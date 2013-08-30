@@ -23,12 +23,11 @@ namespace mogate
 
 		public GameMogate ()
 		{
-			graphics = new GraphicsDeviceManager (this);
+			graphics = new GraphicsDeviceManager(this);
 			Content.RootDirectory = "Content";
 			graphics.PreferredBackBufferHeight = 768;
 			graphics.PreferredBackBufferWidth = 1024;
-			graphics.IsFullScreen = true;
-			graphics.ApplyChanges();
+			graphics.IsFullScreen = false;		
 		}
 
 		/// <summary>

@@ -16,8 +16,8 @@ namespace mogate
 			Left
 		}
 
-		static readonly int m_roomMax = 9;
-		static readonly int m_roomMin = 5;
+		static readonly int m_roomMax = 7;
+		static readonly int m_roomMin = 3;
 		static Random m_rand = new Random(DateTime.UtcNow.Millisecond);
 
 		public static void Generate (IMapGrid map)
