@@ -10,6 +10,7 @@ namespace mogate
 		MapGenerated,
 		HeroCreated,
 		ItemsCreated,
+		MonstersCreated,
 		LevelStarted
 	};
 
@@ -32,7 +33,7 @@ namespace mogate
 			if (Keyboard.GetState ().IsKeyDown (Keys.Space))
 				State = EState.LevelStarting;
 
-			if (State == EState.ItemsCreated)
+			if (State == EState.MonstersCreated)
 				State = EState.LevelStarted;
 
 			base.Update(gameTime);

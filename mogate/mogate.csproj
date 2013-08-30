@@ -50,6 +50,8 @@
     <Compile Include="Services\MapGrid.cs" />
     <Compile Include="Services\Items.cs" />
     <Compile Include="Services\Hero.cs" />
+    <Compile Include="Layers\MonstersLayer.cs" />
+    <Compile Include="Services\Monsters.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />

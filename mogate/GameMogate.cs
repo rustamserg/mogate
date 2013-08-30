@@ -39,17 +39,19 @@ namespace mogate
 		protected override void Initialize ()
 		{
 			// TODO: Add your initialization logic here
-			Services.AddService(typeof(IMapGrid), new MapGrid(WIDTH, HEIGHT));
-			Services.AddService(typeof(IItems), new Items(this));
-			Services.AddService(typeof(IHero), new Hero(this));
+			Services.AddService (typeof(IMapGrid), new MapGrid(WIDTH, HEIGHT));
+			Services.AddService (typeof(IItems), new Items(this));
+			Services.AddService (typeof(IHero), new Hero(this));
+			Services.AddService (typeof(IMonsters), new Monsters (this));
 
 			var gameState = new GameState(this);
-			Services.AddService(typeof(IGameState), gameState);
+			Services.AddService (typeof(IGameState), gameState);
 
-			Components.Add(gameState);
-			Components.Add(new MapGridLayer(this));
-			Components.Add(new ItemsLayer(this));
-			Components.Add(new HeroLayer(this));
+			Components.Add (gameState);
+			Components.Add (new MapGridLayer(this));
+			Components.Add (new ItemsLayer(this));
+			Components.Add (new MonstersLayer (this));
+			Components.Add (new HeroLayer(this));
 
 			base.Initialize ();
 				
