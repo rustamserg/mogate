@@ -24,17 +24,16 @@ namespace mogate
 		public override void Update (GameTime gameTime)
 		{
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
-			if (gameState.State == EState.ItemsCreated) {
-				var monsters = (IMonsters)Game.Services.GetService(typeof(IMonsters));
-				monsters.Init();
+			var monsters = (IMonsters)Game.Services.GetService(typeof(IMonsters));
 
+			if (gameState.State == EState.ItemsCreated) {
+				monsters.Init();
 				gameState.State = EState.MonstersCreated;
 			}
 
 			if (gameState.State == EState.LevelStarted) {
-				var monsters = (IMonsters)Game.Services.GetService (typeof(IMonsters));
 				foreach (var pt in monsters.GetMonsters()) {
-					monsters.TryChaise (pt);
+					monsters.UpdateMapPos (pt);
 				}
 			}
 
@@ -46,9 +45,9 @@ namespace mogate
 			m_spriteBatch.Begin ();
 
 			var monsters = (IMonsters)Game.Services.GetService(typeof(IMonsters));
-			monsters.UpdateDrawPos ();
 
 			foreach (var pt in monsters.GetMonsters()) {
+				monsters.UpdateDrawPos (pt);
 				m_spriteBatch.Draw(m_monster, pt.DrawPos, Color.White);
 			}
 

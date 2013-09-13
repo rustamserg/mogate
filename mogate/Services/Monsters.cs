@@ -32,8 +32,8 @@ namespace mogate
 	{
 		void Init();
 		IEnumerable<MonsterData> GetMonsters();
-		void TryChaise (MonsterData monster);
-		void UpdateDrawPos ();
+		void UpdateMapPos (MonsterData monster);
+		void UpdateDrawPos (MonsterData data);
 	};
 
 	public class Monsters : GameComponent, IMonsters
@@ -67,7 +67,7 @@ namespace mogate
 			return m_monstersPos;
 		}
 
-		public void TryChaise(MonsterData data)
+		public void UpdateMapPos (MonsterData data)
 		{
 			if (data.State == MonsterState.Idle) {
 				var hero = (IHero)Game.Services.GetService (typeof(IHero));
@@ -96,21 +96,19 @@ namespace mogate
 			}
 		}
 
-		public void UpdateDrawPos()
+		public void UpdateDrawPos (MonsterData data)
 		{
-			foreach (var pt in m_monstersPos) {
-				if (pt.MapPos.X * 32 == pt.DrawPos.X && pt.MapPos.Y * 32 == pt.DrawPos.Y) {
-					pt.State = MonsterState.Idle;
-				} else {
-					if (pt.DrawPos.X < pt.MapPos.X * 32)
-						pt.DrawPos.X += 4;
-					if (pt.DrawPos.X > pt.MapPos.X * 32)
-						pt.DrawPos.X -= 4;
-					if (pt.DrawPos.Y < pt.MapPos.Y * 32)
-						pt.DrawPos.Y += 4;
-					if (pt.DrawPos.Y > pt.MapPos.Y * 32)
-						pt.DrawPos.Y -= 4;
-				}
+			if (data.MapPos.X * 32 == data.DrawPos.X && data.MapPos.Y * 32 == data.DrawPos.Y) {
+				data.State = MonsterState.Idle;
+			} else {
+				if (data.DrawPos.X < data.MapPos.X * 32)
+					data.DrawPos.X += 4;
+				if (data.DrawPos.X > data.MapPos.X * 32)
+					data.DrawPos.X -= 4;
+				if (data.DrawPos.Y < data.MapPos.Y * 32)
+					data.DrawPos.Y += 4;
+				if (data.DrawPos.Y > data.MapPos.Y * 32)
+					data.DrawPos.Y -= 4;
 			}
 		}
 	}
