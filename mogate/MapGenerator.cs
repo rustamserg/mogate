@@ -317,7 +317,7 @@ namespace mogate
     		return Enum.GetValues(typeof (T)).Cast<T>().OrderBy(x => m_rand.Next()).FirstOrDefault();
 		}
 
-		static double Dist (Point from, Point to)
+		public static double Dist (Point from, Point to)
 		{
 			return Math.Sqrt(Math.Pow(from.X  - to.X, 2) + Math.Pow(from.Y - to.Y, 2));
 		}

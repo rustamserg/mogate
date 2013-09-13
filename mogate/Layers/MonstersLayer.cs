@@ -10,7 +10,6 @@ namespace mogate
 		Texture2D m_monster;
 		SpriteBatch m_spriteBatch;
 
-
 		public MonstersLayer (Game game) : base(game)
 		{
 		}
@@ -32,6 +31,13 @@ namespace mogate
 				gameState.State = EState.MonstersCreated;
 			}
 
+			if (gameState.State == EState.LevelStarted) {
+				var monsters = (IMonsters)Game.Services.GetService (typeof(IMonsters));
+				foreach (var pt in monsters.GetMonsters()) {
+					monsters.TryChaise (pt);
+				}
+			}
+
 			base.Update(gameTime);
 		}
 
@@ -40,10 +46,10 @@ namespace mogate
 			m_spriteBatch.Begin ();
 
 			var monsters = (IMonsters)Game.Services.GetService(typeof(IMonsters));
+			monsters.UpdateDrawPos ();
 
 			foreach (var pt in monsters.GetMonsters()) {
-				Vector2 drawPos = new Vector2(pt.X * 32, pt.Y * 32);
-				m_spriteBatch.Draw(m_monster, drawPos, Color.White);
+				m_spriteBatch.Draw(m_monster, pt.DrawPos, Color.White);
 			}
 
 			m_spriteBatch.End ();

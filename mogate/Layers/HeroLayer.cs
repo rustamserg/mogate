@@ -11,7 +11,7 @@ namespace mogate
 		Texture2D m_hero;
 		SpriteBatch m_spriteBatch;
 		Vector2 m_heroDrawPos;
-
+		Point m_prevPos;
 
 		public HeroLayer (Game game) : base(game)
 		{
@@ -49,29 +49,43 @@ namespace mogate
 
 		private void UpdateHero (GameTime gameTime)
 		{
-			var hero = (IHero)Game.Services.GetService(typeof(IHero));
+			var hero = (IHero)Game.Services.GetService (typeof(IHero));
+			var mapGrid = (IMapGrid)Game.Services.GetService (typeof(IMapGrid));
 
 			if (m_heroDrawPos.X == hero.Position.X * 32 && m_heroDrawPos.Y == hero.Position.Y * 32) {
 				Point newPos = hero.Position;
-	
-				if (Keyboard.GetState ().IsKeyDown (Keys.Up))
-					newPos.Y--;
-				else if (Keyboard.GetState ().IsKeyDown (Keys.Down))
-					newPos.Y++;
-				else if (Keyboard.GetState ().IsKeyDown (Keys.Left))
-					newPos.X--;
-				else if (Keyboard.GetState ().IsKeyDown (Keys.Right))
-					newPos.X++;
 
-				var mapGrid = (IMapGrid)Game.Services.GetService (typeof(IMapGrid));
+				// check for monsters
+				bool isBounce = false;
+				/*var monsters = (IMonsters)Game.Services.GetService (typeof(IMonsters));
+				foreach (var mp in monsters.GetMonsters()) {
+					if (mp.MapPos == hero.Position) {
+						newPos = m_prevPos;
+						isBounce = true;
+						break;
+					}
+				}*/
+
+				if (!isBounce) {
+					if (Keyboard.GetState ().IsKeyDown (Keys.Up))
+						newPos.Y--;
+					else if (Keyboard.GetState ().IsKeyDown (Keys.Down))
+						newPos.Y++;
+					else if (Keyboard.GetState ().IsKeyDown (Keys.Left))
+						newPos.X--;
+					else if (Keyboard.GetState ().IsKeyDown (Keys.Right))
+						newPos.X++;
+				}
+
 				var mt = mapGrid.GetID (newPos.X, newPos.Y);
-				if (mt == MapGridTypes.ID.Tunnel || mt == MapGridTypes.ID.Door
-					|| mt == MapGridTypes.ID.Room || mt == MapGridTypes.ID.StairUp)
+				if (mt != MapGridTypes.ID.Blocked) {
+					m_prevPos = hero.Position;
 					hero.Position = newPos;
 
-				if (mt == MapGridTypes.ID.StairUp) {
-					var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
-					gameState.State = EState.LevelStarting;
+					if (mt == MapGridTypes.ID.StairUp) {
+						var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
+						gameState.State = EState.LevelStarting;
+					}
 				}
 			} else {
 				if (m_heroDrawPos.X < hero.Position.X * 32)
@@ -92,6 +106,7 @@ namespace mogate
 
 			m_heroDrawPos.X = hero.Position.X * 32;
 			m_heroDrawPos.Y = hero.Position.Y * 32;
+			m_prevPos = hero.Position;
 		}
 	}
 }

@@ -1,19 +1,44 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using Microsoft.Xna.Framework;
 
 namespace mogate
 {
+	public enum MonsterState
+	{
+		Idle,
+		Chasing
+	};
+
+	public class MonsterData
+	{
+		public Point MapPos;
+		public Vector2 DrawPos;
+		public MonsterState State;
+
+		public MonsterData(int x, int y)
+		{
+			State = MonsterState.Idle;
+			MapPos.X = x;
+			MapPos.Y = y;
+			DrawPos.X = MapPos.X * 32;
+			DrawPos.Y = MapPos.Y * 32;
+		}
+	};
+
 	public interface IMonsters
 	{
 		void Init();
-		IEnumerable<Point> GetMonsters();
+		IEnumerable<MonsterData> GetMonsters();
+		void TryChaise (MonsterData monster);
+		void UpdateDrawPos ();
 	};
 
 	public class Monsters : GameComponent, IMonsters
 	{
-		List<Point> m_monstersPos = new List<Point>();
+		List<MonsterData> m_monstersPos = new List<MonsterData>();
 		Random m_rand = new Random(DateTime.UtcNow.Millisecond);
 
 
@@ -30,26 +55,63 @@ namespace mogate
 				for (int y = 0; y < map.Height; y++) {
 					if (map.GetID (x, y) == MapGridTypes.ID.Tunnel) {
 						if (m_rand.Next (100) < 10) {
-							m_monstersPos.Add (new Point (x, y));
+							m_monstersPos.Add (new MonsterData (x, y));
 						}
 					}
 				}
 			}
 		}
 
-		public override void Update (GameTime gameTime)
+		public IEnumerable<MonsterData> GetMonsters()
 		{
-			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
-			if (gameState.State == EState.LevelStarted) {
-
-			}
-
-			base.Update (gameTime);
+			return m_monstersPos;
 		}
 
-		public IEnumerable<Point> GetMonsters()
+		public void TryChaise(MonsterData data)
 		{
-			return new List<Point> (m_monstersPos);
+			if (data.State == MonsterState.Idle) {
+				var hero = (IHero)Game.Services.GetService (typeof(IHero));
+				var map = (IMapGrid)Game.Services.GetService (typeof(IMapGrid));
+
+				if (MapGenerator.Dist (data.MapPos, hero.Position) > 5)
+					return;
+
+				Point newPos = data.MapPos;
+				if (hero.Position.X < data.MapPos.X)
+					newPos.X--;
+				else if (hero.Position.X > data.MapPos.X)
+					newPos.X++;
+				else if (hero.Position.Y < data.MapPos.Y)
+					newPos.Y--;
+				else if (hero.Position.Y > data.MapPos.Y)
+					newPos.Y++;
+
+				if (m_monstersPos.Any (x => x.MapPos == newPos))
+					return;
+
+				if (map.GetID (newPos.X, newPos.Y) == MapGridTypes.ID.Tunnel) {
+					data.MapPos = newPos;
+					data.State = MonsterState.Chasing;
+				}
+			}
+		}
+
+		public void UpdateDrawPos()
+		{
+			foreach (var pt in m_monstersPos) {
+				if (pt.MapPos.X * 32 == pt.DrawPos.X && pt.MapPos.Y * 32 == pt.DrawPos.Y) {
+					pt.State = MonsterState.Idle;
+				} else {
+					if (pt.DrawPos.X < pt.MapPos.X * 32)
+						pt.DrawPos.X += 4;
+					if (pt.DrawPos.X > pt.MapPos.X * 32)
+						pt.DrawPos.X -= 4;
+					if (pt.DrawPos.Y < pt.MapPos.Y * 32)
+						pt.DrawPos.Y += 4;
+					if (pt.DrawPos.Y > pt.MapPos.Y * 32)
+						pt.DrawPos.Y -= 4;
+				}
+			}
 		}
 	}
 }
