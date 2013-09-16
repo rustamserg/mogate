@@ -52,6 +52,9 @@
     <Compile Include="Services\Hero.cs" />
     <Compile Include="Layers\MonstersLayer.cs" />
     <Compile Include="Services\Monsters.cs" />
+    <Compile Include="Entity\Entity.cs" />
+    <Compile Include="Entity\Aspect.cs" />
+    <Compile Include="Aspects\Health.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />
@@ -60,6 +63,8 @@
     <Folder Include="Content\" />
     <Folder Include="Layers\" />
     <Folder Include="Services\" />
+    <Folder Include="Entity\" />
+    <Folder Include="Aspects\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\ladder.png">

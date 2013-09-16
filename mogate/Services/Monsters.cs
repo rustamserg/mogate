@@ -12,7 +12,7 @@ namespace mogate
 		Chasing
 	};
 
-	public class MonsterData
+	public class MonsterData : Entity
 	{
 		public Point MapPos;
 		public Vector2 DrawPos;
@@ -25,6 +25,8 @@ namespace mogate
 			MapPos.Y = y;
 			DrawPos.X = MapPos.X * 32;
 			DrawPos.Y = MapPos.Y * 32;
+
+			RegisterAspect (new Health (100));
 		}
 	};
 
@@ -85,6 +87,9 @@ namespace mogate
 					newPos.Y--;
 				else if (hero.Position.Y > data.MapPos.Y)
 					newPos.Y++;
+
+				if (newPos == hero.Position)
+					return;
 
 				if (m_monstersPos.Any (x => x.MapPos == newPos))
 					return;

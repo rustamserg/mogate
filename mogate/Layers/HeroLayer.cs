@@ -57,14 +57,14 @@ namespace mogate
 
 				// check for monsters
 				bool isBounce = false;
-				/*var monsters = (IMonsters)Game.Services.GetService (typeof(IMonsters));
+				var monsters = (IMonsters)Game.Services.GetService (typeof(IMonsters));
 				foreach (var mp in monsters.GetMonsters()) {
 					if (mp.MapPos == hero.Position) {
 						newPos = m_prevPos;
 						isBounce = true;
 						break;
 					}
-				}*/
+				}
 
 				if (!isBounce) {
 					if (Keyboard.GetState ().IsKeyDown (Keys.Up))
