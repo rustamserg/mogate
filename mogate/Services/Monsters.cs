@@ -9,7 +9,8 @@ namespace mogate
 	public enum MonsterState
 	{
 		Idle,
-		Chasing
+		Chasing,
+		Dead
 	};
 
 	public class MonsterEntity : Entity
@@ -21,6 +22,7 @@ namespace mogate
 			State = MonsterState.Idle;
 			Register (new Position (x, y));
 			Register (new Health (100));
+			Register (new ActionList ());
 		}
 	};
 
@@ -29,7 +31,8 @@ namespace mogate
 		void Init();
 		IEnumerable<MonsterEntity> GetMonsters();
 		void UpdateMapPos (MonsterEntity monster);
-		void UpdateDrawPos (MonsterEntity data);
+		void UpdateDrawPos (MonsterEntity monster);
+		void UpdateActions ();
 	};
 
 	public class Monsters : GameComponent, IMonsters
@@ -110,6 +113,14 @@ namespace mogate
 				if (data.Get<Position>().DrawPos.Y > data.Get<Position>().MapPos.Y * 32)
 					data.Get<Position>().DrawPos.Y -= 4;
 			}
+		}
+
+		public void UpdateActions ()
+		{
+			foreach (var me in m_monsters) {
+				me.Get<ActionList> ().Update ();
+			}
+			m_monsters.RemoveAll (x => x.Get<Health> ().HP == 0);
 		}
 	}
 }

@@ -65,6 +65,9 @@ namespace mogate
 					if (mp.Get<Position>().MapPos == hero.Player.Get<Position>().MapPos) {
 						newPos = m_prevPos;
 						isBounce = true;
+
+						mp.Get<ActionList> ().Push (new AttackEntity (mp, 10));
+
 						break;
 					}
 				}

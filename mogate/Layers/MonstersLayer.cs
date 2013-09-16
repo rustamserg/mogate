@@ -35,6 +35,7 @@ namespace mogate
 				foreach (var pt in monsters.GetMonsters()) {
 					monsters.UpdateMapPos (pt);
 				}
+				monsters.UpdateActions ();
 			}
 
 			base.Update(gameTime);
