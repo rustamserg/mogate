@@ -48,7 +48,7 @@ namespace mogate
 
 			foreach (var pt in monsters.GetMonsters()) {
 				monsters.UpdateDrawPos (pt);
-				m_spriteBatch.Draw(m_monster, pt.DrawPos, Color.White);
+				m_spriteBatch.Draw(m_monster, pt.Get<Position>().DrawPos, Color.White);
 			}
 
 			m_spriteBatch.End ();

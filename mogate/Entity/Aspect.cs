@@ -4,7 +4,7 @@ namespace mogate
 {
 	public interface IAspect
 	{
-		string Name { get; }
+		Type Behavior { get; }
 	}
 }
 

@@ -5,16 +5,16 @@ namespace mogate
 {
 	public class Entity
 	{
-		private Dictionary<string, IAspect> m_aspects = new Dictionary<string, IAspect>();
+		private Dictionary<Type, IAspect> m_aspects = new Dictionary<Type, IAspect>();
 
-		public void RegisterAspect(IAspect aspect)
+		public void Register(IAspect aspect)
 		{
-			m_aspects.Add (aspect.Name, aspect);
+			m_aspects[aspect.Behavior] = aspect;
 		}
 
-		public IAspect GetAspect(string name)
+		public T Get<T>()
 		{
-			return m_aspects [name];
+			return (T)m_aspects [typeof(T)];
 		}
 	}
 }

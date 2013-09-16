@@ -10,7 +10,6 @@ namespace mogate
 	{
 		Texture2D m_hero;
 		SpriteBatch m_spriteBatch;
-		Vector2 m_heroDrawPos;
 		Point m_prevPos;
 
 		public HeroLayer (Game game) : base(game)
@@ -41,7 +40,10 @@ namespace mogate
 		public override void Draw (GameTime gameTime)
 		{
 			m_spriteBatch.Begin();
-			m_spriteBatch.Draw (m_hero, m_heroDrawPos, Color.White);
+
+			var hero = (IHero)Game.Services.GetService (typeof(IHero));
+
+			m_spriteBatch.Draw (m_hero, hero.Player.Get<Position>().DrawPos, Color.White);
 			m_spriteBatch.End();
 
 			base.Draw (gameTime);
@@ -52,14 +54,15 @@ namespace mogate
 			var hero = (IHero)Game.Services.GetService (typeof(IHero));
 			var mapGrid = (IMapGrid)Game.Services.GetService (typeof(IMapGrid));
 
-			if (m_heroDrawPos.X == hero.Position.X * 32 && m_heroDrawPos.Y == hero.Position.Y * 32) {
-				Point newPos = hero.Position;
+			if (hero.Player.Get<Position>().DrawPos.X == hero.Player.Get<Position>().MapPos.X * 32
+			    && hero.Player.Get<Position>().DrawPos.Y == hero.Player.Get<Position>().MapPos.Y * 32) {
+				Point newPos = hero.Player.Get<Position>().MapPos;
 
 				// check for monsters
 				bool isBounce = false;
 				var monsters = (IMonsters)Game.Services.GetService (typeof(IMonsters));
 				foreach (var mp in monsters.GetMonsters()) {
-					if (mp.MapPos == hero.Position) {
+					if (mp.Get<Position>().MapPos == hero.Player.Get<Position>().MapPos) {
 						newPos = m_prevPos;
 						isBounce = true;
 						break;
@@ -79,8 +82,8 @@ namespace mogate
 
 				var mt = mapGrid.GetID (newPos.X, newPos.Y);
 				if (mt != MapGridTypes.ID.Blocked) {
-					m_prevPos = hero.Position;
-					hero.Position = newPos;
+					m_prevPos = hero.Player.Get<Position>().MapPos;
+					hero.Player.Get<Position>().MapPos = newPos;
 
 					if (mt == MapGridTypes.ID.StairUp) {
 						var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
@@ -88,14 +91,14 @@ namespace mogate
 					}
 				}
 			} else {
-				if (m_heroDrawPos.X < hero.Position.X * 32)
-					m_heroDrawPos.X += 4;
-				if (m_heroDrawPos.X > hero.Position.X * 32)
-					m_heroDrawPos.X -= 4;
-				if (m_heroDrawPos.Y < hero.Position.Y * 32)
-					m_heroDrawPos.Y += 4;
-				if (m_heroDrawPos.Y > hero.Position.Y * 32)
-					m_heroDrawPos.Y -= 4;
+				if (hero.Player.Get<Position>().DrawPos.X < hero.Player.Get<Position>().MapPos.X * 32)
+					hero.Player.Get<Position>().DrawPos.X += 4;
+				if (hero.Player.Get<Position>().DrawPos.X > hero.Player.Get<Position>().MapPos.X * 32)
+					hero.Player.Get<Position>().DrawPos.X -= 4;
+				if (hero.Player.Get<Position>().DrawPos.Y < hero.Player.Get<Position>().MapPos.Y * 32)
+					hero.Player.Get<Position>().DrawPos.Y += 4;
+				if (hero.Player.Get<Position>().DrawPos.Y > hero.Player.Get<Position>().MapPos.Y * 32)
+					hero.Player.Get<Position>().DrawPos.Y -= 4;
 			}
 		}
 
@@ -103,10 +106,7 @@ namespace mogate
 		{
 			var hero = (IHero)Game.Services.GetService(typeof(IHero));
 			hero.Init();
-
-			m_heroDrawPos.X = hero.Position.X * 32;
-			m_heroDrawPos.Y = hero.Position.Y * 32;
-			m_prevPos = hero.Position;
+			m_prevPos = hero.Player.Get<Position>().MapPos;
 		}
 	}
 }

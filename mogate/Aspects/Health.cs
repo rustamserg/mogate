@@ -4,8 +4,9 @@ namespace mogate
 {
 	public class Health : IAspect
 	{
+		public Type Behavior { get { return typeof(Health); } }
+
 		public int HP { get; set; }
-		public string Name { get { return "health"; } }
 
 		public Health(int hp)
 		{

@@ -4,25 +4,36 @@ using Microsoft.Xna.Framework;
 
 namespace mogate
 {
+	public class HeroEntity : Entity
+	{
+		public HeroEntity ()
+		{
+			Register (new Health (2000));
+		}
+	};
+
 	public interface IHero
 	{
 		void Init();
-		Point Position { get; set; }
+		HeroEntity Player { get; }
 	};
 
 	public class Hero : GameComponent, IHero
 	{
+		HeroEntity m_player;
+
 		public Hero (Game game) : base(game)
 		{
+			m_player = new HeroEntity ();
 		}
 
 		public void Init ()
 		{
 			var mapGrid = (IMapGrid)Game.Services.GetService(typeof(IMapGrid));
-			Position = mapGrid.StairDown;
+			Player.Register (new Position (mapGrid.StairDown.X, mapGrid.StairDown.Y));
 		}
 
-		public Point Position { get; set; }
+		public HeroEntity Player { get { return m_player; } }
 	}
 }
 

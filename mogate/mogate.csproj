@@ -55,6 +55,7 @@
     <Compile Include="Entity\Entity.cs" />
     <Compile Include="Entity\Aspect.cs" />
     <Compile Include="Aspects\Health.cs" />
+    <Compile Include="Aspects\Position.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />
