@@ -52,13 +52,13 @@
     <Compile Include="Services\Hero.cs" />
     <Compile Include="Layers\MonstersLayer.cs" />
     <Compile Include="Services\Monsters.cs" />
-    <Compile Include="Entity\Entity.cs" />
-    <Compile Include="Entity\Aspect.cs" />
-    <Compile Include="Aspects\Health.cs" />
-    <Compile Include="Aspects\Position.cs" />
-    <Compile Include="Aspects\ActionList.cs" />
     <Compile Include="Actions\AttackEntity.cs" />
     <Compile Include="Actions\MoveTo.cs" />
+    <Compile Include="Behaviors\Health.cs" />
+    <Compile Include="Behaviors\Position.cs" />
+    <Compile Include="Behaviors\ActionList.cs" />
+    <Compile Include="Core\Entity.cs" />
+    <Compile Include="Core\Behavior.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />
@@ -67,9 +67,9 @@
     <Folder Include="Content\" />
     <Folder Include="Layers\" />
     <Folder Include="Services\" />
-    <Folder Include="Entity\" />
-    <Folder Include="Aspects\" />
     <Folder Include="Actions\" />
+    <Folder Include="Behaviors\" />
+    <Folder Include="Core\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\ladder.png">

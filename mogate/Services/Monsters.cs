@@ -109,7 +109,7 @@ namespace mogate
 					return;
 
 				if (map.GetID (newPos.X, newPos.Y) == MapGridTypes.ID.Tunnel) {
-					data.Get<ActionList> ().Push (new MoveTo (data, newPos, 2, () =>
+					data.Get<ActionList> ().Push (new MoveTo (data, newPos, 2, (_) =>
 					 	{ if (data.Get<Position>().MapPos.X * 32 == data.Get<Position>().DrawPos.X
 					    		&& data.Get<Position>().MapPos.Y * 32 == data.Get<Position>().DrawPos.Y)
 							data.State = MonsterState.Idle; } ));

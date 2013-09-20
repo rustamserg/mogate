@@ -2,7 +2,7 @@ using System;
 
 namespace mogate
 {
-	public class Health : IAspect
+	public class Health : IBehavior
 	{
 		public Type Behavior { get { return typeof(Health); } }
 

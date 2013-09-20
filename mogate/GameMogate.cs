@@ -38,15 +38,13 @@ namespace mogate
 		/// </summary>
 		protected override void Initialize ()
 		{
-			// TODO: Add your initialization logic here
+			var monsters = new Monsters (this);
+			var gameState = new GameState(this);
+
 			Services.AddService (typeof(IMapGrid), new MapGrid(WIDTH, HEIGHT));
 			Services.AddService (typeof(IItems), new Items(this));
 			Services.AddService (typeof(IHero), new Hero(this));
-
-			var monsters = new Monsters (this);
 			Services.AddService (typeof(IMonsters), monsters);
-
-			var gameState = new GameState(this);
 			Services.AddService (typeof(IGameState), gameState);
 
 			Components.Add (gameState);

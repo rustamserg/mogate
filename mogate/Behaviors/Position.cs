@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 
 namespace mogate
 {
-	public class Position : IAspect
+	public class Position : IBehavior
 	{
 		public Type Behavior { get { return typeof(Position); } }
 

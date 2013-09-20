@@ -7,9 +7,9 @@ namespace mogate
 	{
 		Entity m_moved;
 		int m_speed;
-		Action m_onEnd;
+		Action<Entity> m_onEnd;
 
-		public MoveTo (Entity moved, Point to, int speed, Action onEnd)
+		public MoveTo (Entity moved, Point to, int speed, Action<Entity> onEnd)
 		{
 			m_moved = moved;
 			m_speed = speed;
@@ -21,7 +21,7 @@ namespace mogate
 		{
 			if (m_moved.Get<Position>().MapPos.X * 32 == m_moved.Get<Position>().DrawPos.X
 			    && m_moved.Get<Position>().MapPos.Y * 32 == m_moved.Get<Position>().DrawPos.Y) {
-				m_onEnd ();
+				m_onEnd (m_moved);
 				return true;
 			} else {
 				if (m_moved.Get<Position>().DrawPos.X < m_moved.Get<Position>().MapPos.X * 32)

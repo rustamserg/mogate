@@ -9,7 +9,7 @@ namespace mogate
 		bool Execute();
 	};
 
-	public class ActionList : IAspect
+	public class ActionList : IBehavior
 	{
 		public Type Behavior { get { return typeof(ActionList); } }
 

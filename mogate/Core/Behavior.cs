@@ -2,9 +2,8 @@ using System;
 
 namespace mogate
 {
-	public interface IAspect
+	public interface IBehavior
 	{
 		Type Behavior { get; }
 	}
 }
-
