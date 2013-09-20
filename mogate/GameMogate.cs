@@ -42,12 +42,15 @@ namespace mogate
 			Services.AddService (typeof(IMapGrid), new MapGrid(WIDTH, HEIGHT));
 			Services.AddService (typeof(IItems), new Items(this));
 			Services.AddService (typeof(IHero), new Hero(this));
-			Services.AddService (typeof(IMonsters), new Monsters (this));
+
+			var monsters = new Monsters (this);
+			Services.AddService (typeof(IMonsters), monsters);
 
 			var gameState = new GameState(this);
 			Services.AddService (typeof(IGameState), gameState);
 
 			Components.Add (gameState);
+			Components.Add (monsters);
 			Components.Add (new MapGridLayer(this));
 			Components.Add (new ItemsLayer(this));
 			Components.Add (new MonstersLayer (this));

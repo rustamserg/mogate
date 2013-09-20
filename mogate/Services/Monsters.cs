@@ -28,11 +28,7 @@ namespace mogate
 
 	public interface IMonsters
 	{
-		void Init();
 		IEnumerable<MonsterEntity> GetMonsters();
-		void UpdateMapPos (MonsterEntity monster);
-		void UpdateDrawPos (MonsterEntity monster);
-		void UpdateActions ();
 	};
 
 	public class Monsters : GameComponent, IMonsters
@@ -45,7 +41,32 @@ namespace mogate
 		{
 		}
 
-		public void Init()
+		public override void Update(GameTime gameTime)
+		{
+			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
+	
+			if (gameState.State == EState.ItemsCreated) {
+				Init();
+				gameState.State = EState.MonstersCreated;
+			}
+
+			if (gameState.State == EState.LevelStarted) {
+				foreach (var pt in m_monsters) {
+					UpdateMapPos (pt);
+				}
+				UpdateActions ();
+			}
+
+			base.Update(gameTime);
+		}
+
+		public IEnumerable<MonsterEntity> GetMonsters()
+		{
+			return m_monsters;
+		}
+
+
+		void Init()
 		{
 			var map = (IMapGrid)Game.Services.GetService(typeof(IMapGrid));
 			m_monsters.Clear ();
@@ -61,12 +82,7 @@ namespace mogate
 			}
 		}
 
-		public IEnumerable<MonsterEntity> GetMonsters()
-		{
-			return m_monsters;
-		}
-
-		public void UpdateMapPos (MonsterEntity data)
+		void UpdateMapPos (MonsterEntity data)
 		{
 			if (data.State == MonsterState.Idle) {
 				var hero = (IHero)Game.Services.GetService (typeof(IHero));
@@ -76,46 +92,33 @@ namespace mogate
 					return;
 
 				Point newPos = data.Get<Position>().MapPos;
-				    if (hero.Player.Get<Position>().MapPos.X < data.Get<Position>().MapPos.X)
+
+				if (hero.Player.Get<Position>().MapPos.X < data.Get<Position>().MapPos.X)
 					newPos.X--;
-				    else if (hero.Player.Get<Position>().MapPos.X > data.Get<Position>().MapPos.X)
+				else if (hero.Player.Get<Position>().MapPos.X > data.Get<Position>().MapPos.X)
 					newPos.X++;
-				    else if (hero.Player.Get<Position>().MapPos.Y < data.Get<Position>().MapPos.Y)
+				else if (hero.Player.Get<Position>().MapPos.Y < data.Get<Position>().MapPos.Y)
 					newPos.Y--;
-				    else if (hero.Player.Get<Position>().MapPos.Y > data.Get<Position>().MapPos.Y)
+				else if (hero.Player.Get<Position>().MapPos.Y > data.Get<Position>().MapPos.Y)
 					newPos.Y++;
 
-				    if (newPos == hero.Player.Get<Position>().MapPos)
+				if (newPos == hero.Player.Get<Position>().MapPos)
 					return;
 
 				if (m_monsters.Any (x => x.Get<Position>().MapPos == newPos))
 					return;
 
 				if (map.GetID (newPos.X, newPos.Y) == MapGridTypes.ID.Tunnel) {
-					data.Get<Position>().MapPos = newPos;
+					data.Get<ActionList> ().Push (new MoveTo (data, newPos, 2, () =>
+					 	{ if (data.Get<Position>().MapPos.X * 32 == data.Get<Position>().DrawPos.X
+					    		&& data.Get<Position>().MapPos.Y * 32 == data.Get<Position>().DrawPos.Y)
+							data.State = MonsterState.Idle; } ));
 					data.State = MonsterState.Chasing;
 				}
 			}
 		}
 
-		public void UpdateDrawPos (MonsterEntity data)
-		{
-			if (data.Get<Position>().MapPos.X * 32 == data.Get<Position>().DrawPos.X
-			    && data.Get<Position>().MapPos.Y * 32 == data.Get<Position>().DrawPos.Y) {
-				data.State = MonsterState.Idle;
-			} else {
-				if (data.Get<Position>().DrawPos.X < data.Get<Position>().MapPos.X * 32)
-					data.Get<Position>().DrawPos.X += 4;
-				if (data.Get<Position>().DrawPos.X > data.Get<Position>().MapPos.X * 32)
-					data.Get<Position>().DrawPos.X -= 4;
-				if (data.Get<Position>().DrawPos.Y < data.Get<Position>().MapPos.Y * 32)
-					data.Get<Position>().DrawPos.Y += 4;
-				if (data.Get<Position>().DrawPos.Y > data.Get<Position>().MapPos.Y * 32)
-					data.Get<Position>().DrawPos.Y -= 4;
-			}
-		}
-
-		public void UpdateActions ()
+		void UpdateActions ()
 		{
 			foreach (var me in m_monsters) {
 				me.Get<ActionList> ().Update ();

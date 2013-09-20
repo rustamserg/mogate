@@ -58,6 +58,7 @@
     <Compile Include="Aspects\Position.cs" />
     <Compile Include="Aspects\ActionList.cs" />
     <Compile Include="Actions\AttackEntity.cs" />
+    <Compile Include="Actions\MoveTo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />
