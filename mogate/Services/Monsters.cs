@@ -22,7 +22,7 @@ namespace mogate
 			State = MonsterState.Idle;
 			Register (new Position (x, y));
 			Register (new Health (100));
-			Register (new ActionList ());
+			Register (new ActionQueue ());
 		}
 	};
 
@@ -109,7 +109,7 @@ namespace mogate
 					return;
 
 				if (map.GetID (newPos.X, newPos.Y) == MapGridTypes.ID.Tunnel) {
-					data.Get<ActionList> ().Push (new MoveTo (data, newPos, 2, (_) =>
+					data.Get<ActionQueue> ().Add (new MoveTo (data, newPos, 2, (_) =>
 					 	{ if (data.Get<Position>().MapPos.X * 32 == data.Get<Position>().DrawPos.X
 					    		&& data.Get<Position>().MapPos.Y * 32 == data.Get<Position>().DrawPos.Y)
 							data.State = MonsterState.Idle; } ));
@@ -121,7 +121,7 @@ namespace mogate
 		void UpdateActions ()
 		{
 			foreach (var me in m_monsters) {
-				me.Get<ActionList> ().Update ();
+				me.Get<ActionQueue> ().Update ();
 			}
 			m_monsters.RemoveAll (x => x.Get<Health> ().HP == 0);
 		}

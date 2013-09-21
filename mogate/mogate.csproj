@@ -55,10 +55,10 @@
     <Compile Include="Actions\MoveTo.cs" />
     <Compile Include="Behaviors\Health.cs" />
     <Compile Include="Behaviors\Position.cs" />
-    <Compile Include="Behaviors\ActionList.cs" />
     <Compile Include="Core\Entity.cs" />
     <Compile Include="Core\Behavior.cs" />
     <Compile Include="Core\MapGenerator.cs" />
+    <Compile Include="Behaviors\ActionQueue.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />

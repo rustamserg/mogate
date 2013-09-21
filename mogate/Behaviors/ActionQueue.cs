@@ -9,13 +9,13 @@ namespace mogate
 		bool Execute();
 	};
 
-	public class ActionList : IBehavior
+	public class ActionQueue : IBehavior
 	{
-		public Type Behavior { get { return typeof(ActionList); } }
+		public Type Behavior { get { return typeof(ActionQueue); } }
 
 		private Queue<IAction> m_actions = new Queue<IAction>();
 
-		public void Push(IAction action)
+		public void Add(IAction action)
 		{
 			m_actions.Enqueue (action);
 		}
@@ -25,9 +25,9 @@ namespace mogate
 			if (m_actions.Count == 0)
 				return;
 
-			var action = m_actions.Dequeue ();
-			if (!action.Execute ())
-				m_actions.Enqueue (action);
+			var action = m_actions.Peek ();
+			if (action.Execute ())
+				m_actions.Dequeue ();
 		}
 	}
 }
