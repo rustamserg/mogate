@@ -66,7 +66,7 @@ namespace mogate
 						newPos = m_prevPos;
 						isBounce = true;
 
-						mp.Get<ActionQueue> ().Add (new AttackEntity (mp, 10));
+						mp.Get<ActionQueue> ().Add (new AttackEntity (mp, 50));
 
 						break;
 					}
