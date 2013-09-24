@@ -15,11 +15,11 @@ namespace mogate
 
 	public class MonsterEntity : Entity
 	{
-		public MonsterState State;
+		public MonsterState EState;
 
 		public MonsterEntity(int x, int y)
 		{
-			State = MonsterState.Idle;
+			EState = MonsterState.Idle;
 			Register (new Position (x, y));
 			Register (new Health (100));
 			Register (new ActionQueue ());
@@ -84,7 +84,7 @@ namespace mogate
 
 		void UpdateMapPos (MonsterEntity data)
 		{
-			if (data.State == MonsterState.Idle) {
+			if (data.EState == MonsterState.Idle) {
 				var hero = (IHero)Game.Services.GetService (typeof(IHero));
 				var map = (IMapGrid)Game.Services.GetService (typeof(IMapGrid));
 
@@ -109,11 +109,8 @@ namespace mogate
 					return;
 
 				if (map.GetID (newPos.X, newPos.Y) == MapGridTypes.ID.Tunnel) {
-					data.Get<ActionQueue> ().Add (new MoveTo (data, newPos, 2, (_) =>
-					 	{ if (data.Get<Position>().MapPos.X * 32 == data.Get<Position>().DrawPos.X
-					    		&& data.Get<Position>().MapPos.Y * 32 == data.Get<Position>().DrawPos.Y)
-							data.State = MonsterState.Idle; } ));
-					data.State = MonsterState.Chasing;
+					data.Get<ActionQueue> ().Add (new MoveTo (data, newPos, 2, (_) => { data.EState = MonsterState.Idle; }));
+					data.EState = MonsterState.Chasing;
 				}
 			}
 		}

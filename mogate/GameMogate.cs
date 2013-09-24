@@ -39,16 +39,21 @@ namespace mogate
 		protected override void Initialize ()
 		{
 			var monsters = new Monsters (this);
-			var gameState = new GameState(this);
+			var gameState = new GameState (this);
+			var hero = new Hero (this);
+			var items = new Items (this);
 
 			Services.AddService (typeof(IMapGrid), new MapGrid(WIDTH, HEIGHT));
-			Services.AddService (typeof(IItems), new Items(this));
-			Services.AddService (typeof(IHero), new Hero(this));
+			Services.AddService (typeof(IItems), items);
+			Services.AddService (typeof(IHero), hero);
 			Services.AddService (typeof(IMonsters), monsters);
 			Services.AddService (typeof(IGameState), gameState);
 
 			Components.Add (gameState);
 			Components.Add (monsters);
+			Components.Add (hero);
+			Components.Add (items);
+
 			Components.Add (new MapGridLayer(this));
 			Components.Add (new ItemsLayer(this));
 			Components.Add (new MonstersLayer (this));

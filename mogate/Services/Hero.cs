@@ -1,20 +1,30 @@
 using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 
 namespace mogate
 {
+	public enum HeroState
+	{
+		Idle,
+		Moving
+	};
+
 	public class HeroEntity : Entity
 	{
+		public HeroState EState;
+
 		public HeroEntity ()
 		{
+			EState = HeroState.Idle;
 			Register (new Health (2000));
+			Register (new ActionQueue ());
 		}
 	};
 
 	public interface IHero
 	{
-		void Init();
 		HeroEntity Player { get; }
 	};
 
@@ -27,13 +37,68 @@ namespace mogate
 			m_player = new HeroEntity ();
 		}
 
-		public void Init ()
+		public override void Update(GameTime gameTime)
 		{
-			var mapGrid = (IMapGrid)Game.Services.GetService(typeof(IMapGrid));
-			Player.Register (new Position (mapGrid.StairDown.X, mapGrid.StairDown.Y));
+			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
+	
+			if (gameState.State == EState.MapGenerated) {
+				Init();
+				gameState.State = EState.HeroCreated;
+			}
+
+			if (gameState.State == EState.LevelStarted) {
+				UpdateHero ();
+				Player.Get<ActionQueue> ().Update ();
+			}
+
+			base.Update (gameTime);
 		}
 
 		public HeroEntity Player { get { return m_player; } }
+
+		private void Init ()
+		{
+			var mapGrid = (IMapGrid)Game.Services.GetService(typeof(IMapGrid));
+
+			Player.EState = HeroState.Idle;
+			Player.Register (new Position (mapGrid.StairDown.X, mapGrid.StairDown.Y));
+		}
+
+		private void UpdateHero()
+		{
+			var mapGrid = (IMapGrid)Game.Services.GetService (typeof(IMapGrid));
+
+			if (Player.EState == HeroState.Idle) {
+				Point newPos = m_player.Get<Position>().MapPos;
+
+				if (Keyboard.GetState ().IsKeyDown (Keys.Up))
+					newPos.Y--;
+				else if (Keyboard.GetState ().IsKeyDown (Keys.Down))
+					newPos.Y++;
+				else if (Keyboard.GetState ().IsKeyDown (Keys.Left))
+					newPos.X--;
+				else if (Keyboard.GetState ().IsKeyDown (Keys.Right))
+					newPos.X++;
+
+				var mt = mapGrid.GetID (newPos.X, newPos.Y);
+				if (mt != MapGridTypes.ID.Blocked) {
+					Player.Get<ActionQueue>().Add(new MoveTo(Player, newPos, 4, OnEndMove));
+					Player.EState = HeroState.Moving;
+				}
+			}
+		}
+		
+		private void OnEndMove(Entity hero)
+		{
+			var mapGrid = (IMapGrid)Game.Services.GetService (typeof(IMapGrid));
+
+			var mt = mapGrid.GetID (Player.Get<Position>().MapPos.X, Player.Get<Position>().MapPos.Y);
+			if (mt == MapGridTypes.ID.StairUp) {
+				var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
+				gameState.State = EState.LevelStarting;
+			}
+			Player.EState = HeroState.Idle;
+		}
 	}
 }
 
