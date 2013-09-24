@@ -28,7 +28,11 @@ namespace mogate
 
 			var hero = (IHero)Game.Services.GetService (typeof(IHero));
 
-			m_spriteBatch.Draw (m_hero, hero.Player.Get<Position>().DrawPos, Color.White);
+			if (hero.Player.Get<Health>().HP < hero.Player.Get<Health>().MaxHP/2)
+				m_spriteBatch.Draw (m_hero, hero.Player.Get<Position>().DrawPos, Color.Red);
+			else
+				m_spriteBatch.Draw (m_hero, hero.Player.Get<Position>().DrawPos, Color.White);
+
 			m_spriteBatch.End();
 
 			base.Draw (gameTime);

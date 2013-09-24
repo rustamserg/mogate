@@ -10,6 +10,7 @@ namespace mogate
 	{
 		Idle,
 		Chasing,
+		Attacking,
 		Dead
 	};
 
@@ -52,7 +53,7 @@ namespace mogate
 
 			if (gameState.State == EState.LevelStarted) {
 				foreach (var pt in m_monsters) {
-					UpdateMapPos (pt);
+					UpdateMonster (pt);
 				}
 				UpdateActions ();
 			}
@@ -64,8 +65,7 @@ namespace mogate
 		{
 			return m_monsters;
 		}
-
-
+		
 		void Init()
 		{
 			var map = (IMapGrid)Game.Services.GetService(typeof(IMapGrid));
@@ -82,7 +82,7 @@ namespace mogate
 			}
 		}
 
-		void UpdateMapPos (MonsterEntity data)
+		void UpdateMonster (MonsterEntity data)
 		{
 			if (data.EState == MonsterState.Idle) {
 				var hero = (IHero)Game.Services.GetService (typeof(IHero));
@@ -92,6 +92,7 @@ namespace mogate
 					return;
 
 				Point newPos = data.Get<Position>().MapPos;
+				Point curPos = data.Get<Position>().MapPos;
 
 				if (hero.Player.Get<Position>().MapPos.X < data.Get<Position>().MapPos.X)
 					newPos.X--;
@@ -102,8 +103,16 @@ namespace mogate
 				else if (hero.Player.Get<Position>().MapPos.Y > data.Get<Position>().MapPos.Y)
 					newPos.Y++;
 
-				if (newPos == hero.Player.Get<Position>().MapPos)
+				if (newPos == hero.Player.Get<Position> ().MapPos) {
+					data.Get<ActionQueue> ().Add (new MoveTo (data, newPos, 4, (_) => {
+						data.Get<ActionQueue>().Add(new MoveTo(data, curPos, 4, (__) => {
+							hero.Player.Get<ActionQueue>().Add(new AttackEntity(hero.Player, 10));
+							data.EState = MonsterState.Idle;
+						}));
+					}));
+					data.EState = MonsterState.Attacking;
 					return;
+				}
 
 				if (m_monsters.Any (x => x.Get<Position>().MapPos == newPos))
 					return;

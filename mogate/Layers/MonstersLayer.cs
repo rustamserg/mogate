@@ -28,7 +28,7 @@ namespace mogate
 			var monsters = (IMonsters)Game.Services.GetService(typeof(IMonsters));
 
 			foreach (var pt in monsters.GetMonsters()) {
-				if (pt.Get<Health>().HP < 100)
+				if (pt.Get<Health>().HP < pt.Get<Health>().MaxHP)
 					m_spriteBatch.Draw(m_monster, pt.Get<Position>().DrawPos, Color.Red);
 				else
 					m_spriteBatch.Draw(m_monster, pt.Get<Position>().DrawPos, Color.White);
