@@ -84,42 +84,81 @@ namespace mogate
 
 		void UpdateMonster (MonsterEntity data)
 		{
-			if (data.EState == MonsterState.Idle) {
-				var hero = (IHero)Game.Services.GetService (typeof(IHero));
-				var map = (IMapGrid)Game.Services.GetService (typeof(IMapGrid));
+			if (data.EState == MonsterState.Idle)
+				UpdateIdleState (data);
+		}
 
-				if (MapGenerator.Dist (data.Get<Position>().MapPos, hero.Player.Get<Position>().MapPos) > 5)
-					return;
+		void UpdateIdleState(MonsterEntity monster)
+		{
+			Point newPos = TryChasePlayer(monster);
 
-				Point newPos = data.Get<Position>().MapPos;
-				Point curPos = data.Get<Position>().MapPos;
+			if (monster.Get<Position>().MapPos != newPos) {
+				MonsterMove (monster, newPos);
+			} else {
+				MonsterIdle (monster);
+			}
+		}
 
-				if (hero.Player.Get<Position>().MapPos.X < data.Get<Position>().MapPos.X)
+		Point TryChasePlayer(MonsterEntity monster)
+		{
+			var hero = (IHero)Game.Services.GetService (typeof(IHero));
+			var map = (IMapGrid)Game.Services.GetService (typeof(IMapGrid));
+
+			Point newPos = monster.Get<Position>().MapPos;
+			Point curPos = monster.Get<Position>().MapPos;
+
+			if (MapGenerator.Dist (curPos, hero.Player.Get<Position> ().MapPos) < 6) {
+				if (hero.Player.Get<Position> ().MapPos.X < monster.Get<Position> ().MapPos.X)
 					newPos.X--;
-				else if (hero.Player.Get<Position>().MapPos.X > data.Get<Position>().MapPos.X)
+				else if (hero.Player.Get<Position> ().MapPos.X > monster.Get<Position> ().MapPos.X)
 					newPos.X++;
-				else if (hero.Player.Get<Position>().MapPos.Y < data.Get<Position>().MapPos.Y)
+				else if (hero.Player.Get<Position> ().MapPos.Y < monster.Get<Position> ().MapPos.Y)
 					newPos.Y--;
-				else if (hero.Player.Get<Position>().MapPos.Y > data.Get<Position>().MapPos.Y)
+				else if (hero.Player.Get<Position> ().MapPos.Y > monster.Get<Position> ().MapPos.Y)
 					newPos.Y++;
 
-				if (newPos == hero.Player.Get<Position> ().MapPos) {
-					data.Get<ActionQueue> ().Add (new MoveTo (data, newPos, 4, (_) => {
-						data.Get<ActionQueue>().Add(new MoveTo(data, curPos, 4, (__) => {
-							hero.Player.Get<ActionQueue>().Add(new AttackEntity(hero.Player, 10));
-							data.EState = MonsterState.Idle;
-						}));
+				if (m_monsters.Any (x => x.Get<Position> ().MapPos == newPos))
+					newPos = curPos;
+				else if (map.GetID (newPos.X, newPos.Y) != MapGridTypes.ID.Tunnel)
+					newPos = curPos;
+			}
+			return newPos;
+		}
+
+		void MonsterMove(MonsterEntity monster, Point newPos)
+		{
+			var hero = (IHero)Game.Services.GetService (typeof(IHero));
+			Point curPos = monster.Get<Position>().MapPos;
+
+			if (newPos == hero.Player.Get<Position> ().MapPos) {
+				monster.Get<ActionQueue> ().Add (new MoveTo (monster, newPos, 1, (_) => {
+					monster.Get<ActionQueue> ().Add (new MoveTo (monster, curPos, 1, (__) => {
+						hero.Player.Get<ActionQueue> ().Add (new AttackEntity (hero.Player, 10));
+						monster.EState = MonsterState.Idle;
 					}));
-					data.EState = MonsterState.Attacking;
-					return;
-				}
+				}));
+				monster.EState = MonsterState.Attacking;
+			} else {
+				monster.Get<ActionQueue> ().Add (new MoveTo (monster, newPos, 2, (_) => {
+					monster.EState = MonsterState.Idle; }));
+				monster.EState = MonsterState.Chasing;
+			}
+		}
 
-				if (m_monsters.Any (x => x.Get<Position>().MapPos == newPos))
-					return;
+		void MonsterIdle(MonsterEntity monster)
+		{
+			var map = (IMapGrid)Game.Services.GetService (typeof(IMapGrid));
+			Point curPos = monster.Get<Position>().MapPos;
 
-				if (map.GetID (newPos.X, newPos.Y) == MapGridTypes.ID.Tunnel) {
-					data.Get<ActionQueue> ().Add (new MoveTo (data, newPos, 2, (_) => { data.EState = MonsterState.Idle; }));
-					data.EState = MonsterState.Chasing;
+			if (m_monsters.Any (x => x.Get<Position> ().MapPos == curPos && x != monster)) {
+				foreach (var cell in map.GetBCross(curPos.X, curPos.Y)) {
+					if (cell.Type == MapGridTypes.ID.Tunnel) {
+						monster.Get<ActionQueue>().Add (new MoveTo (monster, cell.Pos, 2, (_) => {
+							monster.EState = MonsterState.Idle;
+						}));
+						monster.EState = MonsterState.Chasing;
+						break;
+					}
 				}
 			}
 		}

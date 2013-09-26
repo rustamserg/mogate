@@ -65,7 +65,7 @@ namespace mogate
 			for (int x = 0; x < map.Width; x++) {
 				for (int y = 0; y < map.Height; y++) {
 					if (map.GetID(x, y) == MapGridTypes.ID.Tunnel) {
-						if (!map.GetBBox(x, y).Any(z => z != MapGridTypes.ID.Blocked))
+						if (!map.GetBBox(x, y).Any(z => z.Type != MapGridTypes.ID.Blocked))
 							map.SetID (x, y, MapGridTypes.ID.Blocked);
 					}
 				}
@@ -90,7 +90,7 @@ namespace mogate
 			for (int x = 0; x < map.Width; x++) {
 				for (int y = 0; y < map.Height; y++) {
 					if (map.GetID(x, y) == MapGridTypes.ID.TunnelEnd) {
-						if (map.GetBBox(x, y).Any(z => z == MapGridTypes.ID.Door))
+						if (map.GetBBox(x, y).Any(z => z.Type == MapGridTypes.ID.Door))
 							map.SetID (x, y, MapGridTypes.ID.Tunnel);
 					}
 				}
@@ -154,9 +154,7 @@ namespace mogate
 
 			for (int i = 0; i < map.Width/2; i++) {
 				for (int j = 0; j < map.Height/2; j++) {
-					MapGridTypes.Room r = new MapGridTypes.Room();
-					r.Pos.X = i*2 + 1;
-					r.Pos.Y = j*2 + 1;
+					MapGridTypes.Room r = new MapGridTypes.Room(new Point(i*2 + 1, j*2 + 1));
 					r.Width = Math.Max (m_roomMin, m_rand.Next (m_roomMax/2)*2 + 1);
 					r.Height = Math.Max (m_roomMin, m_rand.Next (m_roomMax/2)*2 + 1);
 
@@ -213,7 +211,7 @@ namespace mogate
 						    && map.GetID (r.Pos.X + r.Width + 2, y) == MapGridTypes.ID.Empty
 							&& map.GetID (r.Pos.X + r.Width, y - 1) != MapGridTypes.ID.Door
 						    && map.GetID (r.Pos.X + r.Width, y + 1) != MapGridTypes.ID.Door) { 
-							door = new MapGridTypes.Door { Pos = {X = r.Pos.X + r.Width, Y = y} };
+							door = new MapGridTypes.Door (new Point(r.Pos.X + r.Width, y));
 						}
 					}
 					if (dir == Direction.Down) { // down 
@@ -222,7 +220,7 @@ namespace mogate
 						    && map.GetID (x, r.Pos.Y + r.Height + 2) == MapGridTypes.ID.Empty
 						    && map.GetID (x - 1, r.Pos.Y + r.Height) != MapGridTypes.ID.Door
 						    && map.GetID (x + 1, r.Pos.Y + r.Height) != MapGridTypes.ID.Door) {
-							door = new MapGridTypes.Door { Pos = {X = x, Y = r.Pos.Y + r.Height} };
+							door = new MapGridTypes.Door (new Point (x, r.Pos.Y + r.Height));
 						}
 					}
 					if (dir == Direction.Left) { // left 
@@ -231,7 +229,7 @@ namespace mogate
 						    && map.GetID (r.Pos.X - 2, y) == MapGridTypes.ID.Empty
 						    && map.GetID (r.Pos.X, y - 1) != MapGridTypes.ID.Door
 						    && map.GetID (r.Pos.X, y + 1) != MapGridTypes.ID.Door) {
-							door = new MapGridTypes.Door { Pos = {X = r.Pos.X, Y = y} };
+							door = new MapGridTypes.Door (new Point (r.Pos.X, y));
 						}
 					}
 					if (dir == Direction.Up) { // up 
@@ -240,7 +238,7 @@ namespace mogate
 						    && map.GetID (x, r.Pos.Y - 2) == MapGridTypes.ID.Empty
 						    && map.GetID (x - 1, r.Pos.Y) != MapGridTypes.ID.Door
 						    && map.GetID (x + 1, r.Pos.Y) != MapGridTypes.ID.Door) {
-							door = new MapGridTypes.Door { Pos = {X = x, Y = r.Pos.Y} };
+							door = new MapGridTypes.Door (new Point (x, r.Pos.Y));
 						}
 					}
 					if (door != null) {
@@ -294,8 +292,8 @@ namespace mogate
 			if (map.GetID(x, y) != MapGridTypes.ID.Tunnel && map.GetID(x, y) != MapGridTypes.ID.TunnelEnd)
 				return;
 
-			int tuncells = map.GetBCross(x, y).Count(e => e == MapGridTypes.ID.Tunnel);
-			int empty = map.GetBCross(x, y).Count (e => e == MapGridTypes.ID.Empty || e == MapGridTypes.ID.Blocked);
+			int tuncells = map.GetBCross(x, y).Count(e => e.Type == MapGridTypes.ID.Tunnel);
+			int empty = map.GetBCross(x, y).Count (e => e.Type == MapGridTypes.ID.Empty || e.Type == MapGridTypes.ID.Blocked);
 
 			if (tuncells != 1 || empty != 3)
 				return;

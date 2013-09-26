@@ -20,17 +20,32 @@ namespace mogate
 			StairDown
 		}
 
-		public class Door
+		public class Cell
 		{
 			public Point Pos;
+			public ID Type;
+
+			public Cell(Point p, ID t)
+			{
+				Pos = p;
+				Type = t;
+			}
 		}
 
-		public class Room
+		public class Door : Cell
 		{
-			public Point Pos;
+			public Door(Point p) : base(p, ID.Door) {
+			}
+		}
+
+		public class Room : Cell
+		{
 			public int Width;
 			public int Height;
 			public List<Door> Doors = new List<Door>();
+
+			public Room(Point p) : base(p, ID.Room) {
+			}
 		}
 	}
 
@@ -44,8 +59,8 @@ namespace mogate
 		void Init();
 		MapGridTypes.ID GetID(int x, int y);
 		void SetID(int x, int y, MapGridTypes.ID id);
-		IEnumerable<MapGridTypes.ID> GetBBox (int x, int y);
-		IEnumerable<MapGridTypes.ID> GetBCross (int x, int y);
+		IEnumerable<MapGridTypes.Cell> GetBBox (int x, int y);
+		IEnumerable<MapGridTypes.Cell> GetBCross (int x, int y);
 
 		void AddRoom(MapGridTypes.Room room);
 		IEnumerable<MapGridTypes.Room> GetRooms();
@@ -58,7 +73,7 @@ namespace mogate
 		public Point StairUp { get; set; }
 		public Point StairDown { get; set; }
 
-		MapGridTypes.ID[,] m_map;
+		MapGridTypes.Cell[,] m_map;
 		List<MapGridTypes.Room> m_rooms;
 
 		public MapGrid (int width, int heigth)
@@ -71,7 +86,11 @@ namespace mogate
 
 		public void Init ()
 		{
-			m_map = new MapGridTypes.ID[Width, Height];
+			m_map = new MapGridTypes.Cell[Width, Height];
+			for (int x = 0; x < Width; x++)
+				for (int y = 0; y < Height; y++)
+					m_map [x, y] = new MapGridTypes.Cell (new Point (x, y), MapGridTypes.ID.Blocked);
+
 			m_rooms = new List<mogate.MapGridTypes.Room>();
 		}
 
@@ -80,13 +99,13 @@ namespace mogate
 			if (x < 0 || y < 0 || x >= Width || y >= Height)
 				return MapGridTypes.ID.Blocked;
 
-			return m_map[x, y];
+			return m_map[x, y].Type;
 		}
 
 		public void SetID(int x, int y, MapGridTypes.ID id)
 		{
 			if (x >= 0 && y >= 0 && x < Width && y < Height)
-				m_map[x, y] = id;
+				m_map[x, y].Type = id;
 		}
 
 		public void AddRoom(MapGridTypes.Room room)
@@ -99,28 +118,28 @@ namespace mogate
 			return new List<MapGridTypes.Room>(m_rooms);
 		}
 
-		public IEnumerable<MapGridTypes.ID> GetBBox (int x, int y)
+		public IEnumerable<MapGridTypes.Cell> GetBBox (int x, int y)
 		{
-			List<MapGridTypes.ID> box = new List<MapGridTypes.ID>();
-			box.Add (GetID (x - 1, y - 1));
-			box.Add (GetID (x, y - 1));
-			box.Add (GetID (x + 1, y - 1));
-			box.Add (GetID (x - 1, y));
-			box.Add (GetID (x + 1, y));
-			box.Add (GetID (x - 1, y + 1));
-			box.Add (GetID (x, y + 1));
-			box.Add (GetID (x + 1, y + 1));
+			List<MapGridTypes.Cell> box = new List<MapGridTypes.Cell>();
+			box.Add (new MapGridTypes.Cell(new Point(x - 1, y - 1), GetID (x - 1, y - 1)));
+			box.Add (new MapGridTypes.Cell(new Point(x, y - 1), GetID (x, y - 1)));
+			box.Add (new MapGridTypes.Cell(new Point(x + 1, y - 1), GetID (x + 1, y - 1)));
+			box.Add (new MapGridTypes.Cell(new Point(x - 1, y), GetID (x - 1, y)));
+			box.Add (new MapGridTypes.Cell(new Point(x + 1, y), GetID (x + 1, y)));
+			box.Add (new MapGridTypes.Cell(new Point(x - 1, y + 1), GetID (x - 1, y + 1)));
+			box.Add (new MapGridTypes.Cell(new Point(x, y + 1), GetID (x, y + 1)));
+			box.Add (new MapGridTypes.Cell(new Point(x + 1, y + 1), GetID (x + 1, y + 1)));
 
 			return box;
 		}
 
-		public IEnumerable<MapGridTypes.ID> GetBCross (int x, int y)
+		public IEnumerable<MapGridTypes.Cell> GetBCross (int x, int y)
 		{
-			List<MapGridTypes.ID> box = new List<MapGridTypes.ID>();
-			box.Add (GetID (x, y - 1));
-			box.Add (GetID (x - 1, y));
-			box.Add (GetID (x + 1, y));
-			box.Add (GetID (x, y + 1));
+			List<MapGridTypes.Cell> box = new List<MapGridTypes.Cell>();
+			box.Add (new MapGridTypes.Cell(new Point(x, y - 1), GetID (x, y - 1)));
+			box.Add (new MapGridTypes.Cell(new Point(x - 1, y), GetID (x - 1, y)));
+			box.Add (new MapGridTypes.Cell(new Point(x + 1, y), GetID (x + 1, y)));
+			box.Add (new MapGridTypes.Cell(new Point(x, y + 1), GetID (x, y + 1)));
 
 			return box;
 		}
