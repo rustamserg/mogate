@@ -62,7 +62,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />
-    <None Include="Content\life.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\" />
@@ -101,6 +100,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\tree.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\life.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

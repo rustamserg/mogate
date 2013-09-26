@@ -18,7 +18,7 @@ namespace mogate
 		public HeroEntity ()
 		{
 			EState = HeroState.Idle;
-			Register (new Health (2000));
+			Register (new Health (200));
 			Register (new ActionQueue ());
 		}
 	};
