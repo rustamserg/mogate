@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Graphics;
 
 
 namespace mogate
@@ -18,7 +19,6 @@ namespace mogate
 		public HeroEntity ()
 		{
 			EState = HeroState.Idle;
-			Register (new Health (200));
 			Register (new ActionQueue ());
 		}
 	};
@@ -58,10 +58,13 @@ namespace mogate
 
 		private void Init ()
 		{
-			var mapGrid = (IMapGrid)Game.Services.GetService(typeof(IMapGrid));
+			var mapGrid = (IMapGrid)Game.Services.GetService (typeof(IMapGrid));
+			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
 
 			Player.EState = HeroState.Idle;
+			Player.Register (new Health (200));
 			Player.Register (new Position (mapGrid.StairDown.X, mapGrid.StairDown.Y));
+			Player.Register (new Drawable (sprites.GetSprite ("hero"), new Rectangle (0, 0, 32, 32)));
 		}
 
 		private void UpdateHero()
