@@ -19,7 +19,7 @@ namespace mogate
 		public HeroEntity ()
 		{
 			EState = HeroState.Idle;
-			Register (new ActionQueue ());
+			Register (new Execute ());
 		}
 	};
 
@@ -48,7 +48,7 @@ namespace mogate
 
 			if (gameState.State == EState.LevelStarted) {
 				UpdateHero ();
-				Player.Get<ActionQueue> ().Update ();
+				Player.Get<Execute> ().Update ();
 			}
 
 			base.Update (gameTime);
@@ -85,7 +85,10 @@ namespace mogate
 
 				var mt = mapGrid.GetID (newPos.X, newPos.Y);
 				if (mt != MapGridTypes.ID.Blocked) {
-					Player.Get<ActionQueue>().Add(new MoveTo(Player, newPos, 4, OnEndMove));
+					var seq = new Sequence ();
+					seq.Add (new MoveTo (Player, newPos, 4));
+					seq.Add (new ActionEntity (Player, OnEndMove));
+					Player.Get<Execute>().Start(seq);
 					Player.EState = HeroState.Moving;
 				}
 			}

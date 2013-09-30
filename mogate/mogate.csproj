@@ -57,10 +57,12 @@
     <Compile Include="Core\Entity.cs" />
     <Compile Include="Core\Behavior.cs" />
     <Compile Include="Core\MapGenerator.cs" />
-    <Compile Include="Behaviors\ActionQueue.cs" />
     <Compile Include="Behaviors\Health.cs" />
     <Compile Include="Behaviors\Drawable.cs" />
     <Compile Include="Services\SpriteSheets.cs" />
+    <Compile Include="Actions\Sequence.cs" />
+    <Compile Include="Behaviors\Execute.cs" />
+    <Compile Include="Actions\ActionEntity.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />

@@ -23,7 +23,7 @@ namespace mogate
 			EState = MonsterState.Idle;
 			Register (new Position (x, y));
 			Register (new Health (100));
-			Register (new ActionQueue ());
+			Register (new Execute ());
 		}
 	};
 
@@ -131,16 +131,21 @@ namespace mogate
 			Point curPos = monster.Get<Position>().MapPos;
 
 			if (newPos == hero.Player.Get<Position> ().MapPos) {
-				monster.Get<ActionQueue> ().Add (new MoveTo (monster, newPos, 1, (_) => {
-					monster.Get<ActionQueue> ().Add (new MoveTo (monster, curPos, 1, (__) => {
-						hero.Player.Get<ActionQueue> ().Add (new AttackEntity (hero.Player, 10));
-						monster.EState = MonsterState.Idle;
-					}));
+				var seq = new Sequence ();
+				seq.Add (new MoveTo (monster, newPos, 2));
+				seq.Add (new AttackEntity (hero.Player, 10));
+				seq.Add (new MoveTo (monster, curPos, 2));
+				seq.Add (new ActionEntity(monster, (_) => {
+					monster.EState = MonsterState.Idle;
 				}));
+				monster.Get<Execute> ().Start (seq);
 				monster.EState = MonsterState.Attacking;
 			} else {
-				monster.Get<ActionQueue> ().Add (new MoveTo (monster, newPos, 2, (_) => {
+				var seq = new Sequence ();
+				seq.Add (new MoveTo (monster, newPos, 4));
+				seq.Add (new ActionEntity(monster, (_) => {
 					monster.EState = MonsterState.Idle; }));
+				monster.Get<Execute> ().Start (seq);
 				monster.EState = MonsterState.Chasing;
 			}
 		}
@@ -153,9 +158,12 @@ namespace mogate
 			if (m_monsters.Any (x => x.Get<Position> ().MapPos == curPos && x != monster)) {
 				foreach (var cell in map.GetBCross(curPos.X, curPos.Y)) {
 					if (cell.Type == MapGridTypes.ID.Tunnel) {
-						monster.Get<ActionQueue>().Add (new MoveTo (monster, cell.Pos, 2, (_) => {
+						var seq = new Sequence ();
+						seq.Add (new MoveTo (monster, cell.Pos, 2));
+						seq.Add (new ActionEntity(monster, (_) => {
 							monster.EState = MonsterState.Idle;
 						}));
+						monster.Get<Execute> ().Start (seq);
 						monster.EState = MonsterState.Chasing;
 						break;
 					}
@@ -166,7 +174,7 @@ namespace mogate
 		void UpdateActions ()
 		{
 			foreach (var me in m_monsters) {
-				me.Get<ActionQueue> ().Update ();
+				me.Get<Execute> ().Update ();
 			}
 			m_monsters.RemoveAll (x => x.Get<Health> ().HP == 0);
 		}
