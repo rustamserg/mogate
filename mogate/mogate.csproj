@@ -52,7 +52,6 @@
     <Compile Include="Layers\MonstersLayer.cs" />
     <Compile Include="Services\Monsters.cs" />
     <Compile Include="Actions\AttackEntity.cs" />
-    <Compile Include="Actions\MoveTo.cs" />
     <Compile Include="Behaviors\Position.cs" />
     <Compile Include="Core\Entity.cs" />
     <Compile Include="Core\Behavior.cs" />
@@ -63,6 +62,8 @@
     <Compile Include="Actions\Sequence.cs" />
     <Compile Include="Behaviors\Execute.cs" />
     <Compile Include="Actions\ActionEntity.cs" />
+    <Compile Include="Actions\MoveSpriteTo.cs" />
+    <Compile Include="Behaviors\State.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />

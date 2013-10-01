@@ -3,13 +3,13 @@ using Microsoft.Xna.Framework;
 
 namespace mogate
 {
-	public class MoveTo : IAction
+	public class MoveSpriteTo : IAction
 	{
 		Entity m_moved;
 		int m_speed;
 		Point m_dest;
 
-		public MoveTo (Entity moved, Point to, int speed)
+		public MoveSpriteTo (Entity moved, Point to, int speed)
 		{
 			m_moved = moved;
 			m_speed = speed;

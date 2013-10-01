@@ -12,29 +12,18 @@ namespace mogate
 		Moving
 	};
 
-	public class HeroEntity : Entity
-	{
-		public HeroState EState;
-
-		public HeroEntity ()
-		{
-			EState = HeroState.Idle;
-			Register (new Execute ());
-		}
-	};
-
 	public interface IHero
 	{
-		HeroEntity Player { get; }
+		Entity Player { get; }
 	};
 
 	public class Hero : GameComponent, IHero
 	{
-		HeroEntity m_player;
+		Entity m_player;
 
 		public Hero (Game game) : base(game)
 		{
-			m_player = new HeroEntity ();
+			m_player = new Entity ();
 		}
 
 		public override void Update(GameTime gameTime)
@@ -54,16 +43,17 @@ namespace mogate
 			base.Update (gameTime);
 		}
 
-		public HeroEntity Player { get { return m_player; } }
+		public Entity Player { get { return m_player; } }
 
 		private void Init ()
 		{
 			var mapGrid = (IMapGrid)Game.Services.GetService (typeof(IMapGrid));
 			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
 
-			Player.EState = HeroState.Idle;
+			Player.Register (new State<HeroState> (HeroState.Idle));
 			Player.Register (new Health (200));
 			Player.Register (new Position (mapGrid.StairDown.X, mapGrid.StairDown.Y));
+			Player.Register (new Execute ());
 			Player.Register (new Drawable (sprites.GetSprite ("hero"),
 			                               new Rectangle (0, 0, 32, 32),
 			                               new Point(mapGrid.StairDown.X*32, mapGrid.StairDown.Y*32)));
@@ -73,7 +63,7 @@ namespace mogate
 		{
 			var mapGrid = (IMapGrid)Game.Services.GetService (typeof(IMapGrid));
 
-			if (Player.EState == HeroState.Idle) {
+			if (Player.Get<State<HeroState>>().EState == HeroState.Idle) {
 				Point newPos = m_player.Get<Position>().MapPos;
 
 				if (Keyboard.GetState ().IsKeyDown (Keys.Up))
@@ -88,13 +78,13 @@ namespace mogate
 				var mt = mapGrid.GetID (newPos.X, newPos.Y);
 				if (mt != MapGridTypes.ID.Blocked) {
 					var seq = new Sequence ();
-					seq.Add (new MoveTo (Player, new Point(newPos.X*32, newPos.Y*32), 4));
+					seq.Add (new MoveSpriteTo (Player, new Point(newPos.X*32, newPos.Y*32), 4));
 					seq.Add (new ActionEntity (Player, (_) => {
 						Player.Get<Position> ().MapPos = newPos;
 					}));
 					seq.Add (new ActionEntity (Player, OnEndMove));
 					Player.Get<Execute>().Start(seq);
-					Player.EState = HeroState.Moving;
+					Player.Get<State<HeroState>>().EState = HeroState.Moving;
 				}
 			}
 		}
@@ -108,7 +98,7 @@ namespace mogate
 				var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 				gameState.State = EState.LevelStarting;
 			}
-			Player.EState = HeroState.Idle;
+			Player.Get<State<HeroState>>().EState = HeroState.Idle;
 		}
 	}
 }
