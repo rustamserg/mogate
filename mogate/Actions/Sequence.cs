@@ -18,10 +18,10 @@ namespace mogate
 			if (m_queue.Count == 0)
 				return true;
 
-			if (m_queue.Peek().Execute ())
+			if (m_queue.Peek ().Execute ())
 				m_queue.Dequeue ();
 
-			return false;
+			return (m_queue.Count == 0);
 		}
 	}
 }
