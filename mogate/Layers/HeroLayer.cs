@@ -29,7 +29,7 @@ namespace mogate
 			var ent = hero.Player;
 
 			m_spriteBatch.Draw (ent.Get<Drawable>().SpriteSheet,
-			                    ent.Get<Position>().DrawPos,
+			                    ent.Get<Drawable>().DrawPos,
 			                    ent.Get<Drawable>().SpriteRect,
 			                    Color.White);
 

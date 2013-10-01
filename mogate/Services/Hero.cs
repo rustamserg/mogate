@@ -64,7 +64,9 @@ namespace mogate
 			Player.EState = HeroState.Idle;
 			Player.Register (new Health (200));
 			Player.Register (new Position (mapGrid.StairDown.X, mapGrid.StairDown.Y));
-			Player.Register (new Drawable (sprites.GetSprite ("hero"), new Rectangle (0, 0, 32, 32)));
+			Player.Register (new Drawable (sprites.GetSprite ("hero"),
+			                               new Rectangle (0, 0, 32, 32),
+			                               new Point(mapGrid.StairDown.X*32, mapGrid.StairDown.Y*32)));
 		}
 
 		private void UpdateHero()
@@ -86,7 +88,10 @@ namespace mogate
 				var mt = mapGrid.GetID (newPos.X, newPos.Y);
 				if (mt != MapGridTypes.ID.Blocked) {
 					var seq = new Sequence ();
-					seq.Add (new MoveTo (Player, newPos, 4));
+					seq.Add (new MoveTo (Player, new Point(newPos.X*32, newPos.Y*32), 4));
+					seq.Add (new ActionEntity (Player, (_) => {
+						Player.Get<Position> ().MapPos = newPos;
+					}));
 					seq.Add (new ActionEntity (Player, OnEndMove));
 					Player.Get<Execute>().Start(seq);
 					Player.EState = HeroState.Moving;

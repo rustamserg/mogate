@@ -22,6 +22,7 @@ namespace mogate
 		protected override void LoadContent ()
 		{
 			m_textures ["hero"] = Game.Content.Load<Texture2D> ("hero");
+			m_textures ["monster"] = Game.Content.Load<Texture2D> ("monster");
 		}
 
 		public Texture2D GetSprite(string name)

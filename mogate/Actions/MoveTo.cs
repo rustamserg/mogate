@@ -7,29 +7,29 @@ namespace mogate
 	{
 		Entity m_moved;
 		int m_speed;
+		Point m_dest;
 
 		public MoveTo (Entity moved, Point to, int speed)
 		{
 			m_moved = moved;
 			m_speed = speed;
-			m_moved.Get<Position> ().MapPos = to;
+			m_dest = to;
 		}
 
 		public bool Execute()
 		{
-			if (m_moved.Get<Position>().MapPos.X * 32 == m_moved.Get<Position>().DrawPos.X
-			    && m_moved.Get<Position>().MapPos.Y * 32 == m_moved.Get<Position>().DrawPos.Y) {
+			if (m_moved.Get<Drawable>().DrawPos.X == m_dest.X && m_moved.Get<Drawable>().DrawPos.Y == m_dest.Y)
 				return true;
-			} else {
-				if (m_moved.Get<Position>().DrawPos.X < m_moved.Get<Position>().MapPos.X * 32)
-					m_moved.Get<Position>().DrawPos.X += m_speed;
-				if (m_moved.Get<Position>().DrawPos.X > m_moved.Get<Position>().MapPos.X * 32)
-					m_moved.Get<Position>().DrawPos.X -= m_speed;
-				if (m_moved.Get<Position>().DrawPos.Y < m_moved.Get<Position>().MapPos.Y * 32)
-					m_moved.Get<Position>().DrawPos.Y += m_speed;
-				if (m_moved.Get<Position>().DrawPos.Y > m_moved.Get<Position>().MapPos.Y * 32)
-					m_moved.Get<Position>().DrawPos.Y -= m_speed;
-			}
+
+			if (m_moved.Get<Drawable>().DrawPos.X < m_dest.X)
+				m_moved.Get<Drawable>().DrawPos.X += m_speed;
+			if (m_moved.Get<Drawable>().DrawPos.X > m_dest.X)
+				m_moved.Get<Drawable>().DrawPos.X -= m_speed;
+			if (m_moved.Get<Drawable>().DrawPos.Y < m_dest.Y)
+				m_moved.Get<Drawable>().DrawPos.Y += m_speed;
+			if (m_moved.Get<Drawable>().DrawPos.Y > m_dest.Y)
+				m_moved.Get<Drawable>().DrawPos.Y -= m_speed;
+
 			return false;
 		}
 	}

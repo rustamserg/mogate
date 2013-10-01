@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+
 
 namespace mogate
 {
@@ -18,12 +20,15 @@ namespace mogate
 	{
 		public MonsterState EState;
 
-		public MonsterEntity(int x, int y)
+		public MonsterEntity(int x, int y, Texture2D monster)
 		{
 			EState = MonsterState.Idle;
 			Register (new Position (x, y));
 			Register (new Health (100));
 			Register (new Execute ());
+			Register (new Drawable (monster,
+			                        new Rectangle (0, 0, 32, 32),
+			                        new Point (x * 32, y * 32)));
 		}
 	};
 
@@ -69,13 +74,15 @@ namespace mogate
 		void Init()
 		{
 			var map = (IMapGrid)Game.Services.GetService(typeof(IMapGrid));
+			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
+
 			m_monsters.Clear ();
 
 			for (int x = 0; x < map.Width; x++) {
 				for (int y = 0; y < map.Height; y++) {
 					if (map.GetID (x, y) == MapGridTypes.ID.Tunnel) {
 						if (m_rand.Next (100) < 10) {
-							m_monsters.Add (new MonsterEntity (x, y));
+							m_monsters.Add (new MonsterEntity (x, y, sprites.GetSprite("monster")));
 						}
 					}
 				}
@@ -132,9 +139,9 @@ namespace mogate
 
 			if (newPos == hero.Player.Get<Position> ().MapPos) {
 				var seq = new Sequence ();
-				seq.Add (new MoveTo (monster, newPos, 2));
+				seq.Add (new MoveTo (monster, new Point(newPos.X*32, newPos.Y*32), 2));
 				seq.Add (new AttackEntity (hero.Player, 10));
-				seq.Add (new MoveTo (monster, curPos, 2));
+				seq.Add (new MoveTo (monster, new Point(curPos.X*32, curPos.Y*32), 2));
 				seq.Add (new ActionEntity(monster, (_) => {
 					monster.EState = MonsterState.Idle;
 				}));
@@ -142,7 +149,10 @@ namespace mogate
 				monster.EState = MonsterState.Attacking;
 			} else {
 				var seq = new Sequence ();
-				seq.Add (new MoveTo (monster, newPos, 4));
+				seq.Add (new MoveTo (monster, new Point(newPos.X*32, newPos.Y*32), 4));
+				seq.Add (new ActionEntity (monster, (_) => {
+					monster.Get<Position> ().MapPos = newPos;
+				}));
 				seq.Add (new ActionEntity(monster, (_) => {
 					monster.EState = MonsterState.Idle; }));
 				monster.Get<Execute> ().Start (seq);
@@ -159,7 +169,10 @@ namespace mogate
 				foreach (var cell in map.GetBCross(curPos.X, curPos.Y)) {
 					if (cell.Type == MapGridTypes.ID.Tunnel) {
 						var seq = new Sequence ();
-						seq.Add (new MoveTo (monster, cell.Pos, 2));
+						seq.Add (new MoveTo (monster, new Point(cell.Pos.X*32, cell.Pos.Y*32), 2));
+						seq.Add (new ActionEntity (monster, (_) => {
+							monster.Get<Position> ().MapPos = cell.Pos;
+						}));
 						seq.Add (new ActionEntity(monster, (_) => {
 							monster.EState = MonsterState.Idle;
 						}));
