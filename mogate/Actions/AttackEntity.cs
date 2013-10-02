@@ -1,4 +1,5 @@
 using System;
+using Microsoft.Xna.Framework;
 
 namespace mogate
 {
@@ -13,7 +14,7 @@ namespace mogate
 			m_damage = damage;
 		}
 
-		public bool Execute()
+		public bool Execute(GameTime gameTime)
 		{
 			m_attacked.Get<Health> ().HP = Math.Max (0, m_attacked.Get<Health> ().HP - m_damage);
 			return true;

@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 
+using Microsoft.Xna.Framework;
+
 
 namespace mogate
 {
 	public interface IAction
 	{
-		bool Execute();
+		bool Execute(GameTime gameTime);
 	};
 
 	public class Execute : IBehavior
@@ -20,12 +22,12 @@ namespace mogate
 			m_actions.Enqueue(action);
 		}
 
-		public void Update()
+		public void Update(GameTime gameTime)
 		{
 			if (m_actions.Count == 0)
 				return;
 
-			if (m_actions.Peek ().Execute ())
+			if (m_actions.Peek ().Execute (gameTime))
 				m_actions.Dequeue ();
 		}
 	}

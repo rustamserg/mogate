@@ -64,6 +64,7 @@
     <Compile Include="Actions\ActionEntity.cs" />
     <Compile Include="Actions\MoveSpriteTo.cs" />
     <Compile Include="Behaviors\State.cs" />
+    <Compile Include="Actions\Spawn.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />

@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-
+using Microsoft.Xna.Framework;
 
 namespace mogate
 {
@@ -13,12 +13,12 @@ namespace mogate
 			m_queue.Enqueue (action);
 		}
 
-		public bool Execute()
+		public bool Execute(GameTime gameTime)
 		{
 			if (m_queue.Count == 0)
 				return true;
 
-			if (m_queue.Peek ().Execute ())
+			if (m_queue.Peek ().Execute (gameTime))
 				m_queue.Dequeue ();
 
 			return (m_queue.Count == 0);

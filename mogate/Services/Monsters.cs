@@ -44,7 +44,7 @@ namespace mogate
 				foreach (var pt in m_monsters) {
 					UpdateMonster (pt);
 				}
-				UpdateActions ();
+				UpdateActions (gameTime);
 			}
 
 			base.Update(gameTime);
@@ -131,9 +131,9 @@ namespace mogate
 
 			if (newPos == hero.Player.Get<Position> ().MapPos) {
 				var seq = new Sequence ();
-				seq.Add (new MoveSpriteTo (monster, new Point(newPos.X*32, newPos.Y*32), 2));
+				seq.Add (new MoveSpriteTo (monster, new Vector2(newPos.X*32, newPos.Y*32), 500));
 				seq.Add (new AttackEntity (hero.Player, 10));
-				seq.Add (new MoveSpriteTo (monster, new Point(curPos.X*32, curPos.Y*32), 2));
+				seq.Add (new MoveSpriteTo (monster, new Vector2(curPos.X*32, curPos.Y*32), 500));
 				seq.Add (new ActionEntity(monster, (_) => {
 					monster.Get<State<MonsterState>>().EState = MonsterState.Idle;
 				}));
@@ -141,7 +141,7 @@ namespace mogate
 				monster.Get<State<MonsterState>>().EState = MonsterState.Attacking;
 			} else {
 				var seq = new Sequence ();
-				seq.Add (new MoveSpriteTo (monster, new Point(newPos.X*32, newPos.Y*32), 4));
+				seq.Add (new MoveSpriteTo (monster, new Vector2(newPos.X*32, newPos.Y*32), 600));
 				seq.Add (new ActionEntity (monster, (_) => {
 					monster.Get<Position> ().MapPos = newPos;
 				}));
@@ -161,7 +161,7 @@ namespace mogate
 				foreach (var cell in map.GetBCross(curPos.X, curPos.Y)) {
 					if (cell.Type == MapGridTypes.ID.Tunnel) {
 						var seq = new Sequence ();
-						seq.Add (new MoveSpriteTo (monster, new Point(cell.Pos.X*32, cell.Pos.Y*32), 2));
+						seq.Add (new MoveSpriteTo (monster, new Vector2(cell.Pos.X*32, cell.Pos.Y*32), 200));
 						seq.Add (new ActionEntity (monster, (_) => {
 							monster.Get<Position> ().MapPos = cell.Pos;
 						}));
@@ -176,10 +176,10 @@ namespace mogate
 			}
 		}
 
-		void UpdateActions ()
+		void UpdateActions (GameTime gameTime)
 		{
 			foreach (var me in m_monsters) {
-				me.Get<Execute> ().Update ();
+				me.Get<Execute> ().Update (gameTime);
 			}
 			m_monsters.RemoveAll (x => x.Get<Health> ().HP == 0);
 		}

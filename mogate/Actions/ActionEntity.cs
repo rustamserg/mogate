@@ -1,4 +1,5 @@
 using System;
+using Microsoft.Xna.Framework;
 
 namespace mogate
 {
@@ -13,7 +14,7 @@ namespace mogate
 			m_action = action;
 		}
 
-		public bool Execute()
+		public bool Execute(GameTime gameTime)
 		{
 			m_action (m_entity);
 			return true;

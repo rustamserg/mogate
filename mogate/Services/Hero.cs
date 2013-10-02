@@ -37,7 +37,7 @@ namespace mogate
 
 			if (gameState.State == EState.LevelStarted) {
 				UpdateHero ();
-				Player.Get<Execute> ().Update ();
+				Player.Get<Execute> ().Update (gameTime);
 			}
 
 			base.Update (gameTime);
@@ -78,7 +78,7 @@ namespace mogate
 				var mt = mapGrid.GetID (newPos.X, newPos.Y);
 				if (mt != MapGridTypes.ID.Blocked) {
 					var seq = new Sequence ();
-					seq.Add (new MoveSpriteTo (Player, new Point(newPos.X*32, newPos.Y*32), 4));
+					seq.Add (new MoveSpriteTo (Player, new Vector2(newPos.X*32, newPos.Y*32), 300));
 					seq.Add (new ActionEntity (Player, (_) => {
 						Player.Get<Position> ().MapPos = newPos;
 					}));
