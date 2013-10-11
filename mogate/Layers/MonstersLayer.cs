@@ -25,9 +25,9 @@ namespace mogate
 			var monsters = (IMonsters)Game.Services.GetService(typeof(IMonsters));
 
 			foreach (var pt in monsters.GetMonsters()) {
-				m_spriteBatch.Draw(pt.Get<Drawable>().SpriteSheet,
+				m_spriteBatch.Draw(pt.Get<Drawable>().Sprite.Texture,
 				                   pt.Get<Drawable>().DrawPos,
-				                   pt.Get<Drawable>().SpriteRect,
+				                   pt.Get<Drawable>().Sprite.GetFrame(pt.Get<Drawable>().FrameId),
 				                   Color.White);
 			}
 

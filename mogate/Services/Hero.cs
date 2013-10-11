@@ -55,8 +55,7 @@ namespace mogate
 			Player.Register (new Position (mapGrid.StairDown.X, mapGrid.StairDown.Y));
 			Player.Register (new Execute ());
 			Player.Register (new Drawable (sprites.GetSprite ("hero"),
-			                               new Rectangle (0, 0, 32, 32),
-			                               new Point(mapGrid.StairDown.X*32, mapGrid.StairDown.Y*32)));
+			                               new Vector2(mapGrid.StairDown.X*32, mapGrid.StairDown.Y*32)));
 		}
 
 		private void UpdateHero()
@@ -76,9 +75,12 @@ namespace mogate
 					newPos.X++;
 
 				var mt = mapGrid.GetID (newPos.X, newPos.Y);
-				if (mt != MapGridTypes.ID.Blocked) {
+				if (mt != MapGridTypes.ID.Blocked && newPos != m_player.Get<Position>().MapPos) {
 					var seq = new Sequence ();
-					seq.Add (new MoveSpriteTo (Player, new Vector2(newPos.X*32, newPos.Y*32), 300));
+					var spawn = new Spawn ();
+					spawn.Add(new MoveSpriteTo (Player, new Vector2(newPos.X*32, newPos.Y*32), 300));
+					spawn.Add (new AnimSprite (Player, 300));
+					seq.Add (spawn);
 					seq.Add (new ActionEntity (Player, (_) => {
 						Player.Get<Position> ().MapPos = newPos;
 					}));

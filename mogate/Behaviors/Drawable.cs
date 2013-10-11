@@ -8,16 +8,15 @@ namespace mogate
 	{
 		public Type Behavior { get { return typeof(Drawable); } }
 
-		public Texture2D SpriteSheet;
-		public Rectangle SpriteRect;
+		public SpriteFrame Sprite;
 		public Vector2 DrawPos;
+		public int FrameId;
 
-		public Drawable (Texture2D spriteSheet, Rectangle spriteRect, Point drawPos)
+		public Drawable (SpriteFrame sprite, Vector2 drawPos)
 		{
-			SpriteSheet = spriteSheet;
-			SpriteRect = spriteRect;
-			DrawPos.X = drawPos.X;
-			DrawPos.Y = drawPos.Y;
+			FrameId = 0;
+			Sprite = sprite;
+			DrawPos = drawPos;
 		}
 	}
 }

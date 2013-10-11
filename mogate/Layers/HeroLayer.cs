@@ -28,9 +28,9 @@ namespace mogate
 			var hero = (IHero)Game.Services.GetService (typeof(IHero));
 			var ent = hero.Player;
 
-			m_spriteBatch.Draw (ent.Get<Drawable>().SpriteSheet,
+			m_spriteBatch.Draw (ent.Get<Drawable>().Sprite.Texture,
 			                    ent.Get<Drawable>().DrawPos,
-			                    ent.Get<Drawable>().SpriteRect,
+			                    ent.Get<Drawable>().Sprite.GetFrame(ent.Get<Drawable>().FrameId),
 			                    Color.White);
 
 			for (int i = 0; i < (int)(hero.Player.Get<Health>().HP / 20); i++)
