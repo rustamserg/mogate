@@ -15,20 +15,33 @@ namespace mogate
 	{
 		public Type Behavior { get { return typeof(Execute); } }
 
-		private Queue<IAction> m_actions = new Queue<IAction>();
+		private Dictionary<string, Queue<IAction>> m_actions = new Dictionary<string, Queue<IAction>>();
 
-		public void Start(IAction action)
+		public void Start(IAction action, string tag = "")
 		{
-			m_actions.Enqueue(action);
+			if (!m_actions.ContainsKey (tag))
+				m_actions [tag] = new Queue<IAction> ();
+
+			m_actions[tag].Enqueue(action);
 		}
 
 		public void Update(GameTime gameTime)
 		{
-			if (m_actions.Count == 0)
-				return;
+			var tags = new List<string>(m_actions.Keys);
 
-			if (m_actions.Peek ().Execute (gameTime))
-				m_actions.Dequeue ();
+			foreach (var tag in tags) {
+				var q = m_actions [tag];
+				if (q.Count == 0)
+					continue;
+
+				if (q.Peek ().Execute (gameTime))
+					q.Dequeue ();
+			}
+		}
+
+		public void Cancel(string tag = "")
+		{
+			m_actions.Remove (tag);
 		}
 	}
 }

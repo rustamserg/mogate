@@ -56,6 +56,8 @@ namespace mogate
 			Player.Register (new Execute ());
 			Player.Register (new Drawable (sprites.GetSprite ("hero"), "idle",
 			                               new Vector2(mapGrid.StairDown.X*32, mapGrid.StairDown.Y*32)));
+
+			StartIdle (Player);
 		}
 
 		private void UpdateHero()
@@ -75,18 +77,20 @@ namespace mogate
 					newPos.X++;
 
 				var mt = mapGrid.GetID (newPos.X, newPos.Y);
-				if (mt != MapGridTypes.ID.Blocked && newPos != m_player.Get<Position>().MapPos) {
+				if (mt != MapGridTypes.ID.Blocked && newPos != m_player.Get<Position> ().MapPos) {
 					var seq = new Sequence ();
 					var spawn = new Spawn ();
-					spawn.Add(new MoveSpriteTo (Player, new Vector2(newPos.X*32, newPos.Y*32), 300));
-					spawn.Add (new AnimSprite (Player, 300));
+					spawn.Add (new MoveSpriteTo (Player, new Vector2 (newPos.X * 32, newPos.Y * 32), 300));
+					spawn.Add (new AnimSprite (Player, "move", 300));
 					seq.Add (spawn);
 					seq.Add (new ActionEntity (Player, (_) => {
 						Player.Get<Position> ().MapPos = newPos;
 					}));
 					seq.Add (new ActionEntity (Player, OnEndMove));
-					Player.Get<Execute>().Start(seq);
-					Player.Get<State<HeroState>>().EState = HeroState.Moving;
+
+					Player.Get<Execute> ().Cancel ("idle");
+					Player.Get<Execute> ().Start (seq, "move");
+					Player.Get<State<HeroState>> ().EState = HeroState.Moving;
 				}
 			}
 		}
@@ -100,6 +104,16 @@ namespace mogate
 				var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 				gameState.State = EState.LevelStarting;
 			}
+			StartIdle (hero);
+		}
+
+		private void StartIdle(Entity hero)
+		{
+			var seq = new Sequence ();
+			seq.Add (new AnimSprite (Player, "idle", 600));
+			seq.Add (new ActionEntity (Player, StartIdle));
+
+			Player.Get<Execute> ().Start (seq, "idle");
 			Player.Get<State<HeroState>>().EState = HeroState.Idle;
 		}
 	}
