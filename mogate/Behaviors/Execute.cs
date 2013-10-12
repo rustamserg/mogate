@@ -17,7 +17,13 @@ namespace mogate
 
 		private Dictionary<string, Queue<IAction>> m_actions = new Dictionary<string, Queue<IAction>>();
 
-		public void Start(IAction action, string tag = "")
+		public void AddNew(IAction action, string tag = "")
+		{
+			Cancel (tag);
+			Add (action, tag);
+		}
+
+		public void Add(IAction action, string tag = "")
 		{
 			if (!m_actions.ContainsKey (tag))
 				m_actions [tag] = new Queue<IAction> ();

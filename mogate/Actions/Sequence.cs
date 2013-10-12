@@ -18,9 +18,10 @@ namespace mogate
 			if (m_queue.Count == 0)
 				return true;
 
-			if (m_queue.Peek ().Execute (gameTime))
+			if (m_queue.Peek ().Execute (gameTime)) {
 				m_queue.Dequeue ();
-
+				Execute (gameTime);
+			}
 			return (m_queue.Count == 0);
 		}
 	}

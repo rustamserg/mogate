@@ -130,12 +130,14 @@ namespace mogate
 			if (newPos == hero.Player.Get<Position> ().MapPos) {
 				var seq = new Sequence ();
 				seq.Add (new MoveSpriteTo (monster, new Vector2(newPos.X*32, newPos.Y*32), 500));
-				seq.Add (new AttackEntity (hero.Player, 10));
+				seq.Add (new ActionEntity (hero.Player, (_) => {
+					hero.Player.Get<Health>().HP = Math.Max(0, hero.Player.Get<Health>().HP - 10); 
+				}));
 				seq.Add (new MoveSpriteTo (monster, new Vector2(curPos.X*32, curPos.Y*32), 500));
 				seq.Add (new ActionEntity(monster, (_) => {
 					monster.Get<State<MonsterState>>().EState = MonsterState.Idle;
 				}));
-				monster.Get<Execute> ().Start (seq);
+				monster.Get<Execute> ().Add (seq);
 				monster.Get<State<MonsterState>>().EState = MonsterState.Attacking;
 			} else {
 				var seq = new Sequence ();
@@ -145,7 +147,7 @@ namespace mogate
 				}));
 				seq.Add (new ActionEntity(monster, (_) => {
 					monster.Get<State<MonsterState>>().EState = MonsterState.Idle; }));
-				monster.Get<Execute> ().Start (seq);
+				monster.Get<Execute> ().Add (seq);
 				monster.Get<State<MonsterState>>().EState = MonsterState.Chasing;
 			}
 		}
@@ -166,7 +168,7 @@ namespace mogate
 						seq.Add (new ActionEntity(monster, (_) => {
 							monster.Get<State<MonsterState>>().EState = MonsterState.Idle;
 						}));
-						monster.Get<Execute> ().Start (seq);
+						monster.Get<Execute> ().Add (seq);
 						monster.Get<State<MonsterState>>().EState = MonsterState.Chasing;
 						break;
 					}

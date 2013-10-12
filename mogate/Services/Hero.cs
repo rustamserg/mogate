@@ -88,8 +88,8 @@ namespace mogate
 					}));
 					seq.Add (new ActionEntity (Player, OnEndMove));
 
-					Player.Get<Execute> ().Cancel ("idle");
-					Player.Get<Execute> ().Start (seq, "move");
+					Player.Get<Execute> ().Cancel ("amin_idle");
+					Player.Get<Execute> ().Add (seq, "anim_move");
 					Player.Get<State<HeroState>> ().EState = HeroState.Moving;
 				}
 			}
@@ -109,11 +109,9 @@ namespace mogate
 
 		private void StartIdle(Entity hero)
 		{
-			var seq = new Sequence ();
-			seq.Add (new AnimSprite (Player, "idle", 600));
-			seq.Add (new ActionEntity (Player, StartIdle));
+			var loop = new Loop (new AnimSprite (Player, "idle", 600));
 
-			Player.Get<Execute> ().Start (seq, "idle");
+			Player.Get<Execute> ().AddNew (loop, "amin_idle");
 			Player.Get<State<HeroState>>().EState = HeroState.Idle;
 		}
 	}

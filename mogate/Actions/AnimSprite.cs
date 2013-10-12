@@ -26,8 +26,10 @@ namespace mogate
 				m_entity.Get<Drawable> ().FrameName = m_frameName;
 				m_entity.Get<Drawable> ().FrameId = (int)(t * (m_entity.Get<Drawable> ().FrameCount - 1));
 				return false;
+			} else {
+				m_spent = 0;
+				return true;
 			}
-			return true;
 		}
 	}
 }
