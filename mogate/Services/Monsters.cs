@@ -71,7 +71,7 @@ namespace mogate
 							me.Register (new Position (x, y));
 							me.Register (new Health (100));
 							me.Register (new Execute ());
-							me.Register (new Drawable (sprites.GetSprite("monster"), new Vector2 (x * 32, y * 32)));
+							me.Register (new Drawable (sprites.GetSprite("monster"), "idle", new Vector2 (x * 32, y * 32)));
 							m_monsters.Add (me);
 						}
 					}

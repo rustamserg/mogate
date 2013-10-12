@@ -11,10 +11,24 @@ namespace mogate
 		public SpriteFrame Sprite;
 		public Vector2 DrawPos;
 		public int FrameId;
+		public string FrameName;
 
-		public Drawable (SpriteFrame sprite, Vector2 drawPos)
+		public int FrameCount {
+			get {
+				return Sprite.Frames [FrameName].Count;
+			}
+		}
+
+		public Rectangle DrawRect {
+			get {
+				return Sprite.GetFrame (FrameName, FrameId);
+			}
+		}
+
+		public Drawable (SpriteFrame sprite, string frameName, Vector2 drawPos)
 		{
 			FrameId = 0;
+			FrameName = frameName;
 			Sprite = sprite;
 			DrawPos = drawPos;
 		}

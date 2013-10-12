@@ -54,7 +54,7 @@ namespace mogate
 			Player.Register (new Health (200));
 			Player.Register (new Position (mapGrid.StairDown.X, mapGrid.StairDown.Y));
 			Player.Register (new Execute ());
-			Player.Register (new Drawable (sprites.GetSprite ("hero"),
+			Player.Register (new Drawable (sprites.GetSprite ("hero"), "idle",
 			                               new Vector2(mapGrid.StairDown.X*32, mapGrid.StairDown.Y*32)));
 		}
 

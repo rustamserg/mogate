@@ -27,7 +27,7 @@ namespace mogate
 			foreach (var pt in monsters.GetMonsters()) {
 				m_spriteBatch.Draw(pt.Get<Drawable>().Sprite.Texture,
 				                   pt.Get<Drawable>().DrawPos,
-				                   pt.Get<Drawable>().Sprite.GetFrame(pt.Get<Drawable>().FrameId),
+				                   pt.Get<Drawable>().DrawRect,
 				                   Color.White);
 			}
 

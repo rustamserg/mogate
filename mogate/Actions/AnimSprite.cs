@@ -21,7 +21,7 @@ namespace mogate
 
 			if (m_spent < m_duration) {
 				float t = m_spent / m_duration;
-				m_entity.Get<Drawable> ().FrameId = (int)(t * (m_entity.Get<Drawable> ().Sprite.FrameCount - 1));
+				m_entity.Get<Drawable> ().FrameId = (int)(t * (m_entity.Get<Drawable> ().FrameCount - 1));
 				return false;
 			}
 			return true;

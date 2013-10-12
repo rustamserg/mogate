@@ -6,19 +6,28 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace mogate
 {
-	public struct SpriteFrame
+	public class SpriteFrame
 	{
-		public Texture2D Texture;
-		public Rectangle Rect;
-		public int FrameCount;
-
-		public Rectangle GetFrame(int frameId)
+		public struct Frame
 		{
-			frameId = Math.Min (FrameCount - 1, frameId);
-			var fr = new Rectangle (0, 0, 32, 32);
-			fr.X = Rect.X + frameId * 32;
-			fr.Y = Rect.Y;
-			return fr;
+			public Rectangle Rect;
+			public int Count;
+
+			public Frame(Rectangle r, int c)
+			{
+				Rect = r;
+				Count = c;
+			}
+		};
+
+		public Texture2D Texture;
+		public Dictionary<string, Frame> Frames = new Dictionary<string, Frame>();
+
+		public Rectangle GetFrame(string frameName, int frameId)
+		{
+			var frame = Frames [frameName];
+			frameId = Math.Min (frame.Count - 1, frameId);
+			return new Rectangle (frame.Rect.X + frameId * 32, frame.Rect.Y, 32, 32);
 		}
 	};
 
@@ -38,17 +47,15 @@ namespace mogate
 		protected override void LoadContent ()
 		{
 			var sp = new SpriteFrame ();
-			sp.Rect = new Rectangle (0, 0, 32 * 8, 32 * 2);
-			sp.FrameCount = 8;
 			sp.Texture = Game.Content.Load<Texture2D> ("hero");
+			sp.Frames.Add ("move", new SpriteFrame.Frame (new Rectangle (0, 0, 32 * 8, 32), 8));
+			sp.Frames.Add ("idle", new SpriteFrame.Frame (new Rectangle (0, 32, 32 * 8, 32), 8));
 
 			m_textures ["hero"] = sp;
 
 			sp = new SpriteFrame ();
-			sp.Rect = new Rectangle (0, 0, 32, 32);
-			sp.FrameCount = 1;
 			sp.Texture = Game.Content.Load<Texture2D> ("monster");
-
+			sp.Frames.Add ("idle", new SpriteFrame.Frame (new Rectangle (0, 0, 32, 32), 1));
 			m_textures ["monster"] = sp;
 		}
 

@@ -30,7 +30,7 @@ namespace mogate
 
 			m_spriteBatch.Draw (ent.Get<Drawable>().Sprite.Texture,
 			                    ent.Get<Drawable>().DrawPos,
-			                    ent.Get<Drawable>().Sprite.GetFrame(ent.Get<Drawable>().FrameId),
+			                    ent.Get<Drawable>().DrawRect,
 			                    Color.White);
 
 			for (int i = 0; i < (int)(hero.Player.Get<Health>().HP / 20); i++)
