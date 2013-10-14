@@ -67,6 +67,9 @@
     <Compile Include="Actions\AnimSprite.cs" />
     <Compile Include="Actions\FuncEntity.cs" />
     <Compile Include="Actions\Loop.cs" />
+    <Compile Include="Behaviors\Attack.cs" />
+    <Compile Include="Behaviors\Attackable.cs" />
+    <Compile Include="Actions\Gameplay\AttackEntity.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />
@@ -78,6 +81,7 @@
     <Folder Include="Actions\" />
     <Folder Include="Behaviors\" />
     <Folder Include="Core\" />
+    <Folder Include="Actions\Gameplay\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\ladder.png">

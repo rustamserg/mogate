@@ -70,6 +70,7 @@ namespace mogate
 							me.Register (new State<MonsterState> (MonsterState.Idle));
 							me.Register (new Position (x, y));
 							me.Register (new Health (100));
+							me.Register (new Attack (20));
 							me.Register (new Execute ());
 							me.Register (new Drawable (sprites.GetSprite("monster"), "idle", new Vector2 (x * 32, y * 32)));
 							m_monsters.Add (me);
@@ -130,9 +131,7 @@ namespace mogate
 			if (newPos == hero.Player.Get<Position> ().MapPos) {
 				var seq = new Sequence ();
 				seq.Add (new MoveSpriteTo (monster, new Vector2(newPos.X*32, newPos.Y*32), 500));
-				seq.Add (new ActionEntity (hero.Player, (_) => {
-					hero.Player.Get<Health>().HP = Math.Max(0, hero.Player.Get<Health>().HP - 10); 
-				}));
+				seq.Add (new AttackEntity (monster, hero.Player));
 				seq.Add (new MoveSpriteTo (monster, new Vector2(curPos.X*32, curPos.Y*32), 500));
 				seq.Add (new ActionEntity(monster, (_) => {
 					monster.Get<State<MonsterState>>().EState = MonsterState.Idle;
