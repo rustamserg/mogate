@@ -25,6 +25,10 @@ namespace mogate
 			var monsters = (IMonsters)Game.Services.GetService(typeof(IMonsters));
 
 			foreach (var pt in monsters.GetMonsters()) {
+	
+				if (pt.Get<State<MonsterState>> ().EState == MonsterState.Dead)
+					continue;
+
 				m_spriteBatch.Draw(pt.Get<Drawable>().Sprite.Texture,
 				                   pt.Get<Drawable>().DrawPos,
 				                   pt.Get<Drawable>().DrawRect,

@@ -52,7 +52,8 @@ namespace mogate
 
 			Player.Register (new State<HeroState> (HeroState.Idle));
 			Player.Register (new Health (200));
-			Player.Register (new Attackable ());
+			Player.Register (new Attack (30));
+			Player.Register (new Attackable (OnAttacked));
 			Player.Register (new Position (mapGrid.StairDown.X, mapGrid.StairDown.Y));
 			Player.Register (new Execute ());
 			Player.Register (new Drawable (sprites.GetSprite ("hero"), "idle",
@@ -106,6 +107,11 @@ namespace mogate
 				gameState.State = EState.LevelStarting;
 			}
 			StartIdle (hero);
+		}
+
+		private void OnAttacked(Entity attacker)
+		{
+			attacker.Get<Execute> ().Add (new AttackEntity (Player,	attacker));
 		}
 
 		private void StartIdle(Entity hero)

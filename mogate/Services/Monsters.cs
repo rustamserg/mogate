@@ -71,6 +71,7 @@ namespace mogate
 							me.Register (new Position (x, y));
 							me.Register (new Health (100));
 							me.Register (new Attack (20));
+							me.Register (new Attackable ((attacker) => OnAttacked(me, attacker)));
 							me.Register (new Execute ());
 							me.Register (new Drawable (sprites.GetSprite("monster"), "idle", new Vector2 (x * 32, y * 32)));
 							m_monsters.Add (me);
@@ -134,7 +135,7 @@ namespace mogate
 				seq.Add (new AttackEntity (monster, hero.Player));
 				seq.Add (new MoveSpriteTo (monster, new Vector2(curPos.X*32, curPos.Y*32), 500));
 				seq.Add (new ActionEntity(monster, (_) => {
-					monster.Get<State<MonsterState>>().EState = MonsterState.Idle;
+					TryChangeState(monster, MonsterState.Idle);
 				}));
 				monster.Get<Execute> ().Add (seq);
 				monster.Get<State<MonsterState>>().EState = MonsterState.Attacking;
@@ -145,7 +146,8 @@ namespace mogate
 					monster.Get<Position> ().MapPos = newPos;
 				}));
 				seq.Add (new ActionEntity(monster, (_) => {
-					monster.Get<State<MonsterState>>().EState = MonsterState.Idle; }));
+					TryChangeState(monster, MonsterState.Idle);
+				}));
 				monster.Get<Execute> ().Add (seq);
 				monster.Get<State<MonsterState>>().EState = MonsterState.Chasing;
 			}
@@ -165,7 +167,7 @@ namespace mogate
 							monster.Get<Position> ().MapPos = cell.Pos;
 						}));
 						seq.Add (new ActionEntity(monster, (_) => {
-							monster.Get<State<MonsterState>>().EState = MonsterState.Idle;
+							TryChangeState(monster, MonsterState.Idle);
 						}));
 						monster.Get<Execute> ().Add (seq);
 						monster.Get<State<MonsterState>>().EState = MonsterState.Chasing;
@@ -180,7 +182,18 @@ namespace mogate
 			foreach (var me in m_monsters) {
 				me.Get<Execute> ().Update (gameTime);
 			}
-			m_monsters.RemoveAll (x => x.Get<Health> ().HP == 0);
+		}
+
+		void TryChangeState(Entity monster, MonsterState newState)
+		{
+			if (monster.Get<State<MonsterState>> ().EState != MonsterState.Dead)
+				monster.Get<State<MonsterState>> ().EState = newState;
+		}
+
+		void OnAttacked(Entity monster, Entity attacker)
+		{
+			if (monster.Get<Health> ().HP == 0)
+				monster.Get<State<MonsterState>> ().EState = MonsterState.Dead;
 		}
 	}
 }
