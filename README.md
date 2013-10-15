@@ -26,12 +26,16 @@ Actions itself are divided into two groups:
 1. Generic purpose actions
 2. Gameplay actions
 
+### Generic actions ###
+
 Generic purpose actions mostly designed to organize flow for other actions. For example:
 
 - Sequence - provide queue for set of actions
 - Spawn - allow to run one or more actions at the same time
 - Loop - run other action forever
 - Action - once run a function
+
+### Gameplay actions ###
 
 Gameplay actions are focused on game aspects:
 
@@ -41,6 +45,8 @@ Gameplay actions are focused on game aspects:
 - AttackEntity - implement gameplay attack logic
 
 Using gameplay actions outside of gameplay services allow to identify and isolate gameplay aspects and reuse it in the same way for different entities.
+
+### Example ###
 
 For example we want to move entity to new position with animation:
 
