@@ -76,7 +76,7 @@ For example we want to move entity to new position with animation:
 	Player.Get<Execute> ().AddNew (seq, "movement");
 	Player.Get<State<HeroState>> ().EState = HeroState.Moving;
 
-In example below we use sequence to guarantee order of actions execution and spawn to syncronize animation with sprite movement. Also we use action to change map and state behaviours once visual part of movement flow will be finished.
+In example below we use *Sequence* to guarantee order of actions execution and *Spawn* to syncronize animation with sprite movement. Also we use *ActionEntity* to change map and state behaviours once visual part of movement is finished.
 
 
 
