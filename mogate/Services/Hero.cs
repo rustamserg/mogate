@@ -111,7 +111,8 @@ namespace mogate
 
 		private void OnAttacked(Entity attacker)
 		{
-			attacker.Get<Execute> ().Add (new AttackEntity (Player,	attacker));
+			var effects = (IEffects)Game.Services.GetService (typeof(IEffects));
+			effects.SpawnEffect (Player, "damage", 400);
 		}
 
 		private void StartIdle(Entity hero)

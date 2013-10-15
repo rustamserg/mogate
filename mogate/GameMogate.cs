@@ -43,6 +43,7 @@ namespace mogate
 			var hero = new Hero (this);
 			var items = new Items (this);
 			var sprites = new SpriteSheets (this);
+			var effects = new Effects (this);
 
 			Services.AddService (typeof(IMapGrid), new MapGrid(WIDTH, HEIGHT));
 			Services.AddService (typeof(IItems), items);
@@ -50,17 +51,20 @@ namespace mogate
 			Services.AddService (typeof(IMonsters), monsters);
 			Services.AddService (typeof(IGameState), gameState);
 			Services.AddService (typeof(ISpriteSheets), sprites);
+			Services.AddService (typeof(IEffects), effects);
 
 			Components.Add (sprites);
 			Components.Add (gameState);
 			Components.Add (monsters);
 			Components.Add (hero);
 			Components.Add (items);
+			Components.Add (effects);
 
 			Components.Add (new MapGridLayer(this));
 			Components.Add (new ItemsLayer(this));
 			Components.Add (new MonstersLayer (this));
 			Components.Add (new HeroLayer(this));
+			Components.Add (new EffectsLayer (this));
 
 			base.Initialize ();
 				

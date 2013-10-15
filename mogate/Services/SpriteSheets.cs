@@ -50,13 +50,17 @@ namespace mogate
 			sp.Texture = Game.Content.Load<Texture2D> ("hero");
 			sp.Frames.Add ("move", new SpriteFrame.Frame (new Rectangle (0, 0, 32 * 8, 32), 8));
 			sp.Frames.Add ("idle", new SpriteFrame.Frame (new Rectangle (0, 32, 32 * 8, 32), 8));
-
 			m_textures ["hero"] = sp;
 
 			sp = new SpriteFrame ();
 			sp.Texture = Game.Content.Load<Texture2D> ("monster");
 			sp.Frames.Add ("idle", new SpriteFrame.Frame (new Rectangle (0, 0, 32, 32), 1));
 			m_textures ["monster"] = sp;
+
+			sp = new SpriteFrame ();
+			sp.Texture = Game.Content.Load<Texture2D> ("sword");
+			sp.Frames.Add ("damage", new SpriteFrame.Frame (new Rectangle (0, 0, 32, 32), 1));
+			m_textures ["effects"] = sp;
 		}
 
 		public SpriteFrame GetSprite(string name)

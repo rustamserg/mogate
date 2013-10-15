@@ -65,11 +65,13 @@
     <Compile Include="Behaviors\State.cs" />
     <Compile Include="Actions\Spawn.cs" />
     <Compile Include="Actions\AnimSprite.cs" />
-    <Compile Include="Actions\FuncEntity.cs" />
     <Compile Include="Actions\Loop.cs" />
     <Compile Include="Behaviors\Attack.cs" />
     <Compile Include="Behaviors\Attackable.cs" />
     <Compile Include="Actions\Gameplay\AttackEntity.cs" />
+    <Compile Include="Layers\EffectsLayer.cs" />
+    <Compile Include="Services\Effects.cs" />
+    <Compile Include="Actions\FollowSprite.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />
