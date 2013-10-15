@@ -6,7 +6,7 @@ Mogate is basic maze game prototype developed for testing different approaches f
 Entity framework
 ----------------
 
-Everything in the game is an entity but the entity doesn't use traditional objects oriented hierarchy. Instead of class inheritance programming model the enity can contain one or more behaviours. For example:
+Everything in the game is an entity but the entity doesn't use traditional objects oriented hierarchy. Instead of class inheritance programming model the enity can contain one or more behaviours, like:
 
 - Position - defines entity position in game world
 - Drawable - contains information required to render entity
