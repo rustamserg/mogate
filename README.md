@@ -13,6 +13,19 @@ Everything in the game is an entity but the entity doesn't use traditional objec
 - Attackable - used to attack entity by others
 - Attack - entity uses the attack to take a damage to other attackable entities
 
+For example our player contains next behavior:
+
+	Player.Register (new State<HeroState> (HeroState.Idle));
+	Player.Register (new Health (200));
+	Player.Register (new Attack (30));
+	Player.Register (new Attackable (OnAttacked));
+	Player.Register (new Position (mapGrid.StairDown.X, mapGrid.StairDown.Y));
+	Player.Register (new Execute ());
+	Player.Register (new Drawable (sprites.GetSprite ("hero"), "idle",
+		                           new Vector2(mapGrid.StairDown.X*32, mapGrid.StairDown.Y*32)));
+
+But having only behaviors is noting without logic that enable it. This is a place where actions come to hands.
+
 ## Actions ##
 
 While behaviours are used to describe entity's attributes an action is used to provide a logic on top of behaviours.
