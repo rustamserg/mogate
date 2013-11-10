@@ -6,8 +6,27 @@ using Microsoft.Xna.Framework;
 
 namespace mogate
 {
+
 	public static class MapGenerator
 	{
+		public struct Params
+		{
+			public int RoomMaxSize;
+			public int RoomMinSize;
+			public readonly int RoomsNumber;
+			public int TunnelsCurveWeight;
+			public bool RemoveDeadEnd;
+
+			public Params(IMapGrid map)
+			{
+				RoomMaxSize = 7;
+				RoomMinSize = 5;
+				RoomsNumber = map.Height*map.Width/RoomMaxSize*RoomMinSize;
+				TunnelsCurveWeight = 10;
+				RemoveDeadEnd = false;
+			}
+		}
+
 		enum Direction
 		{
 			Up,
@@ -16,12 +35,12 @@ namespace mogate
 			Left
 		}
 
-		static readonly int m_roomMax = 7;
-		static readonly int m_roomMin = 3;
+		static Params m_params;
 		static Random m_rand = new Random(DateTime.UtcNow.Millisecond);
 
-		public static void Generate (IMapGrid map)
+		public static void Generate (IMapGrid map, Params param)
 		{
+			m_params = param;
 			map.Init();
 
 			// round block
@@ -32,9 +51,8 @@ namespace mogate
 					else
 						map.SetID (x, y, MapGridTypes.ID.Empty);
 
-			// room count
-			int nrooms = (int)((map.Width * map.Height) / (m_roomMax * m_roomMax));
-			PlaceRooms(map, nrooms);
+			// create rooms
+			PlaceRooms(map);
 
 			// create corridors
 			PlaceCorridors(map);
@@ -43,7 +61,8 @@ namespace mogate
 			PlaceStairs(map);
 
 			// remove dead ends
-			RemoveDeadEnds(map);
+			if (m_params.RemoveDeadEnd)
+				RemoveDeadEnds(map);
 
 			// final cleanup
 			Cleanup(map);
@@ -103,7 +122,7 @@ namespace mogate
 			var dirs = new List<Direction>();
 
 			all_dirs.Shuffle();
-			if (m_rand.Next (100) < 10) dirs.Add(last_dir);
+			if (m_rand.Next (100) < m_params.TunnelsCurveWeight) dirs.Add(last_dir);
 			dirs.AddRange(all_dirs.Where(x => !dirs.Contains(x)));
 
 			foreach (var dir in dirs)
@@ -155,8 +174,8 @@ namespace mogate
 			for (int i = 0; i < map.Width/2; i++) {
 				for (int j = 0; j < map.Height/2; j++) {
 					MapGridTypes.Room r = new MapGridTypes.Room(new Point(i*2 + 1, j*2 + 1));
-					r.Width = Math.Max (m_roomMin, m_rand.Next (m_roomMax/2)*2 + 1);
-					r.Height = Math.Max (m_roomMin, m_rand.Next (m_roomMax/2)*2 + 1);
+					r.Width = Math.Max (m_params.RoomMinSize, m_rand.Next (m_params.RoomMaxSize/2)*2 + 1);
+					r.Height = Math.Max (m_params.RoomMinSize, m_rand.Next (m_params.RoomMaxSize/2)*2 + 1);
 
 					bool isFree = true;
 					for (int x = r.Pos.X - 3; x < (r.Pos.X + r.Width + 3) && isFree; x++)
@@ -172,19 +191,25 @@ namespace mogate
 					}
 				}
 			}
+
+			for (int x = 0; x < map.Width; x++)
+				for (int y = 0; y < map.Height; y++)
+					if (map.GetID(x, y) == MapGridTypes.ID.Sill)
+						map.SetID (x, y, MapGridTypes.ID.Empty); 
+
 			return sills;
 		}
 
-		static void PlaceRooms (IMapGrid map, int count)
+		static void PlaceRooms (IMapGrid map)
 		{
-			for (int i = 0; i < count; i++) {
+			for (int i = 0; i < m_params.RoomsNumber; i++) {
 				List<MapGridTypes.Room> sills = GetRooms(map);
 				sills.Shuffle();
 
 				if (sills.Count == 0)
 					continue;
 
-				MapGridTypes.Room r = sills[0];
+				MapGridTypes.Room r = sills.First();
 
 				// alloc room
 				for (int x = r.Pos.X - 1; x < (r.Pos.X + r.Width + 1); x++)
@@ -194,11 +219,6 @@ namespace mogate
 							map.SetID (x, y, MapGridTypes.ID.Blocked);
 						else 
 							map.SetID (x, y, MapGridTypes.ID.Room);
-
-				for (int x = 0; x < map.Width; x++)
-					for (int y = 0; y < map.Height; y++)
-						if (map.GetID(x, y) == MapGridTypes.ID.Sill)
-							map.SetID (x, y, MapGridTypes.ID.Empty); 
 
 				// open room
 				int doors = 2;
