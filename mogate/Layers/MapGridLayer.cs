@@ -31,7 +31,7 @@ namespace mogate
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 			if (gameState.State == EState.LevelStarting) {
 				var mapGrid = (IMapGrid)Game.Services.GetService(typeof(IMapGrid));
-				MapGenerator.Generate(mapGrid);
+				MapGenerator.Generate(mapGrid, new MapGenerator.Params(mapGrid));
 				gameState.State = EState.MapGenerated;
 			}
 		}
