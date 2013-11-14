@@ -18,9 +18,6 @@ namespace mogate
 		GraphicsDeviceManager graphics;
 		//SpriteBatch spriteBatch;
 
-		readonly int WIDTH = 32;
-		readonly int HEIGHT = 23;
-
 		public GameMogate ()
 		{
 			graphics = new GraphicsDeviceManager(this);
@@ -45,7 +42,7 @@ namespace mogate
 			var sprites = new SpriteSheets (this);
 			var effects = new Effects (this);
 
-			Services.AddService (typeof(IMapGrid), new MapGrid(WIDTH, HEIGHT));
+			Services.AddService (typeof(IWorld), new World());
 			Services.AddService (typeof(IItems), items);
 			Services.AddService (typeof(IHero), hero);
 			Services.AddService (typeof(IMonsters), monsters);

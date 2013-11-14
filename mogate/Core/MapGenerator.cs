@@ -101,7 +101,7 @@ namespace mogate
 					if (map.GetID(x, y) != MapGridTypes.ID.Empty)
 						continue;
 
-					OpenCorridor (map, i, j, RandomEnumValue<Direction> ());
+					OpenCorridor (map, i, j, Utils.RandomEnumValue<Direction> ());
 				}
 			}
 
@@ -223,7 +223,7 @@ namespace mogate
 				// open room
 				int doors = 2;
 				while (doors > 0) {
-					Direction dir = RandomEnumValue<Direction>();
+					Direction dir = Utils.RandomEnumValue<Direction>();
 					MapGridTypes.Door door = null;
 					if (dir == Direction.Right) { // right 
 						int y = r.Pos.Y + m_rand.Next(r.Height/2)*2;
@@ -285,7 +285,7 @@ namespace mogate
 			map.StairUp = ends [0];
 			map.StairDown = map.StairUp;
 			foreach (var st in ends) {
-				if (Dist(st, map.StairUp) > Dist(map.StairDown, map.StairUp))
+				if (Utils.Dist(st, map.StairUp) > Utils.Dist(map.StairDown, map.StairUp))
 					map.StairDown = st;
 			}
 			map.SetID (map.StairUp.X, map.StairUp.Y,  MapGridTypes.ID.StairUp);
@@ -326,30 +326,6 @@ namespace mogate
 				if (dir == Direction.Down) CleanupTunnel (map, x, y + 1);
 				if (dir == Direction.Left) CleanupTunnel (map, x - 1, y);
 			}
-		}
-
-		////////////////////////////////////////////////////////////////////
-
-		static T RandomEnumValue<T> ()
-		{
-    		return Enum.GetValues(typeof (T)).Cast<T>().OrderBy(x => m_rand.Next()).FirstOrDefault();
-		}
-
-		public static double Dist (Point from, Point to)
-		{
-			return Math.Sqrt(Math.Pow(from.X  - to.X, 2) + Math.Pow(from.Y - to.Y, 2));
-		}
-
-		static void Shuffle<T>(this IList<T> list)  
-		{  
-   			int n = list.Count;  
-    		while (n > 1) {  
-        		n--;  
-        		int k = m_rand.Next(n + 1);  
-        		T value = list[k];  
-        		list[k] = list[n];  
-        		list[n] = value;  
-    		}  
 		}
 	}
 }

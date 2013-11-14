@@ -23,6 +23,11 @@ namespace mogate
 
 		public override void Draw (GameTime gameTime)
 		{
+			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
+
+			if (gameState.State < EState.HeroCreated)
+				return;
+
 			m_spriteBatch.Begin();
 
 			var hero = (IHero)Game.Services.GetService (typeof(IHero));

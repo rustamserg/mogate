@@ -24,10 +24,14 @@ namespace mogate
 
 		public void Init()
 		{
-			var map = (IMapGrid)Game.Services.GetService(typeof(IMapGrid));
-				m_itemsPos.Clear ();
-				foreach (var room in map.GetRooms()) {
-					m_itemsPos.Add(new Point(room.Pos.X + m_rand.Next(room.Width), room.Pos.Y + m_rand.Next (room.Height)));
+			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
+			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
+
+			var mapGrid = world.GetLevel(gameState.Level);
+
+			m_itemsPos.Clear ();
+			foreach (var room in mapGrid.GetRooms()) {
+				m_itemsPos.Add(new Point(room.Pos.X + m_rand.Next(room.Width), room.Pos.Y + m_rand.Next (room.Height)));
 			}
 		}
 

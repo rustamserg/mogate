@@ -30,7 +30,7 @@ namespace mogate
 		{
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 
-			if (gameState.State == EState.LevelStarted) {
+			if (gameState.State == EState.GameStarted) {
 				UpdateEffects (gameTime);
 			}
 

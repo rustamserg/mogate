@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-
+using System.Xml.Serialization;
 
 namespace mogate
 {
@@ -66,6 +66,7 @@ namespace mogate
 		IEnumerable<MapGridTypes.Room> GetRooms();
 	}
 
+	[Serializable]
 	public class MapGrid : IMapGrid
 	{
 		public int Width { get; set; }

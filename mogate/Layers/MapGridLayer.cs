@@ -29,16 +29,20 @@ namespace mogate
 		public override void Update (GameTime gameTime)
 		{
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
-			if (gameState.State == EState.LevelStarting) {
-				var mapGrid = (IMapGrid)Game.Services.GetService(typeof(IMapGrid));
-				MapGenerator.Generate(mapGrid, new MapGenerator.Params(mapGrid));
-				gameState.State = EState.MapGenerated;
+			if (gameState.State == EState.WorldLoaded) {
+				gameState.State = EState.LevelCreated;
 			}
 		}
 
 		public override void Draw (GameTime gameTime)
 		{
-			var mapGrid = (IMapGrid)Game.Services.GetService (typeof(IMapGrid));
+			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
+			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
+
+			if (gameState.State < EState.LevelCreated)
+				return;
+
+			var mapGrid = world.GetLevel (gameState.Level);
 
 			m_spriteBatch.Begin ();
 

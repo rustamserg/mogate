@@ -40,7 +40,7 @@ namespace mogate
 				gameState.State = EState.MonstersCreated;
 			}
 
-			if (gameState.State == EState.LevelStarted) {
+			if (gameState.State == EState.GameStarted) {
 				foreach (var pt in m_monsters) {
 					UpdateMonster (pt);
 				}
@@ -57,7 +57,10 @@ namespace mogate
 		
 		void Init()
 		{
-			var map = (IMapGrid)Game.Services.GetService(typeof(IMapGrid));
+			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
+			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
+
+			var map = world.GetLevel(gameState.Level);
 			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
 
 			m_monsters.Clear ();
@@ -100,13 +103,17 @@ namespace mogate
 
 		Point TryChasePlayer(Entity monster)
 		{
+			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
+			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
+
+			var map = world.GetLevel(gameState.Level);
+
 			var hero = (IHero)Game.Services.GetService (typeof(IHero));
-			var map = (IMapGrid)Game.Services.GetService (typeof(IMapGrid));
 
 			Point newPos = monster.Get<Position>().MapPos;
 			Point curPos = monster.Get<Position>().MapPos;
 
-			if (MapGenerator.Dist (curPos, hero.Player.Get<Position> ().MapPos) < 6) {
+			if (Utils.Dist (curPos, hero.Player.Get<Position> ().MapPos) < 6) {
 				if (hero.Player.Get<Position> ().MapPos.X < monster.Get<Position> ().MapPos.X)
 					newPos.X--;
 				else if (hero.Player.Get<Position> ().MapPos.X > monster.Get<Position> ().MapPos.X)
@@ -155,11 +162,16 @@ namespace mogate
 
 		void MonsterIdle(Entity monster)
 		{
-			var map = (IMapGrid)Game.Services.GetService (typeof(IMapGrid));
+			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
+			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
+
+			var map = world.GetLevel(gameState.Level);
 			Point curPos = monster.Get<Position>().MapPos;
 
 			if (m_monsters.Any (x => x.Get<Position> ().MapPos == curPos && x != monster)) {
-				foreach (var cell in map.GetBCross(curPos.X, curPos.Y)) {
+				var dirs = new List<MapGridTypes.Cell> (map.GetBCross (curPos.X, curPos.Y));
+				dirs.Shuffle ();
+				foreach (var cell in dirs) {
 					if (cell.Type == MapGridTypes.ID.Tunnel) {
 						var seq = new Sequence ();
 						seq.Add (new MoveSpriteTo (monster, new Vector2(cell.Pos.X*32, cell.Pos.Y*32), 200));

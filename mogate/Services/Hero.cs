@@ -30,12 +30,12 @@ namespace mogate
 		{
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 	
-			if (gameState.State == EState.MapGenerated) {
+			if (gameState.State == EState.LevelCreated) {
 				Init();
 				gameState.State = EState.HeroCreated;
 			}
 
-			if (gameState.State == EState.LevelStarted) {
+			if (gameState.State == EState.GameStarted) {
 				UpdateHero ();
 				Player.Get<Execute> ().Update (gameTime);
 			}
@@ -47,8 +47,11 @@ namespace mogate
 
 		private void Init ()
 		{
-			var mapGrid = (IMapGrid)Game.Services.GetService (typeof(IMapGrid));
 			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
+			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
+			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
+
+			var mapGrid = world.GetLevel(gameState.Level);
 
 			Player.Register (new State<HeroState> (HeroState.Idle));
 			Player.Register (new Health (200));
@@ -64,7 +67,10 @@ namespace mogate
 
 		private void UpdateHero()
 		{
-			var mapGrid = (IMapGrid)Game.Services.GetService (typeof(IMapGrid));
+			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
+			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
+
+			var mapGrid = world.GetLevel(gameState.Level);
 
 			if (Player.Get<State<HeroState>>().EState == HeroState.Idle) {
 				Point newPos = m_player.Get<Position>().MapPos;
@@ -98,12 +104,15 @@ namespace mogate
 		
 		private void OnEndMove(Entity hero)
 		{
-			var mapGrid = (IMapGrid)Game.Services.GetService (typeof(IMapGrid));
+			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
+			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
+
+			var mapGrid = world.GetLevel(gameState.Level);
 
 			var mt = mapGrid.GetID (Player.Get<Position>().MapPos.X, Player.Get<Position>().MapPos.Y);
 			if (mt == MapGridTypes.ID.StairUp) {
-				var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
-				gameState.State = EState.LevelStarting;
+				gameState.Level++;
+				gameState.State = EState.WorldLoaded;
 			}
 			StartIdle (hero);
 		}
