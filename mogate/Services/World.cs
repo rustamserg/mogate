@@ -13,9 +13,6 @@ namespace mogate
 
 	public class World: IWorld, IGameSerializer
 	{
-		readonly int WIDTH = 32;
-		readonly int HEIGHT = 23;
-
 		IMapGrid[] m_levels;
 
 		public void GenerateLevels(int max_levels)
@@ -23,7 +20,7 @@ namespace mogate
 			m_levels = new IMapGrid[max_levels];
 
 			for (int i = 0; i < max_levels; ++i) {
-				var mg = new MapGrid (WIDTH, HEIGHT);
+				var mg = new MapGrid (Globals.WORLD_WIDTH, Globals.WORLD_HEIGHT);
 				MapGenerator.Generate (mg, new MapGenerator.Params (mg));
 				m_levels[i] = mg;
 			}

@@ -27,7 +27,7 @@ namespace mogate
 		{
 			var frame = Frames [frameName];
 			frameId = Math.Min (frame.Count - 1, frameId);
-			return new Rectangle (frame.Rect.X + frameId * 32, frame.Rect.Y, 32, 32);
+			return new Rectangle (frame.Rect.X + frameId * Globals.CELL_WIDTH, frame.Rect.Y, Globals.CELL_WIDTH, Globals.CELL_HEIGHT);
 		}
 	};
 

@@ -44,7 +44,7 @@ namespace mogate
 			var items = (IItems)Game.Services.GetService(typeof(IItems));
 
 			foreach (var pt in items.GetItems()) {
-				Vector2 drawPos = new Vector2(pt.X * 32, pt.Y * 32);
+				Vector2 drawPos = new Vector2(pt.X * Globals.CELL_WIDTH, pt.Y * Globals.CELL_HEIGHT);
 				m_spriteBatch.Draw(m_chest, drawPos, Color.White);
 			}
 

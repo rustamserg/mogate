@@ -74,6 +74,7 @@
     <Compile Include="Actions\FollowSprite.cs" />
     <Compile Include="Services\World.cs" />
     <Compile Include="Core\Utils.cs" />
+    <Compile Include="Core\Globals.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />

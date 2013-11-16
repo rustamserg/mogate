@@ -76,7 +76,7 @@ namespace mogate
 							me.Register (new Attack (20));
 							me.Register (new Attackable ((attacker) => OnAttacked(me, attacker)));
 							me.Register (new Execute ());
-							me.Register (new Drawable (sprites.GetSprite("monster"), "idle", new Vector2 (x * 32, y * 32)));
+							me.Register (new Drawable (sprites.GetSprite("monster"), "idle", new Vector2 (x * Globals.CELL_WIDTH, y * Globals.CELL_HEIGHT)));
 							m_monsters.Add (me);
 						}
 					}
@@ -138,9 +138,9 @@ namespace mogate
 
 			if (newPos == hero.Player.Get<Position> ().MapPos) {
 				var seq = new Sequence ();
-				seq.Add (new MoveSpriteTo (monster, new Vector2(newPos.X*32, newPos.Y*32), 500));
+				seq.Add (new MoveSpriteTo (monster, new Vector2(newPos.X*Globals.CELL_WIDTH, newPos.Y*Globals.CELL_HEIGHT), 500));
 				seq.Add (new AttackEntity (monster, hero.Player));
-				seq.Add (new MoveSpriteTo (monster, new Vector2(curPos.X*32, curPos.Y*32), 500));
+				seq.Add (new MoveSpriteTo (monster, new Vector2(curPos.X*Globals.CELL_WIDTH, curPos.Y*Globals.CELL_HEIGHT), 500));
 				seq.Add (new ActionEntity(monster, (_) => {
 					TryChangeState(monster, MonsterState.Idle);
 				}));
@@ -148,7 +148,7 @@ namespace mogate
 				monster.Get<State<MonsterState>>().EState = MonsterState.Attacking;
 			} else {
 				var seq = new Sequence ();
-				seq.Add (new MoveSpriteTo (monster, new Vector2(newPos.X*32, newPos.Y*32), 600));
+				seq.Add (new MoveSpriteTo (monster, new Vector2(newPos.X*Globals.CELL_WIDTH, newPos.Y*Globals.CELL_HEIGHT), 600));
 				seq.Add (new ActionEntity (monster, (_) => {
 					monster.Get<Position> ().MapPos = newPos;
 				}));
@@ -174,7 +174,7 @@ namespace mogate
 				foreach (var cell in dirs) {
 					if (cell.Type == MapGridTypes.ID.Tunnel) {
 						var seq = new Sequence ();
-						seq.Add (new MoveSpriteTo (monster, new Vector2(cell.Pos.X*32, cell.Pos.Y*32), 200));
+						seq.Add (new MoveSpriteTo (monster, new Vector2(cell.Pos.X*Globals.CELL_WIDTH, cell.Pos.Y*Globals.CELL_HEIGHT), 200));
 						seq.Add (new ActionEntity (monster, (_) => {
 							monster.Get<Position> ().MapPos = cell.Pos;
 						}));

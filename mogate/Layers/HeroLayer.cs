@@ -39,7 +39,7 @@ namespace mogate
 			                    Color.White);
 
 			for (int i = 0; i < (int)(hero.Player.Get<Health>().HP / 20); i++)
-				m_spriteBatch.Draw (m_life, new Vector2 (i * 32, 23 * 32), Color.White);
+				m_spriteBatch.Draw (m_life, new Vector2 (i * Globals.CELL_WIDTH, Globals.WORLD_HEIGHT * Globals.CELL_HEIGHT), Color.White);
 
 			m_spriteBatch.End();
 

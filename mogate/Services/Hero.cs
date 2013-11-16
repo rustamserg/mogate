@@ -60,7 +60,7 @@ namespace mogate
 			Player.Register (new Position (mapGrid.StairDown.X, mapGrid.StairDown.Y));
 			Player.Register (new Execute ());
 			Player.Register (new Drawable (sprites.GetSprite ("hero"), "idle",
-			                               new Vector2(mapGrid.StairDown.X*32, mapGrid.StairDown.Y*32)));
+				new Vector2(mapGrid.StairDown.X*Globals.CELL_WIDTH, mapGrid.StairDown.Y*Globals.CELL_HEIGHT)));
 
 			StartIdle (Player);
 		}
@@ -88,7 +88,7 @@ namespace mogate
 				if (mt != MapGridTypes.ID.Blocked && newPos != m_player.Get<Position> ().MapPos) {
 					var seq = new Sequence ();
 					var spawn = new Spawn ();
-					spawn.Add (new MoveSpriteTo (Player, new Vector2 (newPos.X * 32, newPos.Y * 32), 300));
+					spawn.Add (new MoveSpriteTo (Player, new Vector2 (newPos.X * Globals.CELL_WIDTH, newPos.Y * Globals.CELL_HEIGHT), 300));
 					spawn.Add (new AnimSprite (Player, "move", 300));
 					seq.Add (spawn);
 					seq.Add (new ActionEntity (Player, (_) => {

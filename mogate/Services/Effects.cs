@@ -51,7 +51,7 @@ namespace mogate
 			ent.Register (new Execute ());
 			ent.Register (new State<EffectState> (EffectState.Started));
 			ent.Register (new Drawable (sprites.GetSprite ("effects"), name,
-			                               new Vector2(pos.X * 32, pos.Y * 32)));
+				new Vector2(pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
 
 			var seq = new Sequence ();
 			seq.Add (new AnimSprite(ent, name, duration));
@@ -72,7 +72,7 @@ namespace mogate
 			ent.Register (new Execute ());
 			ent.Register (new State<EffectState> (EffectState.Started));
 			ent.Register (new Drawable (sprites.GetSprite ("effects"), name,
-			                            new Vector2(pos.X * 32, pos.Y * 32)));
+				new Vector2(pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
 
 			var seq = new Sequence ();
 			var spawn = new Spawn ();

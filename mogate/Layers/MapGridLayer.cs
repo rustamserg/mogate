@@ -48,7 +48,7 @@ namespace mogate
 
 			for (int x = 0; x < mapGrid.Width; x++) {
 				for (int y = 0; y < mapGrid.Height; y++) {
-					Vector2 dest = new Vector2(x * 32, y * 32);
+					Vector2 dest = new Vector2(x * Globals.CELL_WIDTH, y * Globals.CELL_HEIGHT);
 
 					m_spriteBatch.Draw (m_tile, dest, Color.White);
 
