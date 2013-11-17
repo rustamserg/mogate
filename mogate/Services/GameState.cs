@@ -25,6 +25,9 @@ namespace mogate
 	{
 		EState State { get; set; }
 		int Level { get; set; }
+
+		void NewGame();
+		void NextLevel();
 	}
 
 	public class GameState : GameComponent, IGameState
@@ -35,21 +38,36 @@ namespace mogate
 		public GameState (Game game) : base(game)
 		{
 			State = EState.WorldLoading;
-			Level = 0;
 		}
 
 		public override void Update (GameTime gameTime)
 		{
 			if (Keyboard.GetState ().IsKeyDown (Keys.Space)) {
-				var world = (IWorld)Game.Services.GetService(typeof(IWorld));
-				world.GenerateLevels (10);
-				State = EState.WorldLoaded;
+				NewGame ();
 			}
+
+			if (State == EState.WorldLoading)
+				NewGame ();
 
 			if (State == EState.MonstersCreated)
 				State = EState.GameStarted;
 
 			base.Update(gameTime);
+		}
+
+		public void NewGame()
+		{
+			var world = (IWorld)Game.Services.GetService(typeof(IWorld));
+			world.GenerateLevels (Globals.MAX_LEVELS);
+
+			Level = 0;
+			State = EState.WorldLoaded;
+		}
+
+		public void NextLevel()
+		{
+			Level = Math.Min (Level + 1, Globals.MAX_LEVELS - 1);
+			State = EState.WorldLoaded;
 		}
 	}
 }

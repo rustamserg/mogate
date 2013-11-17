@@ -9,6 +9,8 @@ namespace mogate
 
 		public static readonly int CELL_WIDTH = 32;
 		public static readonly int CELL_HEIGHT = 32;
+
+		public static readonly int MAX_LEVELS = 10;
 	}
 }
 

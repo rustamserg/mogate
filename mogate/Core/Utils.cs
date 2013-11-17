@@ -24,12 +24,19 @@ namespace mogate
 			int n = list.Count;  
 			while (n > 1) {  
 				n--;  
-				int k = m_rand.Next(n + 1);  
+				int k = m_rand.Next(n + 1);
 				T value = list[k];  
 				list[k] = list[n];  
 				list[n] = value;  
 			}  
 		}
+
+		public static Rectangle RectangleFromString(string rect)
+		{
+			// convert {{x, y}, {w, h}} to rect
+			string parsed = rect.Replace ("{", "").Replace ("}", "");
+			string[] dt = parsed.Split (',');
+			return new Rectangle (int.Parse (dt [0]), int.Parse (dt [1]), int.Parse (dt [2]), int.Parse (dt [3]));
+		}
 	}
 }
-

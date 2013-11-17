@@ -1,4 +1,5 @@
 using System;
+using System.Xml;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -46,10 +47,18 @@ namespace mogate
 
 		protected override void LoadContent ()
 		{
+			var stream = TitleContainer.OpenStream(@"Content\hero.plist");
+			PList pinfo = new PList (stream);
+
 			var sp = new SpriteFrame ();
 			sp.Texture = Game.Content.Load<Texture2D> ("hero");
-			sp.Frames.Add ("move", new SpriteFrame.Frame (new Rectangle (0, 0, 32 * 8, 32), 8));
-			sp.Frames.Add ("idle", new SpriteFrame.Frame (new Rectangle (0, 32, 32 * 8, 32), 8));
+
+			PList frames = pinfo ["frames"] as PList;
+			foreach (var frmName in frames.Keys) {
+				PList frame = frames [frmName] as PList;
+				string texRect = frame ["textureRect"] as string;
+				sp.Frames.Add (frmName, new SpriteFrame.Frame(Utils.RectangleFromString (texRect), 8));
+			}
 			m_textures ["hero"] = sp;
 
 			sp = new SpriteFrame ();

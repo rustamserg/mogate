@@ -59,7 +59,7 @@ namespace mogate
 			Player.Register (new Attackable (OnAttacked));
 			Player.Register (new Position (mapGrid.StairDown.X, mapGrid.StairDown.Y));
 			Player.Register (new Execute ());
-			Player.Register (new Drawable (sprites.GetSprite ("hero"), "idle",
+			Player.Register (new Drawable (sprites.GetSprite ("hero"), "hero_idle",
 				new Vector2(mapGrid.StairDown.X*Globals.CELL_WIDTH, mapGrid.StairDown.Y*Globals.CELL_HEIGHT)));
 
 			StartIdle (Player);
@@ -89,7 +89,7 @@ namespace mogate
 					var seq = new Sequence ();
 					var spawn = new Spawn ();
 					spawn.Add (new MoveSpriteTo (Player, new Vector2 (newPos.X * Globals.CELL_WIDTH, newPos.Y * Globals.CELL_HEIGHT), 300));
-					spawn.Add (new AnimSprite (Player, "move", 300));
+					spawn.Add (new AnimSprite (Player, "hero_move", 300));
 					seq.Add (spawn);
 					seq.Add (new ActionEntity (Player, (_) => {
 						Player.Get<Position> ().MapPos = newPos;
@@ -111,8 +111,7 @@ namespace mogate
 
 			var mt = mapGrid.GetID (Player.Get<Position>().MapPos.X, Player.Get<Position>().MapPos.Y);
 			if (mt == MapGridTypes.ID.StairUp) {
-				gameState.Level++;
-				gameState.State = EState.WorldLoaded;
+				gameState.NextLevel ();
 			}
 			StartIdle (hero);
 		}
@@ -125,7 +124,7 @@ namespace mogate
 
 		private void StartIdle(Entity hero)
 		{
-			var loop = new Loop (new AnimSprite (Player, "idle", 600));
+			var loop = new Loop (new AnimSprite (Player, "hero_idle", 600));
 
 			Player.Get<Execute> ().AddNew (loop, "movement");
 			Player.Get<State<HeroState>>().EState = HeroState.Idle;
