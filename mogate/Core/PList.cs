@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Xml;
 using System.IO;
 
+// Copied from great arcticle
+// http://www.codeproject.com/Tips/406235/A-Simple-PList-Parser-in-Csharp
+
 namespace mogate
 {
 	public class PList : Dictionary<string, dynamic>
@@ -40,19 +43,7 @@ namespace mogate
 				dict[key.InnerText] = ParseValue(val);
 			}
 		}
-
-		private List<dynamic> ParseArray(XmlNodeList elements)
-		{
-			List<dynamic> list = new List<dynamic>();
-			/*foreach (XmlNode e in elements)
-			{
-				dynamic one = ParseValue(e);
-				list.Add(one);
-			}*/
-
-			return list;
-		}
-
+		
 		private dynamic ParseValue(XmlNode val)
 		{
 			switch (val.Name.ToString ()) {
@@ -71,8 +62,7 @@ namespace mogate
 				Parse (plist, val.ChildNodes);
 				return plist;
 			case "array":
-				List<dynamic> list = ParseArray (val.ChildNodes);
-				return list;
+				return new List<dynamic>();
 			default:
 				throw new ArgumentException ("Unsupported");
 			}
