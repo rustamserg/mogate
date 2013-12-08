@@ -31,10 +31,10 @@ namespace mogate
 			if (m_spent < m_duration) {
 				float t = m_spent / m_duration;
 				m_entity.Get<Drawable> ().Sprite = m_sprite;
-				m_entity.Get<Drawable> ().FrameId = (int)(t * (m_entity.Get<Drawable> ().Sprite.Frames - 1));
+				m_entity.Get<Drawable> ().FrameId = (int)(t * m_entity.Get<Drawable> ().Sprite.Frames);
 				return false;
 			} else {
-				m_spent = 0;
+				m_spent = (int)(m_spent - m_duration);
 				return true;
 			}
 		}

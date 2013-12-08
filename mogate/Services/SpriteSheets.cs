@@ -12,15 +12,17 @@ namespace mogate
 		public Texture2D Texture { get; private set; }
 		public Rectangle Rect { get; private set; }
 		public int Frames { get; private set; }
+		public string Name { get; private set; }
 
-		public Sprite2D(Texture2D t, Rectangle r, int f)
+		public Sprite2D(string n, Texture2D t, Rectangle r, int f)
 		{
 			Texture = t;
 			Rect = r;
 			Frames = f;
+			Name = n;
 		}
 
-		public Sprite2D(Texture2D t, Rectangle r) : this(t, r, r.Width / Globals.CELL_WIDTH) {}
+		public Sprite2D(string n, Texture2D t, Rectangle r) : this(n, t, r, r.Width / Globals.CELL_WIDTH) {}
 
 		public Rectangle GetFrameRect(int frameId)
 		{
@@ -52,7 +54,7 @@ namespace mogate
 			foreach (var frmName in frames.Keys) {
 				PList frame = frames [frmName] as PList;
 				string texRect = frame ["textureRect"] as string;
-				var sp = new Sprite2D (texture, Utils.RectangleFromString (texRect));
+				var sp = new Sprite2D (frmName, texture, Utils.RectangleFromString (texRect));
 				m_sprites.Add (frmName, sp);
 			}
 		}

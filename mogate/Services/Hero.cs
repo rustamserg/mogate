@@ -109,7 +109,7 @@ namespace mogate
 		private void DoAttack(Point attackTo)
 		{
 			var effects = (IEffects)Game.Services.GetService (typeof(IEffects));
-			effects.SpawnEffect (attackTo, "effects_damage", 100);
+			effects.SpawnEffect (attackTo, "items_sword", 100);
 
 			var monsters = (IMonsters)Game.Services.GetService (typeof(IMonsters));
 
