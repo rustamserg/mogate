@@ -9,7 +9,6 @@ namespace mogate
 {
 	public class ItemsLayer : DrawableGameComponent
 	{
-		Texture2D m_chest;
 		SpriteBatch m_spriteBatch;
 
 
@@ -20,8 +19,6 @@ namespace mogate
 		protected override void LoadContent ()
 		{
 			m_spriteBatch = new SpriteBatch (Game.GraphicsDevice);
-
-			m_chest = Game.Content.Load<Texture2D> ("bochka");
 		}
 
 		public override void Update (GameTime gameTime)
@@ -45,7 +42,7 @@ namespace mogate
 
 			foreach (var pt in items.GetItems()) {
 				Vector2 drawPos = new Vector2(pt.X * Globals.CELL_WIDTH, pt.Y * Globals.CELL_HEIGHT);
-				m_spriteBatch.Draw(m_chest, drawPos, Color.White);
+				//m_spriteBatch.Draw(m_chest, drawPos, Color.White);
 			}
 
 			m_spriteBatch.End ();

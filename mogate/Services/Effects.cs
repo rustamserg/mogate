@@ -15,7 +15,7 @@ namespace mogate
 	{
 		IEnumerable<Entity> GetEffects();
 		void SpawnEffect (Point pos, string name, float duration);
-		void SpawnEffect (Entity entity, string name, float duration);
+		void AttachEffect (Entity entity, string name, float duration);
 	};
 
 	public class Effects : GameComponent, IEffects
@@ -50,11 +50,11 @@ namespace mogate
 			var ent = new Entity ();
 			ent.Register (new Execute ());
 			ent.Register (new State<EffectState> (EffectState.Started));
-			ent.Register (new Drawable (sprites.GetSprite ("effects"), name,
+			ent.Register (new Drawable (sprites.GetSprite (name),
 				new Vector2(pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
 
 			var seq = new Sequence ();
-			seq.Add (new AnimSprite(ent, name, duration));
+			seq.Add (new AnimSprite(ent, duration));
 			seq.Add (new ActionEntity (ent, (_) => {
 				ent.Get<State<EffectState>> ().EState = EffectState.Finished;
 			}));
@@ -63,7 +63,7 @@ namespace mogate
 			m_effects.Add (ent);
 		}
 
-		public void SpawnEffect(Entity entity, string name, float duration)
+		public void AttachEffect(Entity entity, string name, float duration)
 		{
 			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
 			var pos = entity.Get<Position> ().MapPos;
@@ -71,13 +71,13 @@ namespace mogate
 			var ent = new Entity ();
 			ent.Register (new Execute ());
 			ent.Register (new State<EffectState> (EffectState.Started));
-			ent.Register (new Drawable (sprites.GetSprite ("effects"), name,
+			ent.Register (new Drawable (sprites.GetSprite (name),
 				new Vector2(pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
 
 			var seq = new Sequence ();
 			var spawn = new Spawn ();
 
-			spawn.Add (new AnimSprite(ent, name, duration));
+			spawn.Add (new AnimSprite(ent, duration));
 			spawn.Add (new FollowSprite (ent, entity, duration));
 
 			seq.Add (spawn);

@@ -7,39 +7,36 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace mogate
 {
-	public class SpriteFrame
+	public class Sprite2D
 	{
-		public struct Frame
+		public Texture2D Texture { get; private set; }
+		public Rectangle Rect { get; private set; }
+		public int Frames { get; private set; }
+
+		public Sprite2D(Texture2D t, Rectangle r, int f)
 		{
-			public Rectangle Rect;
-			public int Count;
+			Texture = t;
+			Rect = r;
+			Frames = f;
+		}
 
-			public Frame(Rectangle r, int c)
-			{
-				Rect = r;
-				Count = c;
-			}
-		};
+		public Sprite2D(Texture2D t, Rectangle r) : this(t, r, r.Width / Globals.CELL_WIDTH) {}
 
-		public Texture2D Texture;
-		public Dictionary<string, Frame> Frames = new Dictionary<string, Frame>();
-
-		public Rectangle GetFrame(string frameName, int frameId)
+		public Rectangle GetFrameRect(int frameId)
 		{
-			var frame = Frames [frameName];
-			frameId = Math.Min (frame.Count - 1, frameId);
-			return new Rectangle (frame.Rect.X + frameId * Globals.CELL_WIDTH, frame.Rect.Y, Globals.CELL_WIDTH, Globals.CELL_HEIGHT);
+			frameId = Math.Min (Frames - 1, frameId);
+			return new Rectangle (Rect.X + frameId * Globals.CELL_WIDTH, Rect.Y, Globals.CELL_WIDTH, Globals.CELL_HEIGHT);
 		}
 	};
 
 	public interface ISpriteSheets
 	{
-		SpriteFrame GetSprite (string name);
+		Sprite2D GetSprite (string name);
 	};
 
 	public class SpriteSheets : DrawableGameComponent, ISpriteSheets
 	{
-		Dictionary<string, SpriteFrame> m_textures = new Dictionary<string, SpriteFrame>();
+		Dictionary<string, Sprite2D> m_sprites = new Dictionary<string, Sprite2D>();
 
 		public SpriteSheets (Game game) : base(game)
 		{
@@ -47,34 +44,22 @@ namespace mogate
 
 		protected override void LoadContent ()
 		{
-			var stream = TitleContainer.OpenStream(@"Content\hero.plist");
+			var texture = Game.Content.Load<Texture2D> ("sprites");
+			var stream = TitleContainer.OpenStream(@"Content\sprites.plist");
 			PList pinfo = new PList (stream);
-
-			var sp = new SpriteFrame ();
-			sp.Texture = Game.Content.Load<Texture2D> ("hero");
 
 			PList frames = pinfo ["frames"] as PList;
 			foreach (var frmName in frames.Keys) {
 				PList frame = frames [frmName] as PList;
 				string texRect = frame ["textureRect"] as string;
-				sp.Frames.Add (frmName, new SpriteFrame.Frame(Utils.RectangleFromString (texRect), 8));
+				var sp = new Sprite2D (texture, Utils.RectangleFromString (texRect));
+				m_sprites.Add (frmName, sp);
 			}
-			m_textures ["hero"] = sp;
-
-			sp = new SpriteFrame ();
-			sp.Texture = Game.Content.Load<Texture2D> ("monster");
-			sp.Frames.Add ("idle", new SpriteFrame.Frame (new Rectangle (0, 0, 32, 32), 1));
-			m_textures ["monster"] = sp;
-
-			sp = new SpriteFrame ();
-			sp.Texture = Game.Content.Load<Texture2D> ("sword");
-			sp.Frames.Add ("damage", new SpriteFrame.Frame (new Rectangle (0, 0, 32, 32), 1));
-			m_textures ["effects"] = sp;
 		}
 
-		public SpriteFrame GetSprite(string name)
+		public Sprite2D GetSprite(string name)
 		{
-			return m_textures [name];
+			return m_sprites [name];
 		}
 	}
 }

@@ -76,7 +76,7 @@ namespace mogate
 							me.Register (new Attack (20));
 							me.Register (new Attackable ((attacker) => OnAttacked(me, attacker)));
 							me.Register (new Execute ());
-							me.Register (new Drawable (sprites.GetSprite("monster"), "idle", new Vector2 (x * Globals.CELL_WIDTH, y * Globals.CELL_HEIGHT)));
+							me.Register (new Drawable (sprites.GetSprite("monsters_mob"), new Vector2 (x * Globals.CELL_WIDTH, y * Globals.CELL_HEIGHT)));
 							m_monsters.Add (me);
 						}
 					}
@@ -204,6 +204,9 @@ namespace mogate
 
 		void OnAttacked(Entity monster, Entity attacker)
 		{
+			var effects = (IEffects)Game.Services.GetService (typeof(IEffects));
+			effects.AttachEffect (monster, "effects_damage", 400);
+
 			if (monster.Get<Health> ().HP == 0)
 				monster.Get<State<MonsterState>> ().EState = MonsterState.Dead;
 		}

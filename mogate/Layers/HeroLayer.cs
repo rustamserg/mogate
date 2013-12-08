@@ -8,7 +8,6 @@ namespace mogate
 {
 	public class HeroLayer : DrawableGameComponent
 	{
-		Texture2D m_life;
 		SpriteBatch m_spriteBatch;
 
 		public HeroLayer (Game game) : base(game)
@@ -18,7 +17,6 @@ namespace mogate
 		protected override void LoadContent ()
 		{
 			m_spriteBatch = new SpriteBatch(Game.GraphicsDevice);
-			m_life = Game.Content.Load<Texture2D> ("life");
 		}
 
 		public override void Draw (GameTime gameTime)
@@ -38,8 +36,8 @@ namespace mogate
 			                    ent.Get<Drawable>().DrawRect,
 			                    Color.White);
 
-			for (int i = 0; i < (int)(hero.Player.Get<Health>().HP / 20); i++)
-				m_spriteBatch.Draw (m_life, new Vector2 (i * Globals.CELL_WIDTH, Globals.WORLD_HEIGHT * Globals.CELL_HEIGHT), Color.White);
+			/*for (int i = 0; i < (int)(hero.Player.Get<Health>().HP / 20); i++)
+				m_spriteBatch.Draw (m_life, new Vector2 (i * Globals.CELL_WIDTH, Globals.WORLD_HEIGHT * Globals.CELL_HEIGHT), Color.White);*/
 
 			m_spriteBatch.End();
 

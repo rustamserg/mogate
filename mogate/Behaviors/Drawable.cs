@@ -8,27 +8,19 @@ namespace mogate
 	{
 		public Type Behavior { get { return typeof(Drawable); } }
 
-		public SpriteFrame Sprite;
+		public Sprite2D Sprite;
 		public Vector2 DrawPos;
 		public int FrameId;
-		public string FrameName;
-
-		public int FrameCount {
-			get {
-				return Sprite.Frames [FrameName].Count;
-			}
-		}
 
 		public Rectangle DrawRect {
 			get {
-				return Sprite.GetFrame (FrameName, FrameId);
+				return Sprite.GetFrameRect (FrameId);
 			}
 		}
 
-		public Drawable (SpriteFrame sprite, string frameName, Vector2 drawPos)
+		public Drawable (Sprite2D sprite, Vector2 drawPos)
 		{
 			FrameId = 0;
-			FrameName = frameName;
 			Sprite = sprite;
 			DrawPos = drawPos;
 		}

@@ -7,9 +7,9 @@ namespace mogate
 {
 	public class MapGridLayer: DrawableGameComponent
 	{
-		Texture2D m_wall;
-		Texture2D m_tile;
-		Texture2D m_ladder;
+		Sprite2D m_wall;
+		Sprite2D m_tile;
+		Sprite2D m_ladder;
 		SpriteBatch m_spriteBatch;
 
 
@@ -21,9 +21,10 @@ namespace mogate
 		{
 			m_spriteBatch = new SpriteBatch(Game.GraphicsDevice);
 
-			m_tile = Game.Content.Load<Texture2D>("tile");
-			m_wall = Game.Content.Load<Texture2D>("wall");
-			m_ladder = Game.Content.Load<Texture2D>("ladder");
+			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
+			m_tile = sprites.GetSprite("grid_tile");
+			m_wall = sprites.GetSprite("grid_wall");
+			m_ladder = sprites.GetSprite("grid_ladder");
 		}
 
 		public override void Update (GameTime gameTime)
@@ -50,13 +51,13 @@ namespace mogate
 				for (int y = 0; y < mapGrid.Height; y++) {
 					Vector2 dest = new Vector2(x * Globals.CELL_WIDTH, y * Globals.CELL_HEIGHT);
 
-					m_spriteBatch.Draw (m_tile, dest, Color.White);
+					m_spriteBatch.Draw (m_tile.Texture, dest, m_tile.GetFrameRect (0), Color.White);
 
 					var id = mapGrid.GetID (x, y);
 					if (id == MapGridTypes.ID.Blocked)
-						m_spriteBatch.Draw (m_wall, dest, Color.White);
+						m_spriteBatch.Draw (m_wall.Texture, dest, m_wall.GetFrameRect (0), Color.White);
 					else if (id == MapGridTypes.ID.StairDown || id == MapGridTypes.ID.StairUp)
-						m_spriteBatch.Draw (m_ladder, dest, Color.White);
+						m_spriteBatch.Draw (m_ladder.Texture, dest, m_ladder.GetFrameRect (0), Color.White);
 				}
 			}
 

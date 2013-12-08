@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
@@ -59,7 +60,7 @@ namespace mogate
 			Player.Register (new Attackable (OnAttacked));
 			Player.Register (new Position (mapGrid.StairDown.X, mapGrid.StairDown.Y));
 			Player.Register (new Execute ());
-			Player.Register (new Drawable (sprites.GetSprite ("hero"), "hero_idle",
+			Player.Register (new Drawable (sprites.GetSprite ("hero_idle"),
 				new Vector2(mapGrid.StairDown.X*Globals.CELL_WIDTH, mapGrid.StairDown.Y*Globals.CELL_HEIGHT)));
 
 			StartIdle (Player);
@@ -69,6 +70,7 @@ namespace mogate
 		{
 			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
+			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
 
 			var mapGrid = world.GetLevel(gameState.Level);
 
@@ -83,13 +85,15 @@ namespace mogate
 					newPos.X--;
 				else if (Keyboard.GetState ().IsKeyDown (Keys.Right))
 					newPos.X++;
+				else if (Keyboard.GetState ().IsKeyDown (Keys.A))
+					DoAttack (new Point (newPos.X + 1, newPos.Y));
 
 				var mt = mapGrid.GetID (newPos.X, newPos.Y);
 				if (mt != MapGridTypes.ID.Blocked && newPos != m_player.Get<Position> ().MapPos) {
 					var seq = new Sequence ();
 					var spawn = new Spawn ();
 					spawn.Add (new MoveSpriteTo (Player, new Vector2 (newPos.X * Globals.CELL_WIDTH, newPos.Y * Globals.CELL_HEIGHT), 300));
-					spawn.Add (new AnimSprite (Player, "hero_move", 300));
+					spawn.Add (new AnimSprite (Player, sprites.GetSprite("hero_move"), 300));
 					seq.Add (spawn);
 					seq.Add (new ActionEntity (Player, (_) => {
 						Player.Get<Position> ().MapPos = newPos;
@@ -99,6 +103,19 @@ namespace mogate
 					Player.Get<Execute> ().AddNew (seq, "movement");
 					Player.Get<State<HeroState>> ().EState = HeroState.Moving;
 				}
+			}
+		}
+
+		private void DoAttack(Point attackTo)
+		{
+			var effects = (IEffects)Game.Services.GetService (typeof(IEffects));
+			effects.SpawnEffect (attackTo, "effects_damage", 100);
+
+			var monsters = (IMonsters)Game.Services.GetService (typeof(IMonsters));
+
+			var monster = monsters.GetMonsters ().FirstOrDefault (m => m.Get<Position> ().MapPos == attackTo);
+			if (monster != default(Entity)) {
+				Player.Get<Execute> ().Add (new AttackEntity (Player, monster));
 			}
 		}
 		
@@ -119,12 +136,13 @@ namespace mogate
 		private void OnAttacked(Entity attacker)
 		{
 			var effects = (IEffects)Game.Services.GetService (typeof(IEffects));
-			effects.SpawnEffect (Player, "damage", 400);
+			effects.AttachEffect (Player, "effects_damage", 400);
 		}
 
 		private void StartIdle(Entity hero)
 		{
-			var loop = new Loop (new AnimSprite (Player, "hero_idle", 600));
+			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
+			var loop = new Loop (new AnimSprite (Player, sprites.GetSprite("hero_idle"), 600));
 
 			Player.Get<Execute> ().AddNew (loop, "movement");
 			Player.Get<State<HeroState>>().EState = HeroState.Idle;

@@ -7,14 +7,21 @@ namespace mogate
 	{
 		Entity m_entity;
 		float m_duration;
-		string m_frameName;
 		int m_spent;
+		Sprite2D m_sprite;
 
-		public AnimSprite (Entity entity, string frameName, float duration)
+		public AnimSprite (Entity entity, Sprite2D sprite, float duration)
 		{
 			m_entity = entity;
 			m_duration = duration;
-			m_frameName = frameName;
+			m_sprite = sprite;
+		}
+
+		public AnimSprite (Entity entity, float duration)
+		{
+			m_entity = entity;
+			m_duration = duration;
+			m_sprite = m_entity.Get<Drawable> ().Sprite;
 		}
 
 		public bool Execute(GameTime gameTime)
@@ -23,8 +30,8 @@ namespace mogate
 
 			if (m_spent < m_duration) {
 				float t = m_spent / m_duration;
-				m_entity.Get<Drawable> ().FrameName = m_frameName;
-				m_entity.Get<Drawable> ().FrameId = (int)(t * (m_entity.Get<Drawable> ().FrameCount - 1));
+				m_entity.Get<Drawable> ().Sprite = m_sprite;
+				m_entity.Get<Drawable> ().FrameId = (int)(t * (m_entity.Get<Drawable> ().Sprite.Frames - 1));
 				return false;
 			} else {
 				m_spent = 0;
