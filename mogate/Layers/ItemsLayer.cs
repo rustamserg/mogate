@@ -10,6 +10,7 @@ namespace mogate
 	public class ItemsLayer : DrawableGameComponent
 	{
 		SpriteBatch m_spriteBatch;
+		Sprite2D m_barrel;
 
 
 		public ItemsLayer (Game game) : base(game)
@@ -19,6 +20,9 @@ namespace mogate
 		protected override void LoadContent ()
 		{
 			m_spriteBatch = new SpriteBatch (Game.GraphicsDevice);
+
+			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
+			m_barrel = sprites.GetSprite ("items_barrel");
 		}
 
 		public override void Update (GameTime gameTime)
@@ -41,8 +45,8 @@ namespace mogate
 			var items = (IItems)Game.Services.GetService(typeof(IItems));
 
 			foreach (var pt in items.GetItems()) {
-				Vector2 drawPos = new Vector2(pt.X * Globals.CELL_WIDTH, pt.Y * Globals.CELL_HEIGHT);
-				//m_spriteBatch.Draw(m_chest, drawPos, Color.White);
+				var drawPos = new Vector2(pt.X * Globals.CELL_WIDTH, pt.Y * Globals.CELL_HEIGHT);
+				m_spriteBatch.Draw(m_barrel.Texture, drawPos, m_barrel.GetFrameRect(0), Color.White);
 			}
 
 			m_spriteBatch.End ();
