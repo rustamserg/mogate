@@ -21,6 +21,7 @@ namespace mogate
 	public class Hero : GameComponent, IHero
 	{
 		Entity m_player;
+		Point m_toMove;
 
 		public Hero (Game game) : base(game)
 		{
@@ -63,6 +64,7 @@ namespace mogate
 			Player.Register (new Drawable (sprites.GetSprite ("hero_idle"),
 				new Vector2(mapGrid.StairDown.X*Globals.CELL_WIDTH, mapGrid.StairDown.Y*Globals.CELL_HEIGHT)));
 
+			m_toMove = mapGrid.StairDown;
 			StartIdle (Player);
 		}
 
@@ -77,15 +79,21 @@ namespace mogate
 			if (Player.Get<State<HeroState>>().EState == HeroState.Idle) {
 				Point newPos = m_player.Get<Position>().MapPos;
 
-				if (Keyboard.GetState ().IsKeyDown (Keys.Up))
-					newPos.Y--;
-				else if (Keyboard.GetState ().IsKeyDown (Keys.Down))
-					newPos.Y++;
-				else if (Keyboard.GetState ().IsKeyDown (Keys.Left))
-					newPos.X--;
-				else if (Keyboard.GetState ().IsKeyDown (Keys.Right))
+				var ms = Mouse.GetState ();
+				if (ms.LeftButton == ButtonState.Pressed) {
+					m_toMove = mapGrid.ScreenToWorld (ms.X, ms.Y);						
+				}
+
+				if (newPos.X < m_toMove.X)
 					newPos.X++;
-				else if (Keyboard.GetState ().IsKeyDown (Keys.A))
+				if (newPos.X > m_toMove.X)
+					newPos.X--;
+				if (newPos.Y < m_toMove.Y)
+					newPos.Y++;
+				if (newPos.Y > m_toMove.Y)
+					newPos.Y--;
+
+				if (Keyboard.GetState ().IsKeyDown (Keys.A))
 					DoAttack (new Point (newPos.X + 1, newPos.Y));
 
 				var mt = mapGrid.GetID (newPos.X, newPos.Y);

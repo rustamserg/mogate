@@ -61,6 +61,7 @@ namespace mogate
 		void SetID(int x, int y, MapGridTypes.ID id);
 		IEnumerable<MapGridTypes.Cell> GetBBox (int x, int y);
 		IEnumerable<MapGridTypes.Cell> GetBCross (int x, int y);
+		Point ScreenToWorld (int x, int y);
 
 		void AddRoom(MapGridTypes.Room room);
 		IEnumerable<MapGridTypes.Room> GetRooms();
@@ -143,6 +144,11 @@ namespace mogate
 			box.Add (new MapGridTypes.Cell(new Point(x, y + 1), GetID (x, y + 1)));
 
 			return box;
+		}
+
+		public Point ScreenToWorld (int x, int y)
+		{
+			return new Point(x / Globals.CELL_WIDTH,  y / Globals.CELL_HEIGHT);
 		}
 	}
 }
