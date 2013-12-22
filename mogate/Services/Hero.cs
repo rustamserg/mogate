@@ -57,7 +57,7 @@ namespace mogate
 
 			Player.Register (new State<HeroState> (HeroState.Idle));
 			Player.Register (new Health (200));
-			Player.Register (new Attack (30));
+			Player.Register (new Attack (10));
 			Player.Register (new Attackable (OnAttacked));
 			Player.Register (new Position (mapGrid.StairDown.X, mapGrid.StairDown.Y));
 			Player.Register (new Execute ());
@@ -73,38 +73,49 @@ namespace mogate
 			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
+			var effects = (IEffects)Game.Services.GetService (typeof(IEffects));
 
 			var mapGrid = world.GetLevel(gameState.Level);
 
-			if (Player.Get<State<HeroState>>().EState == HeroState.Idle) {
-				Point newPos = m_player.Get<Position>().MapPos;
+			var ms = Mouse.GetState ();
+			var mapPos = m_player.Get<Position>().MapPos;
 
-				var ms = Mouse.GetState ();
-				if (ms.LeftButton == ButtonState.Pressed) {
-					m_toMove = mapGrid.ScreenToWorld (ms.X, ms.Y);						
+			if (ms.LeftButton == ButtonState.Pressed) {
+				var clickPos = mapGrid.ScreenToWorld (ms.X, ms.Y);
+				if (mapGrid.GetID (clickPos.X, clickPos.Y) != MapGridTypes.ID.Blocked) {
+					m_toMove = clickPos;
+					effects.SpawnEffect (m_toMove, "effects_marker", 200);
 				}
+			}
 
-				if (newPos.X < m_toMove.X)
-					newPos.X++;
-				if (newPos.X > m_toMove.X)
-					newPos.X--;
-				if (newPos.Y < m_toMove.Y)
-					newPos.Y++;
-				if (newPos.Y > m_toMove.Y)
-					newPos.Y--;
+			if (ms.RightButton == ButtonState.Pressed) {
+				var clickPos = mapGrid.ScreenToWorld (ms.X, ms.Y);
+				if (mapGrid.GetID (clickPos.X, clickPos.Y) != MapGridTypes.ID.Blocked) {
+					if (Utils.Dist (clickPos, mapPos) < 2) {
+						DoAttack (clickPos);
+					}
+				}
+			}
 
-				if (Keyboard.GetState ().IsKeyDown (Keys.A))
-					DoAttack (new Point (newPos.X + 1, newPos.Y));
+			if (Player.Get<State<HeroState>>().EState == HeroState.Idle) {
 
-				var mt = mapGrid.GetID (newPos.X, newPos.Y);
-				if (mt != MapGridTypes.ID.Blocked && newPos != m_player.Get<Position> ().MapPos) {
+				if (mapPos.X < m_toMove.X && mapGrid.GetID (mapPos.X + 1, mapPos.Y) != MapGridTypes.ID.Blocked)
+					mapPos.X++;
+				if (mapPos.X > m_toMove.X && mapGrid.GetID (mapPos.X - 1, mapPos.Y) != MapGridTypes.ID.Blocked)
+					mapPos.X--;
+				if (mapPos.Y < m_toMove.Y && mapGrid.GetID (mapPos.X, mapPos.Y + 1) != MapGridTypes.ID.Blocked)
+					mapPos.Y++;
+				if (mapPos.Y > m_toMove.Y && mapGrid.GetID (mapPos.X, mapPos.Y - 1) != MapGridTypes.ID.Blocked)
+					mapPos.Y--;
+
+				if (mapGrid.GetID (mapPos.X, mapPos.Y) != MapGridTypes.ID.Blocked && mapPos != m_player.Get<Position> ().MapPos) {
 					var seq = new Sequence ();
 					var spawn = new Spawn ();
-					spawn.Add (new MoveSpriteTo (Player, new Vector2 (newPos.X * Globals.CELL_WIDTH, newPos.Y * Globals.CELL_HEIGHT), 300));
+					spawn.Add (new MoveSpriteTo (Player, new Vector2 (mapPos.X * Globals.CELL_WIDTH, mapPos.Y * Globals.CELL_HEIGHT), 300));
 					spawn.Add (new AnimSprite (Player, sprites.GetSprite("hero_move"), 300));
 					seq.Add (spawn);
 					seq.Add (new ActionEntity (Player, (_) => {
-						Player.Get<Position> ().MapPos = newPos;
+						Player.Get<Position> ().MapPos = mapPos;
 					}));
 					seq.Add (new ActionEntity (Player, OnEndMove));
 
