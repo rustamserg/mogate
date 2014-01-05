@@ -11,7 +11,7 @@ namespace mogate
 		IMapGrid GetLevel (int level);
 	}
 
-	public class World: IWorld, IGameSerializer
+	public class World: IWorld
 	{
 		IMapGrid[] m_levels;
 
@@ -29,15 +29,6 @@ namespace mogate
 		public IMapGrid GetLevel (int level)
 		{
 			return m_levels[level];
-		}
-
-
-		public void Save()
-		{
-		}
-
-		public void Load()
-		{
 		}
 	}
 }

@@ -67,7 +67,6 @@ namespace mogate
 		IEnumerable<MapGridTypes.Room> GetRooms();
 	}
 
-	[Serializable]
 	public class MapGrid : IMapGrid
 	{
 		public int Width { get; set; }

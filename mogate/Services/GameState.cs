@@ -15,12 +15,6 @@ namespace mogate
 		GameStarted
 	};
 
-	public interface IGameSerializer
-	{
-		void Save();
-		void Load();
-	}
-
 	public interface IGameState
 	{
 		EState State { get; set; }
