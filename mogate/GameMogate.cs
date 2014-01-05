@@ -15,16 +15,16 @@ namespace mogate
 	/// </summary>
 	public class GameMogate : Game
 	{
-		GraphicsDeviceManager graphics;
-		//SpriteBatch spriteBatch;
+		GraphicsDeviceManager m_graphics;
+		Director m_director;
 
 		public GameMogate ()
 		{
-			graphics = new GraphicsDeviceManager(this);
+			m_graphics = new GraphicsDeviceManager(this);
 			Content.RootDirectory = "Content";
-			graphics.PreferredBackBufferHeight = 768;
-			graphics.PreferredBackBufferWidth = 1024;
-			graphics.IsFullScreen = false;		
+			m_graphics.PreferredBackBufferHeight = 768;
+			m_graphics.PreferredBackBufferWidth = 1024;
+			m_graphics.IsFullScreen = false;		
 		}
 
 		/// <summary>
@@ -39,32 +39,27 @@ namespace mogate
 			var gameState = new GameState (this);
 			var items = new Items (this);
 			var sprites = new SpriteSheets (this);
-			var effects = new Effects (this);
 
 			Services.AddService (typeof(IWorld), new World());
 			Services.AddService (typeof(IItems), items);
 			Services.AddService (typeof(IMonsters), monsters);
 			Services.AddService (typeof(IGameState), gameState);
 			Services.AddService (typeof(ISpriteSheets), sprites);
-			Services.AddService (typeof(IEffects), effects);
 
 			Components.Add (sprites);
 			Components.Add (gameState);
 			Components.Add (monsters);
 			Components.Add (items);
-			Components.Add (effects);
 
 			Components.Add (new MapGridLayer(this));
 			Components.Add (new ItemsLayer(this));
 			Components.Add (new MonstersLayer (this));
-			Components.Add (new EffectsLayer (this));
 
 			// new flow, there is only director game component is added
-			var director = new Director (this);
-			Services.AddService (typeof(IDirector), director);
+			m_director = new Director (this);
+			Services.AddService (typeof(IDirector), m_director);
 
-			director.RegisterScene (new GameScene (this, "game"));
-			director.ActivateScene ("game");
+			m_director.RegisterScene (new GameScene (this, "game"));
 
 			base.Initialize ();
 				
@@ -78,8 +73,7 @@ namespace mogate
 		{
 			// Create a new SpriteBatch, which can be used to draw textures.
 			//spriteBatch = new SpriteBatch (GraphicsDevice);
-
-			//TODO: use this.Content to load your game content here 
+			m_director.ActivateScene ("game");
 		}
 
 		/// <summary>
@@ -93,7 +87,7 @@ namespace mogate
 			if (Keyboard.GetState().IsKeyDown(Keys.Escape)) {
 				Exit ();
 			}
-			// TODO: Add your update logic here			
+		
 			base.Update (gameTime);
 		}
 
@@ -103,10 +97,8 @@ namespace mogate
 		/// <param name="gameTime">Provides a snapshot of timing values.</param>
 		protected override void Draw (GameTime gameTime)
 		{
-			graphics.GraphicsDevice.Clear (Color.CornflowerBlue);
+			m_graphics.GraphicsDevice.Clear (Color.CornflowerBlue);
 		
-			//TODO: Add your drawing code here
-            
 			base.Draw (gameTime);
 		}
 	}

@@ -25,16 +25,19 @@ namespace mogate
 		public void RegisterScene (Scene scene)
 		{
 			m_scenes.Add (scene.Name, scene);
+			Game.Components.Add (scene);
 		}
 
 		public void ActivateScene (string name)
 		{
+			if (!string.IsNullOrEmpty (m_activeScene)) {
+				m_scenes [m_activeScene].DeactivateScene ();
+			}
+
 			var sc = m_scenes [name];
 			m_activeScene = name;
 
-			//Game.Components.Clear (); // TODO: uncomment when all moved to scene-based logic
-			sc.ComposeScene ();
-			Game.Components.Add (sc);
+			sc.ActivateScene ();
 		}
 
 		public Scene GetActiveScene()

@@ -69,7 +69,6 @@
     <Compile Include="Behaviors\Attackable.cs" />
     <Compile Include="Actions\Gameplay\AttackEntity.cs" />
     <Compile Include="Layers\EffectsLayer.cs" />
-    <Compile Include="Services\Effects.cs" />
     <Compile Include="Actions\FollowSprite.cs" />
     <Compile Include="Services\World.cs" />
     <Compile Include="Core\Utils.cs" />

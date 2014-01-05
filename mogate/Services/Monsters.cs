@@ -213,7 +213,10 @@ namespace mogate
 
 		void OnAttacked(Entity monster, Entity attacker)
 		{
-			var effects = (IEffects)Game.Services.GetService (typeof(IEffects));
+			var director = (IDirector)Game.Services.GetService (typeof(IDirector));
+			var gs = director.GetActiveScene ();
+			var effects = (EffectsLayer)gs.GetLayer ("effects");
+
 			effects.AttachEffect (monster, "effects_damage", 400);
 
 			if (monster.Get<Health> ().HP == 0)

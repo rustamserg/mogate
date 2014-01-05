@@ -72,7 +72,11 @@ namespace mogate
 		{
 		}
 
-		public virtual void OnContentLoaded()
+		public virtual void OnActivated()
+		{
+		}
+
+		public virtual void OnDeactivated()
 		{
 		}
 	}

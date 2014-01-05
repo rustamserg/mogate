@@ -9,9 +9,10 @@ namespace mogate
 		{
 		}
 
-		protected override void OnPostComposeScene()
+		protected override void LoadLayers()
 		{
 			AddLayer (new HeroLayer (Game, "hero", 0));
+			AddLayer (new EffectsLayer (Game, "effects", 1));
 		}
 	}
 }

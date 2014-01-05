@@ -25,7 +25,7 @@ namespace mogate
 
 		public Entity Player { get { return m_player; } }
 
-		public override void OnContentLoaded()
+		public override void OnActivated()
 		{
 			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
 			m_life = sprites.GetSprite ("items_life");
@@ -86,8 +86,11 @@ namespace mogate
 			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
-			var effects = (IEffects)Game.Services.GetService (typeof(IEffects));
 
+			var director = (IDirector)Game.Services.GetService (typeof(IDirector));
+			var gs = director.GetActiveScene ();
+			var effects = (EffectsLayer)gs.GetLayer ("effects");
+	
 			var mapGrid = world.GetLevel(gameState.Level);
 
 			var ms = Mouse.GetState ();
@@ -140,7 +143,10 @@ namespace mogate
 
 		private void DoAttack(Point attackTo)
 		{
-			var effects = (IEffects)Game.Services.GetService (typeof(IEffects));
+			var director = (IDirector)Game.Services.GetService (typeof(IDirector));
+			var gs = director.GetActiveScene ();
+			var effects = (EffectsLayer)gs.GetLayer ("effects");
+
 			effects.SpawnEffect (attackTo, "items_sword", 100);
 
 			var monsters = (IMonsters)Game.Services.GetService (typeof(IMonsters));
@@ -167,7 +173,10 @@ namespace mogate
 
 		private void OnAttacked(Entity attacker)
 		{
-			var effects = (IEffects)Game.Services.GetService (typeof(IEffects));
+			var director = (IDirector)Game.Services.GetService (typeof(IDirector));
+			var gs = director.GetActiveScene ();
+			var effects = (EffectsLayer)gs.GetLayer ("effects");
+	
 			effects.AttachEffect (m_player, "effects_damage", 400);
 		}
 

@@ -4,36 +4,54 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace mogate
 {
-	public class EffectsLayer : DrawableGameComponent
+	public class EffectsLayer : Layer
 	{
-		SpriteBatch m_spriteBatch;
-		
-		public EffectsLayer (Game game) : base(game)
+		public EffectsLayer(Game game, string name, int z) : base(game, name, z)
 		{
 		}
 
-		protected override void LoadContent ()
+		public void SpawnEffect(Point pos, string name, float duration)
 		{
-			m_spriteBatch = new SpriteBatch (Game.GraphicsDevice);
+			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
+
+			var ent = CreateEntity ();
+			ent.Register (new Execute ());
+			ent.Register (new Drawable (sprites.GetSprite (name),
+				new Vector2(pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
+
+			var seq = new Sequence ();
+			seq.Add (new AnimSprite(ent, duration));
+			seq.Add (new ActionEntity (ent, (_) => {
+				RemoveEntityByTag(ent.Tag);
+			}));
+
+			ent.Get<Execute> ().Add (seq);
 		}
 
-		public override void Draw (GameTime gameTime)
+		public void AttachEffect(Entity entity, string name, float duration)
 		{
-			m_spriteBatch.Begin ();
+			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
+			var pos = entity.Get<Position> ().MapPos;
 
-			var effects = (IEffects)Game.Services.GetService(typeof(IEffects));
+			var ent = CreateEntity ();
+			ent.Register (new Execute ());
+			ent.Register (new Drawable (sprites.GetSprite (name),
+				new Vector2(pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
 
-			foreach (var pt in effects.GetEffects()) {
-				m_spriteBatch.Draw(pt.Get<Drawable>().Sprite.Texture,
-				                   pt.Get<Drawable>().DrawPos,
-				                   pt.Get<Drawable>().DrawRect,
-				                   Color.White);
-			}
+			var seq = new Sequence ();
+			var spawn = new Spawn ();
 
-			m_spriteBatch.End ();
+			spawn.Add (new AnimSprite(ent, duration));
+			spawn.Add (new FollowSprite (ent, entity, duration));
 
-			base.Draw (gameTime);
+			seq.Add (spawn);
+			seq.Add (new ActionEntity (ent, (_) => {
+				RemoveEntityByTag(ent.Tag);
+			}));
+
+			ent.Get<Execute> ().Add (seq);
 		}
+
 	}
 }
 
