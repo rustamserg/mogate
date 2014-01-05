@@ -12,7 +12,8 @@ namespace mogate
 		protected override void LoadLayers()
 		{
 			AddLayer (new HeroLayer (Game, "hero", 0));
-			AddLayer (new EffectsLayer (Game, "effects", 1));
+			AddLayer (new ItemsLayer (Game, "items", 1));
+			AddLayer (new EffectsLayer (Game, "effects", 2));
 		}
 	}
 }
