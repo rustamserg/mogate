@@ -15,8 +15,8 @@ namespace mogate
 
 		public void Attack(Entity attacker, Entity defender)
 		{
-			if (attacker.Get<Attack> () != null) {
-				if (defender.Get<Health> () != null) {
+			if (attacker.Has<Attack> ()) {
+				if (defender.Has<Health> ()) {
 					defender.Get<Health> ().HP = Math.Max (0, defender.Get<Health> ().HP - attacker.Get<Attack> ().Damage);
 				}
 				if (m_onAttack != null)

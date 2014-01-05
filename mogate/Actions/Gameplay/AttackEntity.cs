@@ -16,7 +16,7 @@ namespace mogate
 
 		public bool Execute(GameTime gameTime)
 		{
-			if (m_defender.Get<Attackable> () != null)
+			if (m_defender.Has<Attackable> ())
 				m_defender.Get<Attackable> ().Attack (m_attacker, m_defender);
 
 			return true;
