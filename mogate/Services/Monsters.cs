@@ -108,7 +108,9 @@ namespace mogate
 
 			var map = world.GetLevel(gameState.Level);
 
-			var hero = (IHero)Game.Services.GetService (typeof(IHero));
+			var director = (IDirector)Game.Services.GetService (typeof(IDirector));
+			var gs = director.GetActiveScene ();
+			var hero = (HeroLayer)gs.GetLayer ("hero");
 
 			Point newPos = monster.Get<Position>().MapPos;
 			Point curPos = monster.Get<Position>().MapPos;
@@ -133,7 +135,10 @@ namespace mogate
 
 		void MonsterMove(Entity monster, Point newPos)
 		{
-			var hero = (IHero)Game.Services.GetService (typeof(IHero));
+			var director = (IDirector)Game.Services.GetService (typeof(IDirector));
+			var gs = director.GetActiveScene ();
+			var hero = (HeroLayer)gs.GetLayer ("hero");
+
 			Point curPos = monster.Get<Position>().MapPos;
 
 			if (newPos == hero.Player.Get<Position> ().MapPos) {
@@ -191,8 +196,12 @@ namespace mogate
 
 		void UpdateActions (GameTime gameTime)
 		{
-			foreach (var me in m_monsters) {
+			var iter = new List<Entity> (m_monsters);
+
+			foreach (var me in iter) {
 				me.Get<Execute> ().Update (gameTime);
+				if (me.Get<State<MonsterState>> ().EState == MonsterState.Dead)
+					m_monsters.Remove (me);
 			}
 		}
 

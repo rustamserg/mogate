@@ -48,7 +48,6 @@
     <Compile Include="Services\GameState.cs" />
     <Compile Include="Services\MapGrid.cs" />
     <Compile Include="Services\Items.cs" />
-    <Compile Include="Services\Hero.cs" />
     <Compile Include="Layers\MonstersLayer.cs" />
     <Compile Include="Services\Monsters.cs" />
     <Compile Include="Behaviors\Position.cs" />
@@ -76,6 +75,10 @@
     <Compile Include="Core\Utils.cs" />
     <Compile Include="Core\Globals.cs" />
     <Compile Include="Core\PList.cs" />
+    <Compile Include="Core\Layer.cs" />
+    <Compile Include="Core\Scene.cs" />
+    <Compile Include="Core\Director.cs" />
+    <Compile Include="Scenes\GameScene.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />
@@ -88,6 +91,7 @@
     <Folder Include="Behaviors\" />
     <Folder Include="Core\" />
     <Folder Include="Actions\Gameplay\" />
+    <Folder Include="Scenes\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\sprites.plist">
