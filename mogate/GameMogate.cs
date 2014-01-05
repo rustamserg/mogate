@@ -37,11 +37,9 @@ namespace mogate
 		{
 			var monsters = new Monsters (this);
 			var gameState = new GameState (this);
-			var items = new Items (this);
 			var sprites = new SpriteSheets (this);
 
 			Services.AddService (typeof(IWorld), new World());
-			Services.AddService (typeof(IItems), items);
 			Services.AddService (typeof(IMonsters), monsters);
 			Services.AddService (typeof(IGameState), gameState);
 			Services.AddService (typeof(ISpriteSheets), sprites);
@@ -49,10 +47,8 @@ namespace mogate
 			Components.Add (sprites);
 			Components.Add (gameState);
 			Components.Add (monsters);
-			Components.Add (items);
 
 			Components.Add (new MapGridLayer(this));
-			Components.Add (new ItemsLayer(this));
 			Components.Add (new MonstersLayer (this));
 
 			// new flow, there is only director game component is added
