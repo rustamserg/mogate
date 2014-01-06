@@ -31,6 +31,7 @@ namespace mogate
 			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
 
 			var mapGrid = world.GetLevel(gameState.Level);
+			RemoveAllEntities ();
 
 			foreach (var room in mapGrid.GetRooms()) {
 				var pos = new Point (room.Pos.X + m_rand.Next (room.Width), room.Pos.Y + m_rand.Next (room.Height));

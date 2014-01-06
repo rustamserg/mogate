@@ -31,6 +31,16 @@ namespace mogate
 			return m_entitiesByTag [tag];
 		}
 
+		public IEnumerable<Entity> GetAllEntities()
+		{
+			return new List<Entity>(m_entitiesByTag.Values);
+		}
+
+		public void RemoveAllEntities()
+		{
+			m_entitiesByTag.Clear();
+		}
+
 		public void RemoveEntityByTag(int tag)
 		{
 			m_entitiesByTag.Remove (tag);

@@ -48,7 +48,6 @@
     <Compile Include="Services\GameState.cs" />
     <Compile Include="Services\MapGrid.cs" />
     <Compile Include="Layers\MonstersLayer.cs" />
-    <Compile Include="Services\Monsters.cs" />
     <Compile Include="Behaviors\Position.cs" />
     <Compile Include="Core\Entity.cs" />
     <Compile Include="Core\Behavior.cs" />

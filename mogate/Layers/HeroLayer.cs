@@ -29,8 +29,6 @@ namespace mogate
 		{
 			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
 			m_life = sprites.GetSprite ("items_life");
-
-			m_player = CreateEntity ();
 		}
 
 		protected override void OnPostUpdate (GameTime gameTime)
@@ -67,6 +65,9 @@ namespace mogate
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 
 			var mapGrid = world.GetLevel(gameState.Level);
+
+			RemoveAllEntities ();
+			m_player = CreateEntity ();
 
 			m_player.Register (new State<HeroState> (HeroState.Idle));
 			m_player.Register (new Health (200));
@@ -146,12 +147,11 @@ namespace mogate
 			var director = (IDirector)Game.Services.GetService (typeof(IDirector));
 			var gs = director.GetActiveScene ();
 			var effects = (EffectsLayer)gs.GetLayer ("effects");
+			var monsters = (MonstersLayer)gs.GetLayer ("monsters");
 
 			effects.SpawnEffect (attackTo, "items_sword", 100);
 
-			var monsters = (IMonsters)Game.Services.GetService (typeof(IMonsters));
-
-			var monster = monsters.GetMonsters ().FirstOrDefault (m => m.Get<Position> ().MapPos == attackTo);
+			var monster = monsters.GetAllEntities().FirstOrDefault (m => m.Get<Position> ().MapPos == attackTo);
 			if (monster != default(Entity)) {
 				m_player.Get<Execute> ().Add (new AttackEntity (m_player, monster));
 			}
