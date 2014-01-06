@@ -45,8 +45,6 @@ namespace mogate
 			Components.Add (sprites);
 			Components.Add (gameState);
 
-			Components.Add (new MapGridLayer(this));
-
 			// new flow, there is only director game component is added
 			m_director = new Director (this);
 			Services.AddService (typeof(IDirector), m_director);
