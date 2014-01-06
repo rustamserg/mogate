@@ -76,6 +76,8 @@
     <Compile Include="Core\Scene.cs" />
     <Compile Include="Core\Director.cs" />
     <Compile Include="Scenes\GameScene.cs" />
+    <Compile Include="Scenes\MainScene.cs" />
+    <Compile Include="Layers\MenuLayer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />

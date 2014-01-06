@@ -50,6 +50,7 @@ namespace mogate
 			Services.AddService (typeof(IDirector), m_director);
 
 			m_director.RegisterScene (new GameScene (this, "game"));
+			m_director.RegisterScene (new MainScene (this, "main"));
 
 			base.Initialize ();
 				
