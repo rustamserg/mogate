@@ -66,9 +66,9 @@ namespace mogate
 					continue;
 
 				spriteBatch.Draw (ent.Get<Drawable>().Sprite.Texture,
-									ent.Get<Drawable>().DrawPos,
-									ent.Get<Drawable>().DrawRect,
-									Color.White);
+					ent.Get<Drawable>().DrawPos,
+					ent.Get<Drawable>().DrawRect,
+					ent.Get<Drawable>().DrawColor);
 			}
 
 			OnPostDraw (spriteBatch, gameTime);
