@@ -3,12 +3,14 @@ using System.Linq;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.IO;
 
 namespace mogate
 {
 	public class Scene : DrawableGameComponent
 	{
 		private SpriteBatch m_spriteBatch;
+		private Effect m_effect;
 		private Dictionary<string, Layer> m_layersByName = new Dictionary<string, Layer>();
 		private List<Layer> m_orderedLayers = new List<Layer> ();
 
@@ -23,6 +25,10 @@ namespace mogate
 		protected override void LoadContent ()
 		{
 			m_spriteBatch = new SpriteBatch (Game.GraphicsDevice);
+
+			using (var reader = new BinaryReader(File.Open("Content/grayscale.mgfxo", FileMode.Open))) {
+				m_effect = new Effect(Game.GraphicsDevice, reader.ReadBytes((int)reader.BaseStream.Length));
+			}
 		}
 
 		public override void Update (GameTime gameTime)
@@ -39,7 +45,12 @@ namespace mogate
 		public override void Draw (GameTime gameTime)
 		{
 			if (IsActive) {
-				m_spriteBatch.Begin ();
+				m_spriteBatch.Begin (SpriteSortMode.Deferred,
+					BlendState.NonPremultiplied,
+					SamplerState.PointClamp,
+					DepthStencilState.Default,
+					RasterizerState.CullNone,
+					m_effect);
 
 				var iter = new List<Layer> (m_orderedLayers);
 				foreach (var la in iter) {
