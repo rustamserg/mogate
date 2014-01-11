@@ -12,7 +12,7 @@ float4 main(float4 color : COLOR0, float2 texCoord : TEXCOORD0) : COLOR0
     float greyscale = dot(tex.rgb, float3(0.3, 0.59, 0.11));
 
     // The input color alpha controls saturation level.
-    tex.rgb = lerp(greyscale, tex.rgb *_valueRGB, color.a *_valueAlpha);
+    //tex.rgb = lerp(greyscale, tex.rgb *_valueRGB, color.a *_valueAlpha);
 
     return tex;
 }
