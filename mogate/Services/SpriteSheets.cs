@@ -34,11 +34,13 @@ namespace mogate
 	public interface ISpriteSheets
 	{
 		Sprite2D GetSprite (string name);
+		SpriteFont GetFont (string name);
 	};
 
 	public class SpriteSheets : DrawableGameComponent, ISpriteSheets
 	{
 		Dictionary<string, Sprite2D> m_sprites = new Dictionary<string, Sprite2D>();
+		Dictionary<string, SpriteFont> m_fonts = new Dictionary<string, SpriteFont> ();
 
 		public SpriteSheets (Game game) : base(game)
 		{
@@ -57,11 +59,18 @@ namespace mogate
 				var sp = new Sprite2D (frmName, texture, Utils.RectangleFromString (texRect));
 				m_sprites.Add (frmName, sp);
 			}
+
+			m_fonts ["SpriteFont1"] = Game.Content.Load<SpriteFont> ("SpriteFont1");
 		}
 
 		public Sprite2D GetSprite(string name)
 		{
 			return m_sprites [name];
+		}
+
+		public SpriteFont GetFont(string name)
+		{
+			return m_fonts [name];
 		}
 	}
 }

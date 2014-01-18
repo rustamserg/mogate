@@ -108,9 +108,16 @@
     <Content Include="Content\grayscale.mgfxo">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\fade.mgfxo">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\SpriteFont1.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <MonoGameShader Include="Shaders\grayscale.fx" />
+    <MonoGameShader Include="Shaders\fade.fx" />
   </ItemGroup>
 </Project>

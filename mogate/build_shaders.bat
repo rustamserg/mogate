@@ -1,4 +1,5 @@
 cd Shaders
 2mgfx grayscale.fx grayscale.mgfxo
-copy /Y grayscale.mgfxo ..\Content
+2mgfx fade.fx fade.mgfxo
+copy /Y *.mgfxo ..\Content
 cd ..

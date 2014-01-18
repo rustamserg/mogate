@@ -8,7 +8,7 @@ namespace mogate
 	public interface IDirector
 	{
 		void RegisterScene (Scene scene);
-		void ActivateScene (string name);
+		void ActivateScene (string name, TimeSpan duration);
 		Scene GetScene(string name);
 		Scene GetActiveScene();
 	}
@@ -28,7 +28,7 @@ namespace mogate
 			Game.Components.Add (scene);
 		}
 
-		public void ActivateScene (string name)
+		public void ActivateScene (string name, TimeSpan duration)
 		{
 			if (!string.IsNullOrEmpty (m_activeScene)) {
 				m_scenes [m_activeScene].DeactivateScene ();
@@ -37,7 +37,7 @@ namespace mogate
 			var sc = m_scenes [name];
 			m_activeScene = name;
 
-			sc.ActivateScene ();
+			sc.ActivateScene ((float)duration.TotalMilliseconds);
 		}
 
 		public Scene GetActiveScene()
