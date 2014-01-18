@@ -53,7 +53,6 @@ namespace mogate
 			m_director.RegisterScene (new MainScene (this, "main"));
 
 			base.Initialize ();
-				
 		}
 
 		/// <summary>
@@ -64,22 +63,7 @@ namespace mogate
 		{
 			// Create a new SpriteBatch, which can be used to draw textures.
 			//spriteBatch = new SpriteBatch (GraphicsDevice);
-			m_director.ActivateScene ("game");
-		}
-
-		/// <summary>
-		/// Allows the game to run logic such as updating the world,
-		/// checking for collisions, gathering input, and playing audio.
-		/// </summary>
-		/// <param name="gameTime">Provides a snapshot of timing values.</param>
-		protected override void Update (GameTime gameTime)
-		{
-			// For Mobile devices, this logic will close the Game when the Back button is pressed
-			if (Keyboard.GetState().IsKeyDown(Keys.Escape)) {
-				Exit ();
-			}
-		
-			base.Update (gameTime);
+			m_director.ActivateScene ("main");
 		}
 
 		/// <summary>

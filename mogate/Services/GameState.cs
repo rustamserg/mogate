@@ -36,8 +36,18 @@ namespace mogate
 
 		public override void Update (GameTime gameTime)
 		{
-			if (Keyboard.GetState ().IsKeyDown (Keys.Space)) {
+			if (Keyboard.GetState().IsKeyDown(Keys.Escape)) {
+				Game.Exit ();
+			}
+			if (Keyboard.GetState ().IsKeyDown (Keys.N)) {
 				NewGame ();
+			}
+			if (Keyboard.GetState ().IsKeyDown (Keys.Space)) {
+				var director = (IDirector)Game.Services.GetService (typeof(IDirector));
+				var sc = director.GetActiveScene ();
+				if (sc.Name != "game") {
+					director.ActivateScene ("game");
+				}
 			}
 
 			if (State == EState.WorldLoading)

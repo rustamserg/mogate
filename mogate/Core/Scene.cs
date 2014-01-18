@@ -45,18 +45,13 @@ namespace mogate
 		public override void Draw (GameTime gameTime)
 		{
 			if (IsActive) {
-				m_spriteBatch.Begin (SpriteSortMode.Deferred,
-					BlendState.NonPremultiplied,
-					SamplerState.PointClamp,
-					DepthStencilState.Default,
-					RasterizerState.CullNone,
-					m_effect);
-
+				m_spriteBatch.Begin (SpriteSortMode.Immediate, BlendState.AlphaBlend); 
+				m_effect.Parameters ["ColorAmount"].SetValue(0.6f);
+				m_effect.CurrentTechnique.Passes [0].Apply ();
 				var iter = new List<Layer> (m_orderedLayers);
 				foreach (var la in iter) {
 					la.Draw (m_spriteBatch, gameTime);
 				}
-
 				m_spriteBatch.End ();
 			}
 			base.Draw (gameTime);

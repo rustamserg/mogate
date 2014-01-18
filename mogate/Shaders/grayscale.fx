@@ -1,24 +1,20 @@
 sampler TextureSampler : register(s0);
-float _valueAlpha = 1;
-float _valueRGB = 1;
+float ColorAmount;
 
-float4 main(float4 color : COLOR0, float2 texCoord : TEXCOORD0) : COLOR0
+float4 main(float2 texCoord : TEXCOORD0) : COLOR0
 {
-    // Look up the texture color.
-    float4 tex = tex2D(TextureSampler, texCoord);
+    float4 tex = tex2D(TextureSampler, texCoord); 
+    float3 colrgb = tex.rgb;
+    float greycolor = dot(colrgb, float3(0.3, 0.59, 0.11));
 
-    // Convert it to greyscale. The constants 0.3, 0.59, and 0.11 are because
-    // the human eye is more sensitive to green light, and less to blue.
-    float greyscale = dot(tex.rgb, float3(0.3, 0.59, 0.11));
+    colrgb.rgb = lerp(dot(greycolor, float3(0.3, 0.59, 0.11)), colrgb, ColorAmount);
 
-    // The input color alpha controls saturation level.
-    //tex.rgb = lerp(greyscale, tex.rgb *_valueRGB, color.a *_valueAlpha);
-
-    return tex;
+    return float4(colrgb.rgb, tex.a);
 }
-technique Technique1
+
+technique Technique0
 {
-    pass Pass1
+    pass Pass0
     {
         PixelShader = compile ps_2_0 main();
     }
