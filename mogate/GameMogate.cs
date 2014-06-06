@@ -24,7 +24,9 @@ namespace mogate
 			Content.RootDirectory = "Content";
 			m_graphics.PreferredBackBufferHeight = 768;
 			m_graphics.PreferredBackBufferWidth = 1024;
-			m_graphics.IsFullScreen = false;		
+			m_graphics.IsFullScreen = false;
+
+			IsMouseVisible = true;
 		}
 
 		/// <summary>
