@@ -37,7 +37,7 @@ namespace mogate
 		{
 			m_spriteBatch = new SpriteBatch (Game.GraphicsDevice);
 
-			using (var reader = new BinaryReader(File.Open("Content/fade.mgfxo", FileMode.Open))) {
+			using (var reader = new BinaryReader(File.Open("Content/Shaders/fade.xnb", FileMode.Open))) {
 				m_effect = new Effect(Game.GraphicsDevice, reader.ReadBytes((int)reader.BaseStream.Length));
 			}
 		}

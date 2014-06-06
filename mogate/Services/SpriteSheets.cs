@@ -48,8 +48,8 @@ namespace mogate
 
 		protected override void LoadContent ()
 		{
-			var texture = Game.Content.Load<Texture2D> ("sprites");
-			var stream = TitleContainer.OpenStream(@"Content\sprites.plist");
+			var texture = Game.Content.Load<Texture2D> ("Sprites/sprites");
+			var stream = TitleContainer.OpenStream(@"Content/Sprites/sprites.plist");
 			PList pinfo = new PList (stream);
 
 			PList frames = pinfo ["frames"] as PList;
@@ -60,7 +60,7 @@ namespace mogate
 				m_sprites.Add (frmName, sp);
 			}
 
-			m_fonts ["SpriteFont1"] = Game.Content.Load<SpriteFont> ("SpriteFont1");
+			m_fonts ["SpriteFont1"] = Game.Content.Load<SpriteFont> ("Fonts/SpriteFont1");
 		}
 
 		public Sprite2D GetSprite(string name)
