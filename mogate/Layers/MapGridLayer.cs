@@ -24,21 +24,10 @@ namespace mogate
 			m_ladder = sprites.GetSprite("grid_ladder");
 		}
 
-		protected override void OnPostUpdate (GameTime gameTime)
-		{
-			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
-			if (gameState.State == EState.WorldLoaded) {
-				gameState.State = EState.LevelCreated;
-			}
-		}
-
 		protected override void OnPostDraw(SpriteBatch spriteBatch, GameTime gameTime)
 		{
 			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
-
-			if (gameState.State < EState.LevelCreated)
-				return;
 
 			var mapGrid = world.GetLevel (gameState.Level);
 

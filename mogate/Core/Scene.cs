@@ -51,10 +51,11 @@ namespace mogate
 						m_fade = m_spent / m_duration;
 					else
 						State = SceneState.Activated;
-				}
-				var iter = new List<Layer> (m_orderedLayers);
-				foreach (var la in iter) {
-					la.Update (gameTime);
+				} else {
+					var iter = new List<Layer> (m_orderedLayers);
+					foreach (var la in iter) {
+						la.Update (gameTime);
+					}
 				}
 			}
 			base.Update (gameTime);
@@ -67,10 +68,11 @@ namespace mogate
 				if (State == SceneState.Activating) {
 					m_effect.Parameters ["ColorAmount"].SetValue (m_fade);
 					m_effect.CurrentTechnique.Passes [0].Apply ();
-				}
-				var iter = new List<Layer> (m_orderedLayers);
-				foreach (var la in iter) {
-					la.Draw (m_spriteBatch, gameTime);
+				} else {
+					var iter = new List<Layer> (m_orderedLayers);
+					foreach (var la in iter) {
+						la.Draw (m_spriteBatch, gameTime);
+					}
 				}
 				m_spriteBatch.End ();
 			}

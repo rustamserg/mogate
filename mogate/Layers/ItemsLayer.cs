@@ -15,16 +15,7 @@ namespace mogate
 		{
 		}
 
-		protected override void OnPostUpdate (GameTime gameTime)
-		{
-			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
-			if (gameState.State == EState.HeroCreated) {
-				Init();
-				gameState.State = EState.ItemsCreated;
-			}
-		}
-
-		private void Init()
+		public override void OnActivated()
 		{
 			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));

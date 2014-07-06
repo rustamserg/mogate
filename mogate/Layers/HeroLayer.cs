@@ -25,40 +25,7 @@ namespace mogate
 
 		public Entity Player { get { return m_player; } }
 
-		public override void OnActivated()
-		{
-			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
-			m_life = sprites.GetSprite ("items_life");
-		}
-
-		protected override void OnPostUpdate (GameTime gameTime)
-		{
-			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
-
-			if (gameState.State == EState.LevelCreated) {
-				Init();
-				gameState.State = EState.HeroCreated;
-			}
-
-			if (gameState.State == EState.GameStarted) {
-				UpdateHero ();
-			}
-		}
-
-		protected override void OnPostDraw (SpriteBatch spriteBatch, GameTime gameTime)
-		{
-			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
-
-			if (gameState.State < EState.HeroCreated)
-				return;
-
-			for (int i = 0; i < (int)(m_player.Get<Health> ().HP / 20); i++) {
-				var drawPos = new Vector2 (i * Globals.CELL_WIDTH, Globals.WORLD_HEIGHT * Globals.CELL_HEIGHT);
-				spriteBatch.Draw (m_life.Texture, drawPos, m_life.GetFrameRect (0), Color.White);
-			}
-		}
-
-		private void Init ()
+		public override void OnActivated ()
 		{
 			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
 			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
@@ -80,9 +47,19 @@ namespace mogate
 
 			m_toMove = mapGrid.StairDown;
 			StartIdle ();
+
+			m_life = sprites.GetSprite ("items_life");
 		}
 
-		private void UpdateHero()
+		protected override void OnPostDraw (SpriteBatch spriteBatch, GameTime gameTime)
+		{
+			for (int i = 0; i < (int)(m_player.Get<Health> ().HP / 20); i++) {
+				var drawPos = new Vector2 (i * Globals.CELL_WIDTH, Globals.WORLD_HEIGHT * Globals.CELL_HEIGHT);
+				spriteBatch.Draw (m_life.Texture, drawPos, m_life.GetFrameRect (0), Color.White);
+			}
+		}
+
+		protected override void OnPostUpdate (GameTime gameTime)
 		{
 			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));

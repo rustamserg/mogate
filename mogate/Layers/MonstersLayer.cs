@@ -20,17 +20,7 @@ namespace mogate
 		{
 		}
 
-		protected override void OnPostUpdate(GameTime gameTime)
-		{
-			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
-
-			if (gameState.State == EState.ItemsCreated) {
-				Init();
-				gameState.State = EState.MonstersCreated;
-			}
-		}
-
-		void Init()
+		public override void OnActivated ()
 		{
 			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
@@ -69,7 +59,7 @@ namespace mogate
 				UpdateIdleState (monster);
 		}
 
-		void UpdateIdleState(Entity monster)
+		void UpdateIdleState (Entity monster)
 		{
 			Point newPos = TryChasePlayer(monster);
 
@@ -77,7 +67,7 @@ namespace mogate
 				MonsterMove (monster, newPos);
 		}
 
-		Point TryChasePlayer(Entity monster)
+		Point TryChasePlayer (Entity monster)
 		{
 			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
@@ -107,7 +97,7 @@ namespace mogate
 			return newPos;
 		}
 
-		void MonsterMove(Entity monster, Point newPos)
+		void MonsterMove (Entity monster, Point newPos)
 		{
 			var director = (IDirector)Game.Services.GetService (typeof(IDirector));
 			var gs = director.GetActiveScene ();
@@ -140,7 +130,7 @@ namespace mogate
 		}
 
 
-		void OnAttacked(Entity monster, Entity attacker)
+		void OnAttacked (Entity monster, Entity attacker)
 		{
 			var director = (IDirector)Game.Services.GetService (typeof(IDirector));
 			var gs = director.GetActiveScene ();
