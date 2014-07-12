@@ -25,16 +25,6 @@ namespace mogate
 			if (Keyboard.GetState().IsKeyDown(Keys.Escape)) {
 				Game.Exit ();
 			}
-			if (Keyboard.GetState ().IsKeyDown (Keys.Space)) {
-				NewGame ();
-
-				var director = (IDirector)Game.Services.GetService (typeof(IDirector));
-				var sc = director.GetActiveScene ();
-				if (sc.Name != "game") {
-					director.ActivateScene ("game", TimeSpan.FromSeconds(3));
-				}
-			}
-
 			base.Update(gameTime);
 		}
 

@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace mogate
 {
@@ -18,9 +19,24 @@ namespace mogate
 			m_font = sprites.GetFont ("SpriteFont1");
 		}
 
+		protected override void OnPostUpdate(GameTime gameTime)
+		{
+			if (Keyboard.GetState ().IsKeyDown (Keys.N)) {
+				var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
+				gameState.NewGame ();
+	
+				var director = (IDirector)Game.Services.GetService (typeof(IDirector));
+				var sc = director.GetActiveScene ();
+				if (sc.Name != "game") {
+					director.ActivateScene ("game", TimeSpan.FromSeconds(3));
+				}
+			}
+		}
+
 		protected override void OnPostDraw(SpriteBatch spriteBatch, GameTime gameTime)
 		{
-			spriteBatch.DrawString (m_font, "Press space ...", new Vector2 (430, 300), Color.White);
+			spriteBatch.DrawString (m_font, "Press 'N' for new game", new Vector2 (420, 270), Color.White);
+			spriteBatch.DrawString (m_font, "Press 'C' to continue", new Vector2 (420, 300), Color.White);
 		}
 	}
 }
