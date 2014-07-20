@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectTypeGuids>{948B3504-5B70-4649-8FE4-BDE1FB46EC69};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectGuid>{370FC57D-064F-4385-AD01-BFF74DEE8993}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>mogate.MonoMac</RootNamespace>
+    <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
+    <AssemblyName>mogate.MonoMac</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <UseSGen>false</UseSGen>
+    <IncludeMonoRuntime>false</IncludeMonoRuntime>
+    <EnablePackageSigning>false</EnablePackageSigning>
+    <EnableCodeSigning>false</EnableCodeSigning>
+    <CreatePackage>false</CreatePackage>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <LinkMode>Full</LinkMode>
+    <UseSGen>false</UseSGen>
+    <IncludeMonoRuntime>true</IncludeMonoRuntime>
+    <EnablePackageSigning>false</EnablePackageSigning>
+    <CodeSigningKey>Developer ID Application</CodeSigningKey>
+    <EnableCodeSigning>true</EnableCodeSigning>
+    <CreatePackage>true</CreatePackage>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'AppStore|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\AppStore</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <LinkMode>Full</LinkMode>
+    <UseSGen>false</UseSGen>
+    <IncludeMonoRuntime>true</IncludeMonoRuntime>
+    <PackageSigningKey>3rd Party Mac Developer Installer</PackageSigningKey>
+    <CreatePackage>true</CreatePackage>
+    <CodeSigningKey>3rd Party Mac Developer Application</CodeSigningKey>
+    <EnableCodeSigning>true</EnableCodeSigning>
+    <EnablePackageSigning>true</EnablePackageSigning>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="MonoMac" />
+    <Reference Include="Lidgren.Network">
+      <HintPath>..\packages\MonoGame.Binaries.3.2.0\build\MonoMac\Lidgren.Network.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoGame.Framework">
+      <HintPath>..\packages\MonoGame.Binaries.3.2.0\build\MonoMac\MonoGame.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Tao.Sdl">
+      <HintPath>..\packages\MonoGame.Binaries.3.2.0\build\MonoMac\Tao.Sdl.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
+    <Folder Include="Core\" />
+    <Folder Include="Layers\" />
+    <Folder Include="Services\" />
+    <Folder Include="Actions\" />
+    <Folder Include="Behaviors\" />
+    <Folder Include="Scenes\" />
+    <Folder Include="Content\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Info.plist" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="..\mogate\GameMogate.cs">
+      <Link>GameMogate.cs</Link>
+    </Compile>
+    <Compile Include="..\mogate\Core\Behavior.cs">
+      <Link>Core\Behavior.cs</Link>
+    </Compile>
+    <Compile Include="..\mogate\Core\Director.cs">
+      <Link>Core\Director.cs</Link>
+    </Compile>
+    <Compile Include="..\mogate\Core\Entity.cs">
+      <Link>Core\Entity.cs</Link>
+    </Compile>
+    <Compile Include="..\mogate\Core\Globals.cs">
+      <Link>Core\Globals.cs</Link>
+    </Compile>
+    <Compile Include="..\mogate\Core\Layer.cs">
+      <Link>Core\Layer.cs</Link>
+    </Compile>
+    <Compile Include="..\mogate\Core\MapGenerator.cs">
+      <Link>Core\MapGenerator.cs</Link>
+    </Compile>
+    <Compile Include="..\mogate\Core\PList.cs">
+      <Link>Core\PList.cs</Link>
+    </Compile>
+    <Compile Include="..\mogate\Core\Scene.cs">
+      <Link>Core\Scene.cs</Link>
+    </Compile>
+    <Compile Include="..\mogate\Core\Utils.cs">
+      <Link>Core\Utils.cs</Link>
+    </Compile>
+    <Compile Include="..\mogate\Layers\EffectsLayer.cs">
+      <Link>Layers\EffectsLayer.cs</Link>
+    </Compile>
+    <Compile Include="..\mogate\Layers\HeroLayer.cs">
+      <Link>Layers\HeroLayer.cs</Link>
+    </Compile>
+    <Compile Include="..\mogate\Layers\ItemsLayer.cs">
+      <Link>Layers\ItemsLayer.cs</Link>
+    </Compile>
+    <Compile Include="..\mogate\Layers\MapGridLayer.cs">
+      <Link>Layers\MapGridLayer.cs</Link>
+    </Compile>
+    <Compile Include="..\mogate\Layers\MenuLayer.cs">
+      <Link>Layers\MenuLayer.cs</Link>
+    </Compile>
+    <Compile Include="..\mogate\Layers\MonstersLayer.cs">
+      <Link>Layers\MonstersLayer.cs</Link>
+    </Compile>
+    <Compile Include="..\mogate\Services\GameState.cs">
+      <Link>Services\GameState.cs</Link>
+    </Compile>
+    <Compile Include="..\mogate\Services\MapGrid.cs">
+      <Link>Services\MapGrid.cs</Link>
+    </Compile>
+    <Compile Include="..\mogate\Services\SpriteSheets.cs">
+      <Link>Services\SpriteSheets.cs</Link>
+    </Compile>
+    <Compile Include="..\mogate\Services\World.cs">
+      <Link>Services\World.cs</Link>
+    </Compile>
+    <Compile Include="..\mogate\Actions\ActionEntity.cs">
+      <Link>Actions\ActionEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\mogate\Actions\AnimSprite.cs">
+      <Link>Actions\AnimSprite.cs</Link>
+    </Compile>
+    <Compile Include="..\mogate\Actions\FollowSprite.cs">
+      <Link>Actions\FollowSprite.cs</Link>
+    </Compile>
+    <Compile Include="..\mogate\Actions\Loop.cs">
+      <Link>Actions\Loop.cs</Link>
+    </Compile>
+    <Compile Include="..\mogate\Actions\MoveSpriteTo.cs">
+      <Link>Actions\MoveSpriteTo.cs</Link>
+    </Compile>
+    <Compile Include="..\mogate\Actions\Sequence.cs">
+      <Link>Actions\Sequence.cs</Link>
+    </Compile>
+    <Compile Include="..\mogate\Actions\Spawn.cs">
+      <Link>Actions\Spawn.cs</Link>
+    </Compile>
+    <Compile Include="..\mogate\Actions\Gameplay\AttackEntity.cs">
+      <Link>Actions\Gameplay\AttackEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\mogate\Behaviors\Attack.cs">
+      <Link>Behaviors\Attack.cs</Link>
+    </Compile>
+    <Compile Include="..\mogate\Behaviors\Attackable.cs">
+      <Link>Behaviors\Attackable.cs</Link>
+    </Compile>
+    <Compile Include="..\mogate\Behaviors\Drawable.cs">
+      <Link>Behaviors\Drawable.cs</Link>
+    </Compile>
+    <Compile Include="..\mogate\Behaviors\Execute.cs">
+      <Link>Behaviors\Execute.cs</Link>
+    </Compile>
+    <Compile Include="..\mogate\Behaviors\Health.cs">
+      <Link>Behaviors\Health.cs</Link>
+    </Compile>
+    <Compile Include="..\mogate\Behaviors\Position.cs">
+      <Link>Behaviors\Position.cs</Link>
+    </Compile>
+    <Compile Include="..\mogate\Behaviors\State.cs">
+      <Link>Behaviors\State.cs</Link>
+    </Compile>
+    <Compile Include="..\mogate\Scenes\GameScene.cs">
+      <Link>Scenes\GameScene.cs</Link>
+    </Compile>
+    <Compile Include="..\mogate\Scenes\MainScene.cs">
+      <Link>Scenes\MainScene.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="..\mogate\Icon.png">
+      <Link>Resources\Icon.png</Link>
+    </BundleResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\mogate\Content\Fonts\SpriteFont1.xnb">
+      <Link>Content\Fonts\SpriteFont1.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\mogate\Content\Shaders\fade.xnb">
+      <Link>Content\Shaders\fade.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\mogate\Content\Shaders\grayscale.xnb">
+      <Link>Content\Shaders\grayscale.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\mogate\Content\Sprites\sprites.plist">
+      <Link>Content\Sprites\sprites.plist</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\mogate\Content\Sprites\sprites.png">
+      <Link>Content\Sprites\sprites.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+</Project>
