@@ -202,11 +202,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="..\mogate\Icon.png">
-      <Link>Resources\Icon.png</Link>
-    </BundleResource>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="..\mogate\Content\Fonts\SpriteFont1.xnb">
       <Link>Content\Fonts\SpriteFont1.xnb</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -227,5 +222,8 @@
       <Link>Content\Sprites\sprites.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\Icon.png" />
   </ItemGroup>
 </Project>
