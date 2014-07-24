@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mogate", "mogate\mogate.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mogate.Content", "mogate.Content\mogate.Content.csproj", "{885B53C3-88D2-4252-8F87-362A7280721E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mogate.Game", "mogate.Game\mogate.Game.csproj", "{53E46420-5BD0-4FF9-835B-FED9064E9100}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -15,6 +17,10 @@ Global
 		{0F36DD4E-D5EE-4ACD-AD24-7D86752E6521}.Debug|x86.Build.0 = Debug|x86
 		{0F36DD4E-D5EE-4ACD-AD24-7D86752E6521}.Release|x86.ActiveCfg = Release|x86
 		{0F36DD4E-D5EE-4ACD-AD24-7D86752E6521}.Release|x86.Build.0 = Release|x86
+		{53E46420-5BD0-4FF9-835B-FED9064E9100}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{53E46420-5BD0-4FF9-835B-FED9064E9100}.Debug|x86.Build.0 = Debug|Any CPU
+		{53E46420-5BD0-4FF9-835B-FED9064E9100}.Release|x86.ActiveCfg = Release|Any CPU
+		{53E46420-5BD0-4FF9-835B-FED9064E9100}.Release|x86.Build.0 = Release|Any CPU
 		{885B53C3-88D2-4252-8F87-362A7280721E}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{885B53C3-88D2-4252-8F87-362A7280721E}.Debug|x86.Build.0 = Debug|Any CPU
 		{885B53C3-88D2-4252-8F87-362A7280721E}.Release|x86.ActiveCfg = Release|Any CPU

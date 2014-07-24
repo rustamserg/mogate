@@ -32,61 +32,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Core" />
-    <Reference Include="Lidgren.Network">
-      <HintPath>..\packages\MonoGame.Binaries.3.2.0\build\net40\Lidgren.Network.dll</HintPath>
-    </Reference>
-    <Reference Include="MonoGame.Framework">
-      <HintPath>..\packages\MonoGame.Binaries.3.2.0\build\net40\MonoGame.Framework.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenTK">
-      <HintPath>..\packages\MonoGame.Binaries.3.2.0\build\net40\OpenTK.dll</HintPath>
-    </Reference>
-    <Reference Include="Tao.Sdl">
-      <HintPath>..\packages\MonoGame.Binaries.3.2.0\build\net40\Tao.Sdl.dll</HintPath>
+    <Reference Include="MonoGameContentProcessors">
+      <HintPath>..\packages\MonoGame.ContentProcessors.3.2.1\lib\MonoGameContentProcessors.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="GameMogate.cs" />
-    <Compile Include="Layers\HeroLayer.cs" />
-    <Compile Include="Layers\ItemsLayer.cs" />
-    <Compile Include="Layers\MapGridLayer.cs" />
-    <Compile Include="Services\GameState.cs" />
-    <Compile Include="Services\MapGrid.cs" />
-    <Compile Include="Layers\MonstersLayer.cs" />
-    <Compile Include="Behaviors\Position.cs" />
-    <Compile Include="Core\Entity.cs" />
-    <Compile Include="Core\Behavior.cs" />
-    <Compile Include="Core\MapGenerator.cs" />
-    <Compile Include="Behaviors\Health.cs" />
-    <Compile Include="Behaviors\Drawable.cs" />
-    <Compile Include="Services\SpriteSheets.cs" />
-    <Compile Include="Actions\Sequence.cs" />
-    <Compile Include="Behaviors\Execute.cs" />
-    <Compile Include="Actions\ActionEntity.cs" />
-    <Compile Include="Actions\MoveSpriteTo.cs" />
-    <Compile Include="Behaviors\State.cs" />
-    <Compile Include="Actions\Spawn.cs" />
-    <Compile Include="Actions\AnimSprite.cs" />
-    <Compile Include="Actions\Loop.cs" />
-    <Compile Include="Behaviors\Attack.cs" />
-    <Compile Include="Behaviors\Attackable.cs" />
-    <Compile Include="Actions\Gameplay\AttackEntity.cs" />
-    <Compile Include="Layers\EffectsLayer.cs" />
-    <Compile Include="Actions\FollowSprite.cs" />
-    <Compile Include="Services\World.cs" />
-    <Compile Include="Core\Utils.cs" />
-    <Compile Include="Core\Globals.cs" />
-    <Compile Include="Core\PList.cs" />
-    <Compile Include="Core\Layer.cs" />
-    <Compile Include="Core\Scene.cs" />
-    <Compile Include="Core\Director.cs" />
-    <Compile Include="Scenes\GameScene.cs" />
-    <Compile Include="Scenes\MainScene.cs" />
-    <Compile Include="Layers\MenuLayer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />
@@ -99,6 +51,10 @@
     <ProjectReference Include="..\mogate.Content\mogate.Content.csproj">
       <Project>{885B53C3-88D2-4252-8F87-362A7280721E}</Project>
       <Name>mogate.Content</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\mogate.Game\mogate.Game.csproj">
+      <Project>{53E46420-5BD0-4FF9-835B-FED9064E9100}</Project>
+      <Name>mogate.Game</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>
