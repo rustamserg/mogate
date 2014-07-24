@@ -18,6 +18,7 @@ namespace mogate
 		Sprite2D m_life;
 		Point m_toMove;
 		Entity m_player;
+		bool m_isLevelCompleted = false;
 
 		public HeroLayer(Game game, string name, int z) : base(game, name, z)
 		{
@@ -66,6 +67,11 @@ namespace mogate
 			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
 
 			var director = (IDirector)Game.Services.GetService (typeof(IDirector));
+			if (m_isLevelCompleted) {
+				director.ActivateScene ("inter", TimeSpan.FromSeconds (1));
+				return;
+			}
+
 			var gs = director.GetActiveScene ();
 			var effects = (EffectsLayer)gs.GetLayer ("effects");
 	
@@ -143,7 +149,7 @@ namespace mogate
 
 			var mt = mapGrid.GetID (m_player.Get<Position>().MapPos.X, m_player.Get<Position>().MapPos.Y);
 			if (mt == MapGridTypes.ID.StairUp) {
-				gameState.NextLevel ();
+				m_isLevelCompleted = true;
 			}
 			StartIdle ();
 		}

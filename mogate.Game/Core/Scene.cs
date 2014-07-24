@@ -54,7 +54,8 @@ namespace mogate
 				} else {
 					var iter = new List<Layer> (m_orderedLayers);
 					foreach (var la in iter) {
-						la.Update (gameTime);
+						if (State == SceneState.Activated)
+							la.Update (gameTime);
 					}
 				}
 			}
