@@ -28,7 +28,7 @@ namespace mogate
 				var director = (IDirector)Game.Services.GetService (typeof(IDirector));
 				var sc = director.GetActiveScene ();
 				if (sc.Name != "game") {
-					director.ActivateScene ("game", TimeSpan.FromSeconds(2));
+					director.ActivateScene ("game");
 				}
 			}
 		}

@@ -65,10 +65,14 @@ namespace mogate
 				if (!ent.Has<Drawable> ())
 					continue;
 
-				spriteBatch.Draw (ent.Get<Drawable>().Sprite.Texture,
-					ent.Get<Drawable>().DrawPos,
-					ent.Get<Drawable>().DrawRect,
-					ent.Get<Drawable>().DrawColor);
+				var drawAspect = ent.Get<Drawable> ();
+				var drawColor = (drawAspect.DrawAlpha < 1.0f)
+					? drawAspect.DrawColor * drawAspect.DrawAlpha : drawAspect.DrawColor;
+
+				spriteBatch.Draw (drawAspect.Sprite.Texture,
+					drawAspect.DrawPos,
+					drawAspect.DrawRect,
+					drawColor);
 			}
 
 			OnPostDraw (spriteBatch, gameTime);

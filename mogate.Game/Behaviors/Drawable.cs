@@ -11,6 +11,7 @@ namespace mogate
 		public Sprite2D Sprite;
 		public Vector2 DrawPos;
 		public Color DrawColor;
+		public float DrawAlpha;
 		public int FrameId;
 
 		public Rectangle DrawRect {
@@ -25,6 +26,7 @@ namespace mogate
 			Sprite = sprite;
 			DrawPos = drawPos;
 			DrawColor = Color.White;
+			DrawAlpha = 1.0f;
 		}
 	}
 }

@@ -16,6 +16,7 @@ namespace mogate
 			AddLayer (new HeroLayer (Game, "hero", 2));
 			AddLayer (new MonstersLayer (Game, "monsters", 3));
 			AddLayer (new EffectsLayer (Game, "effects", 4));
+			AddLayer (new FogLayer (Game, "fog", 5));
 		}
 	}
 }

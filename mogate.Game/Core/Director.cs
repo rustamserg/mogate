@@ -9,6 +9,7 @@ namespace mogate
 	{
 		void RegisterScene (Scene scene);
 		void ActivateScene (string name, TimeSpan duration);
+		void ActivateScene (string name);
 		Scene GetScene(string name);
 		Scene GetActiveScene();
 	}
@@ -26,6 +27,11 @@ namespace mogate
 		{
 			m_scenes.Add (scene.Name, scene);
 			Game.Components.Add (scene);
+		}
+
+		public void ActivateScene (string name)
+		{
+			ActivateScene (name, TimeSpan.Zero);
 		}
 
 		public void ActivateScene (string name, TimeSpan duration)
