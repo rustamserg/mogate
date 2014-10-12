@@ -24,8 +24,34 @@ namespace mogate
 					var ent = CreateEntity ();
 					ent.Register(new Drawable(sprites.GetSprite("effects_fog"),
 						new Vector2(w * Globals.CELL_WIDTH, h * Globals.CELL_HEIGHT)));
+					ent.Register (new Position (w, h));
+				}
+			}
+		}
 
-					ent.Get<Drawable> ().DrawAlpha = 0.3f;
+		protected override void OnPostUpdate(GameTime gameTime)
+		{
+			var fogent = GetAllEntities ();
+
+			var director = (IDirector)Game.Services.GetService (typeof(IDirector));
+			var scene = director.GetActiveScene ();
+
+			var hero = scene.GetLayer ("hero");
+			var items = scene.GetLayer ("items");
+
+			var player = hero.GetEntityByTag ("player");
+			var pp = player.Get<Position> ().MapPos;
+			var dist = player.Get<PointLight> ().Distance;
+
+			foreach (var ent in fogent) {
+				ent.Get<Drawable> ().DrawAlpha = 1.0f;
+			}
+
+			foreach (var ent in fogent) {
+				var fp = ent.Get<Position> ().MapPos;
+				var lightDist = (float)Utils.Dist (fp, pp);
+				if (lightDist < player.Get<PointLight> ().Distance) {
+					ent.Get<Drawable> ().DrawAlpha *= lightDist / player.Get<PointLight> ().Distance;
 				}
 			}
 		}

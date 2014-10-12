@@ -30,6 +30,8 @@ namespace mogate
 				var ent = CreateEntity ();
 				ent.Register (new Drawable (sprites.GetSprite ("items_barrel"),
 					new Vector2(pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
+				ent.Register (new Position (pos.X, pos.Y));
+				ent.Register (new PointLight (3));
 			}
 		}
 	}

@@ -6,9 +6,9 @@ namespace mogate
 	public class Entity
 	{
 		private Dictionary<Type, IBehavior> m_behaviors = new Dictionary<Type, IBehavior>();
-		public readonly int Tag;	
+		public readonly string Tag;	
 
-		public Entity(int tag = 0)
+		public Entity(string tag = "")
 		{
 			Tag = tag;
 		}

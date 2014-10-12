@@ -24,8 +24,6 @@ namespace mogate
 		{
 		}
 
-		public Entity Player { get { return m_player; } }
-
 		public override void OnActivated ()
 		{
 			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
@@ -35,11 +33,12 @@ namespace mogate
 			var mapGrid = world.GetLevel(gameState.Level);
 
 			RemoveAllEntities ();
-			m_player = CreateEntity ();
+			m_player = CreateEntity ("player");
 
 			m_player.Register (new State<HeroState> (HeroState.Idle));
 			m_player.Register (new Health (200));
 			m_player.Register (new Attack (10));
+			m_player.Register (new PointLight (7));
 			m_player.Register (new Attackable (OnAttacked));
 			m_player.Register (new Position (mapGrid.StairDown.X, mapGrid.StairDown.Y));
 			m_player.Register (new Execute ());

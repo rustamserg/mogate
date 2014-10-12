@@ -7,7 +7,7 @@ namespace mogate
 {
 	public class Layer : GameComponent
 	{
-		private Dictionary<int, Entity> m_entitiesByTag = new Dictionary<int, Entity>();
+		private Dictionary<string, Entity> m_entitiesByTag = new Dictionary<string, Entity>();
 		private int m_id;
 
 		public string Name { get; private set; }
@@ -19,14 +19,14 @@ namespace mogate
 			ZOrder = z;
 		}
 
-		public Entity CreateEntity(int tag = 0)
+		public Entity CreateEntity(string tag = "")
 		{
-			var ent = new Entity(tag == 0 ? ++m_id : tag);
+			var ent = new Entity(string.IsNullOrEmpty(tag) ? (++m_id).ToString() : tag);
 			m_entitiesByTag.Add (ent.Tag, ent);
 			return ent;
 		}
 
-		public Entity GetEntityByTag(int tag)
+		public Entity GetEntityByTag(string tag)
 		{
 			return m_entitiesByTag [tag];
 		}
@@ -41,7 +41,7 @@ namespace mogate
 			m_entitiesByTag.Clear();
 		}
 
-		public void RemoveEntityByTag(int tag)
+		public void RemoveEntityByTag(string tag)
 		{
 			m_entitiesByTag.Remove (tag);
 		}

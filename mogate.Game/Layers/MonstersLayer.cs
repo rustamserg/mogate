@@ -76,19 +76,19 @@ namespace mogate
 
 			var director = (IDirector)Game.Services.GetService (typeof(IDirector));
 			var gs = director.GetActiveScene ();
-			var hero = (HeroLayer)gs.GetLayer ("hero");
+			var player = gs.GetLayer ("hero").GetEntityByTag("player");
 
 			Point newPos = monster.Get<Position>().MapPos;
 			Point curPos = monster.Get<Position>().MapPos;
 
-			if (Utils.Dist (curPos, hero.Player.Get<Position> ().MapPos) < 6) {
-				if (hero.Player.Get<Position> ().MapPos.X < monster.Get<Position> ().MapPos.X)
+			if (Utils.Dist (curPos, player.Get<Position> ().MapPos) < 6) {
+				if (player.Get<Position> ().MapPos.X < monster.Get<Position> ().MapPos.X)
 					newPos.X--;
-				else if (hero.Player.Get<Position> ().MapPos.X > monster.Get<Position> ().MapPos.X)
+				else if (player.Get<Position> ().MapPos.X > monster.Get<Position> ().MapPos.X)
 					newPos.X++;
-				else if (hero.Player.Get<Position> ().MapPos.Y < monster.Get<Position> ().MapPos.Y)
+				else if (player.Get<Position> ().MapPos.Y < monster.Get<Position> ().MapPos.Y)
 					newPos.Y--;
-				else if (hero.Player.Get<Position> ().MapPos.Y > monster.Get<Position> ().MapPos.Y)
+				else if (player.Get<Position> ().MapPos.Y > monster.Get<Position> ().MapPos.Y)
 					newPos.Y++;
 
 				if (map.GetID (newPos.X, newPos.Y) != MapGridTypes.ID.Tunnel)
@@ -101,14 +101,14 @@ namespace mogate
 		{
 			var director = (IDirector)Game.Services.GetService (typeof(IDirector));
 			var gs = director.GetActiveScene ();
-			var hero = (HeroLayer)gs.GetLayer ("hero");
+			var player = gs.GetLayer ("hero").GetEntityByTag("player");
 
 			Point curPos = monster.Get<Position>().MapPos;
 
-			if (newPos == hero.Player.Get<Position> ().MapPos) {
+			if (newPos == player.Get<Position> ().MapPos) {
 				var seq = new Sequence ();
 				seq.Add (new MoveSpriteTo (monster, new Vector2(newPos.X*Globals.CELL_WIDTH, newPos.Y*Globals.CELL_HEIGHT), 500));
-				seq.Add (new AttackEntity (monster, hero.Player));
+				seq.Add (new AttackEntity (monster, player));
 				seq.Add (new MoveSpriteTo (monster, new Vector2(curPos.X*Globals.CELL_WIDTH, curPos.Y*Globals.CELL_HEIGHT), 500));
 				seq.Add (new ActionEntity(monster, (_) => {
 					monster.Get<State<MonsterState>>().EState = MonsterState.Idle;
