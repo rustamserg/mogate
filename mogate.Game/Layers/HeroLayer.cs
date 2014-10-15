@@ -130,12 +130,17 @@ namespace mogate
 			var gs = director.GetActiveScene ();
 			var effects = (EffectsLayer)gs.GetLayer ("effects");
 			var monsters = (MonstersLayer)gs.GetLayer ("monsters");
+			var items = (ItemsLayer)gs.GetLayer ("items");
 
 			effects.SpawnEffect (attackTo, "items_sword", 100);
 
 			var monster = monsters.GetAllEntities().FirstOrDefault (m => m.Get<Position> ().MapPos == attackTo);
 			if (monster != default(Entity)) {
 				m_player.Get<Execute> ().Add (new AttackEntity (m_player, monster));
+			}
+			var item = items.GetAllEntities ().FirstOrDefault (m => m.Get<Position> ().MapPos == attackTo);
+			if (item != default(Entity)) {
+				m_player.Get<Execute> ().Add (new AttackEntity (m_player, item));
 			}
 		}
 
@@ -149,6 +154,15 @@ namespace mogate
 			var mt = mapGrid.GetID (m_player.Get<Position>().MapPos.X, m_player.Get<Position>().MapPos.Y);
 			if (mt == MapGridTypes.ID.StairUp) {
 				m_isLevelCompleted = true;
+			}
+
+			var director = (IDirector)Game.Services.GetService (typeof(IDirector));
+			var gs = director.GetActiveScene ();
+			var items = (ItemsLayer)gs.GetLayer ("items");
+
+			var toTrigger = items.GetAllEntities ().Where (m => m.Has<Triggerable>());
+			foreach (var item in toTrigger) {
+				m_player.Get<Execute> ().Add (new TriggerEntity (m_player, item));
 			}
 			StartIdle ();
 		}

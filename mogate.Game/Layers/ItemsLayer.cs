@@ -31,8 +31,39 @@ namespace mogate
 				ent.Register (new Drawable (sprites.GetSprite ("items_barrel"),
 					new Vector2(pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
 				ent.Register (new Position (pos.X, pos.Y));
-				ent.Register (new PointLight (3));
+				ent.Register (new Health (10));
+				ent.Register (new Attackable ((attacker) => OnAttacked(ent, attacker)));
 			}
+		}
+
+		void OnAttacked (Entity item, Entity attacker)
+		{
+			var director = (IDirector)Game.Services.GetService (typeof(IDirector));
+			var gs = director.GetActiveScene ();
+			var effects = (EffectsLayer)gs.GetLayer ("effects");
+			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
+
+			effects.AttachEffect (item, "effects_damage", 400);
+
+			if (item.Get<Health> ().HP == 0) {
+				RemoveEntityByTag (item.Tag);
+		
+				var mp = item.Get<Position> ().MapPos;
+				var ent = CreateEntity ();
+				ent.Register (new Drawable (sprites.GetSprite ("items_life"),
+					new Vector2 (mp.X * Globals.CELL_WIDTH, mp.Y * Globals.CELL_HEIGHT)));
+				ent.Register (new Position (mp.X, mp.Y));
+				ent.Register (new Triggerable (1, (from) => OnTriggered(ent, from)));
+			}
+		}
+
+		void OnTriggered (Entity item, Entity from)
+		{
+			if (from.Has<Health> ()) {
+				from.Get<Health> ().HP = Math.Min (from.Get<Health> ().MaxHP,
+					from.Get<Health> ().HP + 20);
+			}
+			RemoveEntityByTag (item.Tag);
 		}
 	}
 }

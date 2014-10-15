@@ -37,21 +37,18 @@ namespace mogate
 			var scene = director.GetActiveScene ();
 
 			var hero = scene.GetLayer ("hero");
-			var items = scene.GetLayer ("items");
 
 			var player = hero.GetEntityByTag ("player");
 			var pp = player.Get<Position> ().MapPos;
 			var dist = player.Get<PointLight> ().Distance;
 
 			foreach (var ent in fogent) {
-				ent.Get<Drawable> ().DrawAlpha = 1.0f;
-			}
-
-			foreach (var ent in fogent) {
 				var fp = ent.Get<Position> ().MapPos;
 				var lightDist = (float)Utils.Dist (fp, pp);
 				if (lightDist < player.Get<PointLight> ().Distance) {
-					ent.Get<Drawable> ().DrawAlpha *= lightDist / player.Get<PointLight> ().Distance;
+					ent.Get<Drawable> ().DrawAlpha = lightDist / player.Get<PointLight> ().Distance;
+				} else {
+					ent.Get<Drawable> ().DrawAlpha = 1.0f;
 				}
 			}
 		}
