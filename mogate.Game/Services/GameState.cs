@@ -6,7 +6,9 @@ namespace mogate
 {
 	public interface IGameState
 	{
-		int Level { get; set; }
+		int Level { get; }
+		int PlayerHealth { get; set; }
+		bool IsGameEnd { get; }
 
 		void NewGame();
 		void NextLevel();
@@ -14,7 +16,9 @@ namespace mogate
 
 	public class GameState : GameComponent, IGameState
 	{
-		public int Level { get; set; }
+		public int Level { get; private set; }
+		public bool IsGameEnd { get; private set; }
+		public int PlayerHealth { get; set; }
 
 		public GameState (Game game) : base(game)
 		{
@@ -34,11 +38,19 @@ namespace mogate
 			world.GenerateLevels (Globals.MAX_LEVELS);
 
 			Level = 0;
+			PlayerHealth = 200;
+			IsGameEnd = false;
 		}
-
+		 
 		public void NextLevel()
 		{
-			Level = Math.Min (Level + 1, Globals.MAX_LEVELS - 1);
+			Level = Level + 1;
+		
+			if (Level == Globals.MAX_LEVELS) {
+				IsGameEnd = true;
+				Level = 0;
+				return;
+			}
 		}
 	}
 }

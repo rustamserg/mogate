@@ -17,7 +17,6 @@ namespace mogate
 	{
 		Sprite2D m_life;
 		Point m_toMove;
-		Entity m_player;
 		bool m_isLevelCompleted = false;
 
 		public HeroLayer(Game game, string name, int z) : base(game, name, z)
@@ -33,16 +32,16 @@ namespace mogate
 			var mapGrid = world.GetLevel(gameState.Level);
 
 			RemoveAllEntities ();
-			m_player = CreateEntity ("player");
+			var player = CreateEntity ("player");
 
-			m_player.Register (new State<HeroState> (HeroState.Idle));
-			m_player.Register (new Health (200));
-			m_player.Register (new Attack (10));
-			m_player.Register (new PointLight (7));
-			m_player.Register (new Attackable (OnAttacked));
-			m_player.Register (new Position (mapGrid.StairDown.X, mapGrid.StairDown.Y));
-			m_player.Register (new Execute ());
-			m_player.Register (new Drawable (sprites.GetSprite ("hero_idle"),
+			player.Register (new State<HeroState> (HeroState.Idle));
+			player.Register (new Health (gameState.PlayerHealth));
+			player.Register (new Attack (10));
+			player.Register (new PointLight (7));
+			player.Register (new Attackable (OnAttacked));
+			player.Register (new Position (mapGrid.StairDown.X, mapGrid.StairDown.Y));
+			player.Register (new Execute ());
+			player.Register (new Drawable (sprites.GetSprite ("hero_idle"),
 				new Vector2(mapGrid.StairDown.X*Globals.CELL_WIDTH, mapGrid.StairDown.Y*Globals.CELL_HEIGHT)));
 
 			m_toMove = mapGrid.StairDown;
@@ -51,10 +50,19 @@ namespace mogate
 			m_life = sprites.GetSprite ("items_life");
 		}
 
+		public override void OnDeactivated ()
+		{
+			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
+			var player = GetEntityByTag("player");
+			gameState.PlayerHealth = player.Get<Health> ().HP;
+		}
+
 		protected override void OnPostDraw (SpriteBatch spriteBatch, GameTime gameTime)
 		{
-			for (int i = 0; i < (int)(m_player.Get<Health> ().HP / 20); i++) {
-				var drawPos = new Vector2 (i * Globals.CELL_WIDTH, Globals.WORLD_HEIGHT * Globals.CELL_HEIGHT);
+			var player = GetEntityByTag("player");
+
+			for (int i = 0; i < (int)(player.Get<Health> ().HP / 20); i++) {
+				var drawPos = new Vector2 (Globals.WORLD_WIDTH * Globals.CELL_WIDTH, i  * Globals.CELL_HEIGHT);
 				spriteBatch.Draw (m_life.Texture, drawPos, m_life.GetFrameRect (0), Color.White);
 			}
 		}
@@ -64,6 +72,9 @@ namespace mogate
 			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
+
+			if (Keyboard.GetState ().IsKeyDown (Keys.Q))
+				m_isLevelCompleted = true;
 
 			var director = (IDirector)Game.Services.GetService (typeof(IDirector));
 			if (m_isLevelCompleted) {
@@ -75,9 +86,10 @@ namespace mogate
 			var effects = (EffectsLayer)gs.GetLayer ("effects");
 	
 			var mapGrid = world.GetLevel(gameState.Level);
+			var player = GetEntityByTag("player");
 
 			var ms = Mouse.GetState ();
-			var mapPos = m_player.Get<Position>().MapPos;
+			var mapPos = player.Get<Position>().MapPos;
 
 			if (ms.LeftButton == ButtonState.Pressed) {
 				var clickPos = mapGrid.ScreenToWorld (ms.X, ms.Y);
@@ -96,7 +108,7 @@ namespace mogate
 				}
 			}
 
-			if (m_player.Get<State<HeroState>>().EState == HeroState.Idle) {
+			if (player.Get<State<HeroState>>().EState == HeroState.Idle) {
 
 				if (mapPos.X < m_toMove.X && mapGrid.GetID (mapPos.X + 1, mapPos.Y) != MapGridTypes.ID.Blocked)
 					mapPos.X++;
@@ -107,19 +119,19 @@ namespace mogate
 				if (mapPos.Y > m_toMove.Y && mapGrid.GetID (mapPos.X, mapPos.Y - 1) != MapGridTypes.ID.Blocked)
 					mapPos.Y--;
 
-				if (mapGrid.GetID (mapPos.X, mapPos.Y) != MapGridTypes.ID.Blocked && mapPos != m_player.Get<Position> ().MapPos) {
+				if (mapGrid.GetID (mapPos.X, mapPos.Y) != MapGridTypes.ID.Blocked && mapPos != player.Get<Position> ().MapPos) {
 					var seq = new Sequence ();
 					var spawn = new Spawn ();
-					spawn.Add (new MoveSpriteTo (m_player, new Vector2 (mapPos.X * Globals.CELL_WIDTH, mapPos.Y * Globals.CELL_HEIGHT), 300));
-					spawn.Add (new AnimSprite (m_player, sprites.GetSprite("hero_move"), 300));
+					spawn.Add (new MoveSpriteTo (player, new Vector2 (mapPos.X * Globals.CELL_WIDTH, mapPos.Y * Globals.CELL_HEIGHT), 300));
+					spawn.Add (new AnimSprite (player, sprites.GetSprite("hero_move"), 300));
 					seq.Add (spawn);
-					seq.Add (new ActionEntity (m_player, (_) => {
-						m_player.Get<Position> ().MapPos = mapPos;
+					seq.Add (new ActionEntity (player, (_) => {
+						player.Get<Position> ().MapPos = mapPos;
 					}));
-					seq.Add (new ActionEntity (m_player, OnEndMove));
+					seq.Add (new ActionEntity (player, OnEndMove));
 
-					m_player.Get<Execute> ().AddNew (seq, "movement");
-					m_player.Get<State<HeroState>> ().EState = HeroState.Moving;
+					player.Get<Execute> ().AddNew (seq, "movement");
+					player.Get<State<HeroState>> ().EState = HeroState.Moving;
 				}
 			}
 		}
@@ -131,16 +143,17 @@ namespace mogate
 			var effects = (EffectsLayer)gs.GetLayer ("effects");
 			var monsters = (MonstersLayer)gs.GetLayer ("monsters");
 			var items = (ItemsLayer)gs.GetLayer ("items");
+			var player = GetEntityByTag("player");
 
 			effects.SpawnEffect (attackTo, "items_sword", 100);
 
 			var monster = monsters.GetAllEntities().FirstOrDefault (m => m.Get<Position> ().MapPos == attackTo);
 			if (monster != default(Entity)) {
-				m_player.Get<Execute> ().Add (new AttackEntity (m_player, monster));
+				player.Get<Execute> ().Add (new AttackEntity (player, monster));
 			}
 			var item = items.GetAllEntities ().FirstOrDefault (m => m.Get<Position> ().MapPos == attackTo);
 			if (item != default(Entity)) {
-				m_player.Get<Execute> ().Add (new AttackEntity (m_player, item));
+				player.Get<Execute> ().Add (new AttackEntity (player, item));
 			}
 		}
 
@@ -150,8 +163,9 @@ namespace mogate
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 
 			var mapGrid = world.GetLevel(gameState.Level);
+			var player = GetEntityByTag("player");
 
-			var mt = mapGrid.GetID (m_player.Get<Position>().MapPos.X, m_player.Get<Position>().MapPos.Y);
+			var mt = mapGrid.GetID (player.Get<Position>().MapPos.X, player.Get<Position>().MapPos.Y);
 			if (mt == MapGridTypes.ID.StairUp) {
 				m_isLevelCompleted = true;
 			}
@@ -162,7 +176,7 @@ namespace mogate
 
 			var toTrigger = items.GetAllEntities ().Where (m => m.Has<Triggerable>());
 			foreach (var item in toTrigger) {
-				m_player.Get<Execute> ().Add (new TriggerEntity (m_player, item));
+				player.Get<Execute> ().Add (new TriggerEntity (player, item));
 			}
 			StartIdle ();
 		}
@@ -172,17 +186,22 @@ namespace mogate
 			var director = (IDirector)Game.Services.GetService (typeof(IDirector));
 			var gs = director.GetActiveScene ();
 			var effects = (EffectsLayer)gs.GetLayer ("effects");
+			var player = GetEntityByTag("player");
 	
-			effects.AttachEffect (m_player, "effects_damage", 400);
+			effects.AttachEffect (player, "effects_damage", 400);
+
+			if (player.Get<Health> ().HP == 0)
+				director.ActivateScene ("main");
 		}
 
 		private void StartIdle()
 		{
 			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
-			var loop = new Loop (new AnimSprite (m_player, sprites.GetSprite("hero_idle"), 600));
+			var player = GetEntityByTag("player");
+			var loop = new Loop (new AnimSprite (player, sprites.GetSprite("hero_idle"), 600));
 
-			m_player.Get<Execute> ().AddNew (loop, "movement");
-			m_player.Get<State<HeroState>>().EState = HeroState.Idle;
+			player.Get<Execute> ().AddNew (loop, "movement");
+			player.Get<State<HeroState>>().EState = HeroState.Idle;
 		}
 	}
 }

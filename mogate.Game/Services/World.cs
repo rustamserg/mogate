@@ -21,7 +21,14 @@ namespace mogate
 
 			for (int i = 0; i < max_levels; ++i) {
 				var mg = new MapGrid (Globals.WORLD_WIDTH, Globals.WORLD_HEIGHT);
-				MapGenerator.Generate (mg, new MapGenerator.Params (mg));
+				var pr = new MapGenerator.Params (mg);
+
+				pr.RoomMinSize = Globals.ROOM_MIN_SIZE [i];
+				pr.RoomMaxSize = Globals.ROOM_MAX_SIZE [i];
+				pr.RemoveDeadEnd = Globals.REM_DEAD_END [i];
+				pr.TunnelsCurveWeight = Globals.TUNNELS_CURVE [i];
+
+				MapGenerator.Generate (mg, pr);
 				m_levels[i] = mg;
 			}
 		}

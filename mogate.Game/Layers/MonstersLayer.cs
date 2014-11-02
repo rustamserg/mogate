@@ -33,7 +33,7 @@ namespace mogate
 			for (int x = 0; x < map.Width; x++) {
 				for (int y = 0; y < map.Height; y++) {
 					if (map.GetID (x, y) == MapGridTypes.ID.Tunnel) {
-						if (m_rand.Next (100) < 10) {
+						if (m_rand.Next (100) < Globals.MONSTER_PROB[gameState.Level]) {
 							var me = CreateEntity ();
 							me.Register (new State<MonsterState> (MonsterState.Idle));
 							me.Register (new Position (x, y));

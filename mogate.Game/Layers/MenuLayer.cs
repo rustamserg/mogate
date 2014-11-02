@@ -35,8 +35,7 @@ namespace mogate
 
 		protected override void OnPostDraw(SpriteBatch spriteBatch, GameTime gameTime)
 		{
-			spriteBatch.DrawString (m_font, "Press 'N' for new game", new Vector2 (420, 270), Color.White);
-			spriteBatch.DrawString (m_font, "Press 'C' to continue", new Vector2 (420, 300), Color.White);
+			spriteBatch.DrawString (m_font, "Press 'N' to start your adventure", new Vector2 (420, 270), Color.White);
 		}
 	}
 }
