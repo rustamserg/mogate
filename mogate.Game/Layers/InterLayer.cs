@@ -9,7 +9,7 @@ namespace mogate
 	{
 		private SpriteFont m_font;
 
-		public InterLayer (Game game, string name, int z) : base(game, name, z)
+		public InterLayer (Game game, string name, Scene scene, int z) : base(game, name, scene, z)
 		{
 		}
 

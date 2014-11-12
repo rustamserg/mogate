@@ -6,7 +6,7 @@ namespace mogate
 {
 	public class EffectsLayer : Layer
 	{
-		public EffectsLayer(Game game, string name, int z) : base(game, name, z)
+		public EffectsLayer(Game game, string name, Scene scene, int z) : base(game, name, scene, z)
 		{
 		}
 

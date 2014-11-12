@@ -19,7 +19,7 @@ namespace mogate
 		Point m_toMove;
 		bool m_isLevelCompleted = false;
 
-		public HeroLayer(Game game, string name, int z) : base(game, name, z)
+		public HeroLayer(Game game, string name, Scene scene, int z) : base(game, name, scene, z)
 		{
 		}
 
@@ -31,7 +31,6 @@ namespace mogate
 
 			var mapGrid = world.GetLevel(gameState.Level);
 
-			RemoveAllEntities ();
 			var player = CreateEntity ("player");
 
 			player.Register (new State<HeroState> (HeroState.Idle));
@@ -81,9 +80,8 @@ namespace mogate
 				director.ActivateScene ("inter", TimeSpan.FromSeconds (1));
 				return;
 			}
-
-			var gs = director.GetActiveScene ();
-			var effects = (EffectsLayer)gs.GetLayer ("effects");
+				
+			var effects = (EffectsLayer)Scene.GetLayer ("effects");
 	
 			var mapGrid = world.GetLevel(gameState.Level);
 			var player = GetEntityByTag("player");
@@ -138,11 +136,9 @@ namespace mogate
 
 		private void DoAttack(Point attackTo)
 		{
-			var director = (IDirector)Game.Services.GetService (typeof(IDirector));
-			var gs = director.GetActiveScene ();
-			var effects = (EffectsLayer)gs.GetLayer ("effects");
-			var monsters = (MonstersLayer)gs.GetLayer ("monsters");
-			var items = (ItemsLayer)gs.GetLayer ("items");
+			var effects = (EffectsLayer)Scene.GetLayer ("effects");
+			var monsters = (MonstersLayer)Scene.GetLayer ("monsters");
+			var items = (ItemsLayer)Scene.GetLayer ("items");
 			var player = GetEntityByTag("player");
 
 			effects.SpawnEffect (attackTo, "items_sword", 100);
@@ -170,9 +166,7 @@ namespace mogate
 				m_isLevelCompleted = true;
 			}
 
-			var director = (IDirector)Game.Services.GetService (typeof(IDirector));
-			var gs = director.GetActiveScene ();
-			var items = (ItemsLayer)gs.GetLayer ("items");
+			var items = (ItemsLayer)Scene.GetLayer ("items");
 
 			var toTrigger = items.GetAllEntities ().Where (m => m.Has<Triggerable>());
 			foreach (var item in toTrigger) {
@@ -184,8 +178,7 @@ namespace mogate
 		private void OnAttacked(Entity attacker)
 		{
 			var director = (IDirector)Game.Services.GetService (typeof(IDirector));
-			var gs = director.GetActiveScene ();
-			var effects = (EffectsLayer)gs.GetLayer ("effects");
+			var effects = (EffectsLayer)Scene.GetLayer ("effects");
 			var player = GetEntityByTag("player");
 	
 			effects.AttachEffect (player, "effects_damage", 400);

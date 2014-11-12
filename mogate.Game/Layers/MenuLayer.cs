@@ -9,7 +9,7 @@ namespace mogate
 	{
 		private SpriteFont m_font;
 
-		public MenuLayer (Game game, string name, int z) : base(game, name, z)
+		public MenuLayer (Game game, string name, Scene scene, int z) : base(game, name, scene, z)
 		{
 		}
 
@@ -26,10 +26,7 @@ namespace mogate
 				gameState.NewGame ();
 	
 				var director = (IDirector)Game.Services.GetService (typeof(IDirector));
-				var sc = director.GetActiveScene ();
-				if (sc.Name != "game") {
-					director.ActivateScene ("game");
-				}
+				director.ActivateScene ("game");
 			}
 		}
 

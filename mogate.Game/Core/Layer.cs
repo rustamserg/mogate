@@ -12,11 +12,13 @@ namespace mogate
 
 		public string Name { get; private set; }
 		public int ZOrder { get; set; }
+		public Scene Scene { get; private set; } 
 
-		public Layer(Game game, string name, int z) : base(game)
+		public Layer(Game game, string name, Scene scene, int z) : base(game)
 		{
 			Name = name;
 			ZOrder = z;
+			Scene = scene;
 		}
 
 		public Entity CreateEntity(string tag = "")
@@ -34,11 +36,6 @@ namespace mogate
 		public IEnumerable<Entity> GetAllEntities()
 		{
 			return new List<Entity>(m_entitiesByTag.Values);
-		}
-
-		public void RemoveAllEntities()
-		{
-			m_entitiesByTag.Clear();
 		}
 
 		public void RemoveEntityByTag(string tag)
@@ -76,6 +73,18 @@ namespace mogate
 			}
 
 			OnPostDraw (spriteBatch, gameTime);
+		}
+
+		public void Activate()
+		{
+			m_entitiesByTag.Clear();
+			OnActivated ();
+		}
+
+		public void Deactivate()
+		{
+			OnDeactivated ();
+			m_entitiesByTag.Clear();
 		}
 
 		protected virtual void OnPostUpdate(GameTime gameTime)

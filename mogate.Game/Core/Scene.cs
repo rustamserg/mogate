@@ -111,7 +111,7 @@ namespace mogate
 
 			var iter = new List<Layer> (m_orderedLayers);
 			foreach (var la in iter) {
-				la.OnActivated ();
+				la.Activate ();
 			}
 		}
 
@@ -121,7 +121,7 @@ namespace mogate
 
 			var iter = new List<Layer> (m_orderedLayers);
 			foreach (var la in iter) {
-				la.OnDeactivated ();
+				la.Deactivate ();
 			}
 		}
 

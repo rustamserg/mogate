@@ -11,7 +11,6 @@ namespace mogate
 		void ActivateScene (string name, TimeSpan duration);
 		void ActivateScene (string name);
 		Scene GetScene(string name);
-		Scene GetActiveScene();
 	}
 
 	public class Director : GameComponent, IDirector
@@ -44,11 +43,6 @@ namespace mogate
 			m_activeScene = name;
 
 			sc.ActivateScene ((float)duration.TotalMilliseconds);
-		}
-
-		public Scene GetActiveScene()
-		{
-			return GetScene (m_activeScene);
 		}
 
 		public Scene GetScene(string name)

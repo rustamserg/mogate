@@ -11,12 +11,12 @@ namespace mogate
 
 		protected override void LoadLayers()
 		{
-			AddLayer (new MapGridLayer (Game, "map", 0));
-			AddLayer (new ItemsLayer (Game, "items", 1));
-			AddLayer (new HeroLayer (Game, "hero", 2));
-			AddLayer (new MonstersLayer (Game, "monsters", 3));
-			AddLayer (new EffectsLayer (Game, "effects", 4));
-			AddLayer (new FogLayer (Game, "fog", 5));
+			AddLayer (new MapGridLayer (Game, "map", this, 0));
+			AddLayer (new ItemsLayer (Game, "items", this, 1));
+			AddLayer (new HeroLayer (Game, "hero", this, 2));
+			AddLayer (new MonstersLayer (Game, "monsters", this, 3));
+			AddLayer (new EffectsLayer (Game, "effects", this, 4));
+			AddLayer (new FogLayer (Game, "fog", this, 5));
 		}
 	}
 }

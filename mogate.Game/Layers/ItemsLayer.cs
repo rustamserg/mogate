@@ -11,7 +11,7 @@ namespace mogate
 	{
 		Random m_rand = new Random(DateTime.UtcNow.Millisecond);
 
-		public ItemsLayer(Game game, string name, int z) : base(game, name, z)
+		public ItemsLayer(Game game, string name, Scene scene, int z) : base(game, name, scene, z)
 		{
 		}
 
@@ -22,7 +22,6 @@ namespace mogate
 			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
 
 			var mapGrid = world.GetLevel(gameState.Level);
-			RemoveAllEntities ();
 
 			foreach (var room in mapGrid.GetRooms()) {
 				var pos = new Point (room.Pos.X + m_rand.Next (room.Width), room.Pos.Y + m_rand.Next (room.Height));
@@ -38,9 +37,7 @@ namespace mogate
 
 		void OnAttacked (Entity item, Entity attacker)
 		{
-			var director = (IDirector)Game.Services.GetService (typeof(IDirector));
-			var gs = director.GetActiveScene ();
-			var effects = (EffectsLayer)gs.GetLayer ("effects");
+			var effects = (EffectsLayer)Scene.GetLayer ("effects");
 			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
 
 			effects.AttachEffect (item, "effects_damage", 400);

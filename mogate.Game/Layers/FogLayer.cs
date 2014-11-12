@@ -6,7 +6,7 @@ namespace mogate
 {
 	public class FogLayer : Layer
 	{
-		public FogLayer(Game game, string name, int z) : base(game, name, z)
+		public FogLayer(Game game, string name, Scene scene, int z) : base(game, name, scene, z)
 		{
 		}
 
@@ -17,7 +17,6 @@ namespace mogate
 			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
 
 			var mapGrid = world.GetLevel(gameState.Level);
-			RemoveAllEntities ();
 
 			for (int w = 0; w < mapGrid.Width; w++) {
 				for (int h = 0; h < mapGrid.Height; h++) {
@@ -33,10 +32,7 @@ namespace mogate
 		{
 			var fogent = GetAllEntities ();
 
-			var director = (IDirector)Game.Services.GetService (typeof(IDirector));
-			var scene = director.GetActiveScene ();
-
-			var hero = scene.GetLayer ("hero");
+			var hero = Scene.GetLayer ("hero");
 
 			var player = hero.GetEntityByTag ("player");
 			var pp = player.Get<Position> ().MapPos;

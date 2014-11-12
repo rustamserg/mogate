@@ -12,7 +12,7 @@ namespace mogate
 		Sprite2D m_ladder;
 
 
-		public MapGridLayer (Game game, string name, int z) : base(game, name, z)
+		public MapGridLayer (Game game, string name, Scene scene, int z) : base(game, name, scene, z)
 		{
 		}
 

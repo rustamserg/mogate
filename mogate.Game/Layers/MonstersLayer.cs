@@ -16,7 +16,7 @@ namespace mogate
 	{
 		Random m_rand = new Random(DateTime.UtcNow.Millisecond);
 
-		public MonstersLayer (Game game, string name, int z) : base(game, name, z)
+		public MonstersLayer (Game game, string name, Scene scene, int z) : base(game, name, scene, z)
 		{
 		}
 
@@ -27,8 +27,6 @@ namespace mogate
 
 			var map = world.GetLevel(gameState.Level);
 			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
-
-			RemoveAllEntities ();
 
 			for (int x = 0; x < map.Width; x++) {
 				for (int y = 0; y < map.Height; y++) {
@@ -74,9 +72,7 @@ namespace mogate
 
 			var map = world.GetLevel(gameState.Level);
 
-			var director = (IDirector)Game.Services.GetService (typeof(IDirector));
-			var gs = director.GetActiveScene ();
-			var player = gs.GetLayer ("hero").GetEntityByTag("player");
+			var player = Scene.GetLayer ("hero").GetEntityByTag("player");
 
 			Point newPos = monster.Get<Position>().MapPos;
 			Point curPos = monster.Get<Position>().MapPos;
@@ -99,9 +95,7 @@ namespace mogate
 
 		void MonsterMove (Entity monster, Point newPos)
 		{
-			var director = (IDirector)Game.Services.GetService (typeof(IDirector));
-			var gs = director.GetActiveScene ();
-			var player = gs.GetLayer ("hero").GetEntityByTag("player");
+			var player = Scene.GetLayer ("hero").GetEntityByTag("player");
 
 			Point curPos = monster.Get<Position>().MapPos;
 
@@ -132,9 +126,7 @@ namespace mogate
 
 		void OnAttacked (Entity monster, Entity attacker)
 		{
-			var director = (IDirector)Game.Services.GetService (typeof(IDirector));
-			var gs = director.GetActiveScene ();
-			var effects = (EffectsLayer)gs.GetLayer ("effects");
+			var effects = (EffectsLayer)Scene.GetLayer ("effects");
 
 			effects.AttachEffect (monster, "effects_damage", 400);
 

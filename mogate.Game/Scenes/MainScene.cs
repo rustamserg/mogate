@@ -11,7 +11,7 @@ namespace mogate
 
 		protected override void LoadLayers()
 		{
-			AddLayer (new MenuLayer (Game, "menu", 0));
+			AddLayer (new MenuLayer (Game, "menu", this, 0));
 		}
 	}
 }

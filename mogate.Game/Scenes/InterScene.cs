@@ -11,7 +11,7 @@ namespace mogate
 
 		protected override void LoadLayers()
 		{
-			AddLayer (new InterLayer (Game, "inter", 0));
+			AddLayer (new InterLayer (Game, "inter", this, 0));
 		}
 	}
 }
