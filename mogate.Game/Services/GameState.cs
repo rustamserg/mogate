@@ -38,7 +38,7 @@ namespace mogate
 			world.GenerateLevels (Globals.MAX_LEVELS);
 
 			Level = 0;
-			PlayerHealth = 200;
+			PlayerHealth = 80;
 			IsGameEnd = false;
 		}
 		 

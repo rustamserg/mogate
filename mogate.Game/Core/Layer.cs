@@ -9,6 +9,7 @@ namespace mogate
 	{
 		private Dictionary<string, Entity> m_entitiesByTag = new Dictionary<string, Entity>();
 		private int m_id;
+		private bool m_isActivated;
 
 		public string Name { get; private set; }
 		public int ZOrder { get; set; }
@@ -47,6 +48,9 @@ namespace mogate
 		{
 			var iter = new List<Entity> (m_entitiesByTag.Values);
 			foreach (var ent in iter) {
+				if (!m_isActivated)
+					continue;
+
 				if (ent.Has<Execute> ()) {
 					ent.Get<Execute> ().Update (gameTime);
 				}
@@ -59,6 +63,9 @@ namespace mogate
 		public void Draw (SpriteBatch spriteBatch, GameTime gameTime)
 		{
 			foreach (var ent in m_entitiesByTag.Values) {
+				if (!m_isActivated)
+					continue;
+
 				if (!ent.Has<Drawable> ())
 					continue;
 
@@ -77,6 +84,7 @@ namespace mogate
 
 		public void Activate()
 		{
+			m_isActivated = true;
 			m_entitiesByTag.Clear();
 			OnActivated ();
 		}
@@ -85,6 +93,7 @@ namespace mogate
 		{
 			OnDeactivated ();
 			m_entitiesByTag.Clear();
+			m_isActivated = false;
 		}
 
 		protected virtual void OnPostUpdate(GameTime gameTime)
