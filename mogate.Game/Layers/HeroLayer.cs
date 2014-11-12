@@ -36,7 +36,7 @@ namespace mogate
 			player.Register (new State<HeroState> (HeroState.Idle));
 			player.Register (new Health (gameState.PlayerHealth));
 			player.Register (new Attack (10));
-			player.Register (new PointLight (7));
+			player.Register (new PointLight (6));
 			player.Register (new Attackable (OnAttacked));
 			player.Register (new Position (mapGrid.StairDown.X, mapGrid.StairDown.Y));
 			player.Register (new Execute ());
