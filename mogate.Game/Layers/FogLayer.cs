@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 
 namespace mogate
 {
@@ -33,18 +34,30 @@ namespace mogate
 			var fogent = GetAllEntities ();
 
 			var hero = Scene.GetLayer ("hero");
+			var items = Scene.GetLayer ("items");
 
-			var player = hero.GetEntityByTag ("player");
-			var pp = player.Get<Position> ().MapPos;
-			var dist = player.Get<PointLight> ().Distance;
+			var toLight = new List<Entity> ();
+
+			foreach (var ent in hero.GetAllEntities()) {
+				if (ent.Has<PointLight> () && ent.Has<Position> ()) {
+					toLight.Add (ent);
+				}
+			}
+			foreach (var ent in items.GetAllEntities()) {
+				if (ent.Has<PointLight> () && ent.Has<Position> ()) {
+					toLight.Add (ent);
+				}
+			}
 
 			foreach (var ent in fogent) {
 				var fp = ent.Get<Position> ().MapPos;
-				var lightDist = (float)Utils.Dist (fp, pp);
-				if (lightDist < player.Get<PointLight> ().Distance) {
-					ent.Get<Drawable> ().DrawAlpha = lightDist / player.Get<PointLight> ().Distance;
-				} else {
-					ent.Get<Drawable> ().DrawAlpha = 1.0f;
+				ent.Get<Drawable> ().DrawAlpha = 1.0f;
+
+				foreach (var pe in toLight) {
+					var lightDist = (float)Utils.Dist (fp, pe.Get<Position> ().MapPos);
+					if (lightDist < pe.Get<PointLight> ().Distance) {
+						ent.Get<Drawable> ().DrawAlpha *= lightDist / pe.Get<PointLight> ().Distance;
+					}
 				}
 			}
 		}

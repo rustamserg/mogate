@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Linq;
 
 
 namespace mogate
@@ -32,6 +33,19 @@ namespace mogate
 				ent.Register (new Position (pos.X, pos.Y));
 				ent.Register (new Health (10));
 				ent.Register (new Attackable ((attacker) => OnAttacked(ent, attacker)));
+				ent.Register (new PointLight (4));
+			}
+
+			if (gameState.Level == Globals.MAX_LEVELS - 1) {
+				var tree = CreateEntity ();
+				var treeRoom = mapGrid.GetRooms ().First ();
+				var pos = new Point (treeRoom.Pos.X + m_rand.Next (treeRoom.Width), treeRoom.Pos.Y + m_rand.Next (treeRoom.Height));
+
+				tree.Register (new Position (pos.X, pos.Y));
+				tree.Register (new Health (10));
+				tree.Register (new PointLight (5));
+				tree.Register (new Attackable ((attacker) => OnAttacked(tree, attacker)));
+				tree.Register (new Drawable (sprites.GetSprite("items_artefact"), new Vector2 (pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
 			}
 		}
 

@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Linq;
 
 
 namespace mogate
@@ -40,7 +41,7 @@ namespace mogate
 							me.Register (new Attackable ((attacker) => OnAttacked(me, attacker)));
 							me.Register (new Execute ());
 							me.Register (new Drawable (sprites.GetSprite("monsters_mob"), new Vector2 (x * Globals.CELL_WIDTH, y * Globals.CELL_HEIGHT)));
-						
+
 							var updateLoop = new Loop (new ActionEntity(me, (_) => {
 								UpdateMonster(me);
 							}));
@@ -49,20 +50,36 @@ namespace mogate
 					}
 				}
 			}
+
+			if (gameState.Level == Globals.MAX_LEVELS - 1) {
+				var boss = CreateEntity ();
+				var bossRoom = map.GetRooms ().First ();
+				var pos = new Point (bossRoom.Pos.X + m_rand.Next (bossRoom.Width), bossRoom.Pos.Y + m_rand.Next (bossRoom.Height));
+
+				boss.Register (new State<MonsterState> (MonsterState.Idle));
+				boss.Register (new Position (pos.X, pos.Y));
+				boss.Register (new Health (100));
+				boss.Register (new Attack (20));
+				boss.Register (new PointLight (5));
+				boss.Register (new Attackable ((attacker) => OnAttacked(boss, attacker)));
+				boss.Register (new Execute ());
+				boss.Register (new Drawable (sprites.GetSprite("monsters_boss"), new Vector2 (pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
+
+				var updateLoop = new Loop (new ActionEntity(boss, (_) => {
+					UpdateMonster(boss);
+				}));
+				boss.Get<Execute> ().Add (updateLoop, "update_loop");
+			}
 		}
 
 		void UpdateMonster (Entity monster)
 		{
-			if (monster.Get<State<MonsterState>>().EState == MonsterState.Idle)
-				UpdateIdleState (monster);
-		}
+			if (monster.Get<State<MonsterState>> ().EState == MonsterState.Idle) {
+				var newPos = TryChasePlayer (monster);
 
-		void UpdateIdleState (Entity monster)
-		{
-			Point newPos = TryChasePlayer(monster);
-
-			if (monster.Get<Position>().MapPos != newPos)
-				MonsterMove (monster, newPos);
+				if (monster.Get<Position> ().MapPos != newPos)
+					MonsterMove (monster, newPos);
+			}
 		}
 
 		Point TryChasePlayer (Entity monster)
