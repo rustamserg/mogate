@@ -62,9 +62,9 @@ namespace mogate
 
 		public void Draw (SpriteBatch spriteBatch, GameTime gameTime)
 		{
+			OnPreDraw (spriteBatch, gameTime);
+
 			foreach (var ent in m_entitiesByTag.Values) {
-				if (!m_isActivated)
-					continue;
 
 				if (!ent.Has<Drawable> ())
 					continue;
@@ -101,6 +101,10 @@ namespace mogate
 		}
 
 		protected virtual void OnPostDraw(SpriteBatch spriteBatch, GameTime gameTime)
+		{
+		}
+
+		protected virtual void OnPreDraw(SpriteBatch spriteBatch, GameTime gameTime)
 		{
 		}
 

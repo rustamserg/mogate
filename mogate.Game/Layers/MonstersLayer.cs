@@ -66,9 +66,19 @@ namespace mogate
 				boss.Register (new Drawable (sprites.GetSprite("monsters_boss"), new Vector2 (pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
 
 				var updateLoop = new Loop (new ActionEntity(boss, (_) => {
-					UpdateMonster(boss);
+					UpdateBoss(boss);
 				}));
 				boss.Get<Execute> ().Add (updateLoop, "update_loop");
+			}
+		}
+
+		void UpdateBoss (Entity boss)
+		{
+			if (boss.Get<State<MonsterState>> ().EState == MonsterState.Idle) {
+				var newPos = ProtectArtefact (boss);
+
+				if (boss.Get<Position> ().MapPos != newPos)
+					MonsterMove (boss, newPos);
 			}
 		}
 
@@ -109,6 +119,35 @@ namespace mogate
 			}
 			return newPos;
 		}
+
+		Point ProtectArtefact (Entity boss)
+		{
+			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
+			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
+
+			var map = world.GetLevel(gameState.Level);
+
+			var player = Scene.GetLayer ("hero").GetEntityByTag("player");
+
+			Point newPos = boss.Get<Position>().MapPos;
+			Point curPos = boss.Get<Position>().MapPos;
+
+			if (Utils.Dist (curPos, player.Get<Position> ().MapPos) < 6) {
+				if (player.Get<Position> ().MapPos.X < boss.Get<Position> ().MapPos.X)
+					newPos.X--;
+				else if (player.Get<Position> ().MapPos.X > boss.Get<Position> ().MapPos.X)
+					newPos.X++;
+				else if (player.Get<Position> ().MapPos.Y < boss.Get<Position> ().MapPos.Y)
+					newPos.Y--;
+				else if (player.Get<Position> ().MapPos.Y > boss.Get<Position> ().MapPos.Y)
+					newPos.Y++;
+
+				if (map.GetID (newPos.X, newPos.Y) != MapGridTypes.ID.Room)
+					newPos = curPos;
+			}
+			return newPos;
+		}
+
 
 		void MonsterMove (Entity monster, Point newPos)
 		{
