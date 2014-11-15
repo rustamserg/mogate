@@ -6,13 +6,6 @@ using System.Linq;
 
 namespace mogate
 {
-	public enum MonsterState
-	{
-		Idle,
-		Chasing,
-		Attacking
-	};
-
 	public class MonstersLayer : Layer
 	{
 		public MonstersLayer (Game game, string name, Scene scene, int z) : base(game, name, scene, z)
@@ -32,7 +25,6 @@ namespace mogate
 					if (map.GetID (x, y) == MapGridTypes.ID.Tunnel) {
 						if (Utils.Rand.Next (100) < Globals.MONSTER_PROB[gameState.Level]) {
 							var me = CreateEntity ();
-							me.Register (new State<MonsterState> (MonsterState.Idle));
 							me.Register (new Position (x, y));
 							me.Register (new Health (2, 2));
 							me.Register (new Attack (1));
@@ -59,7 +51,6 @@ namespace mogate
 				var bossRoom = map.GetRooms ().First ();
 				var pos = new Point (bossRoom.Pos.X + Utils.Rand.Next (bossRoom.Width), bossRoom.Pos.Y + Utils.Rand.Next (bossRoom.Height));
 
-				boss.Register (new State<MonsterState> (MonsterState.Idle));
 				boss.Register (new Position (pos.X, pos.Y));
 				boss.Register (new Health (10, 10));
 				boss.Register (new Attack (2));
