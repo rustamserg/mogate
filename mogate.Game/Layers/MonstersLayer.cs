@@ -40,13 +40,12 @@ namespace mogate
 							me.Register (new AttackSpeed (500));
 							me.Register (new Attackable ((attacker) => OnAttacked(me, attacker)));
 							me.Register (new Execute ());
-							me.Register (new Patrol ());
+							me.Register (new Patrol (3, 10));
+							me.Register (new LookDirection (Utils.Direction.Down));
+							me.Register (new Perception (PerceptionType.Directional, 5));
+							me.Register (new AllowedMapArea(MapGridTypes.ID.Tunnel));
 							me.Register (new Drawable (sprites.GetSprite("monsters_mob"), new Vector2 (x * Globals.CELL_WIDTH, y * Globals.CELL_HEIGHT)));
 
-							/*var updateLoop = new Loop (new ActionEntity(me, (_) => {
-								UpdateMonster(me);
-							}));
-							me.Get<Execute> ().Add (updateLoop, "update_loop");*/
 							me.Get<Execute> ().Add (new ActionEntity (me, (_) => {
 								StartPatrol (me);
 							}), "patrol_loop");
@@ -68,19 +67,49 @@ namespace mogate
 				boss.Register (new AttackSpeed (300));
 				boss.Register (new Attackable ((attacker) => OnAttacked(boss, attacker)));
 				boss.Register (new Execute ());
+				boss.Register (new Patrol (3, 10));
+				boss.Register (new LookDirection (Utils.Direction.Down));
+				boss.Register (new Perception (PerceptionType.Circular, 10));
+				boss.Register (new AllowedMapArea(MapGridTypes.ID.Room));
 				boss.Register (new Drawable (sprites.GetSprite("monsters_boss"), new Vector2 (pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
 
-				var updateLoop = new Loop (new ActionEntity(boss, (_) => {
-					UpdateBoss(boss);
-				}));
-				boss.Get<Execute> ().Add (updateLoop, "update_loop");
+				boss.Get<Execute> ().Add (new ActionEntity (boss, (_) => {
+					StartPatrol (boss);
+				}), "patrol_loop");
 			}
 		}
 
 		void StartPatrol(Entity monster)
 		{
-			monster.Get<Patrol>().Direction = Utils.RandomEnumValue<Utils.Direction> ();
-			monster.Get<Patrol>().Steps = Utils.Rand.Next (10) + 3;
+			if (monster.Get<Patrol> ().Steps == 0) {
+				monster.Get<LookDirection> ().Direction = Utils.RandomEnumValue<Utils.Direction> ();
+				monster.Get<Patrol> ().Steps = Utils.Rand.Next (monster.Get<Patrol>().MaxSteps - monster.Get<Patrol>().MinSteps + 1) + monster.Get<Patrol>().MinSteps;
+			}
+
+			var player = Scene.GetLayer ("hero").GetEntityByTag("player");
+			var playerPos = player.Get<Position> ().MapPos;
+			var monsterPos = monster.Get<Position> ().MapPos;
+
+			if (monster.Get<Perception> ().Type == PerceptionType.Directional) {
+				var distToPlayer = (int)Utils.DirectionDist (monsterPos, playerPos, monster.Get<LookDirection> ().Direction);
+				if (distToPlayer >= 0 && distToPlayer < monster.Get<Perception> ().AlertDistance) {
+					monster.Get<Patrol> ().Steps += monster.Get<Perception> ().AlertDistance - distToPlayer + 1;
+				}
+			} else if (monster.Get<Perception> ().Type == PerceptionType.Circular) {
+				var distToPlayer = (int)Utils.Dist (monsterPos, playerPos);
+				if (distToPlayer < monster.Get<Perception> ().AlertDistance) {
+					if (monsterPos.X > playerPos.X)
+						monster.Get<LookDirection> ().Direction = Utils.Direction.Left;
+					else if (monsterPos.X < playerPos.X)
+						monster.Get<LookDirection> ().Direction = Utils.Direction.Right;
+					else if (monsterPos.Y > playerPos.Y)
+						monster.Get<LookDirection> ().Direction = Utils.Direction.Up;
+					else if (monsterPos.Y < playerPos.Y)
+						monster.Get<LookDirection> ().Direction = Utils.Direction.Down;
+					monster.Get<Patrol> ().Steps += monster.Get<Perception> ().AlertDistance - distToPlayer + 1;
+				}
+			}
+
 			monster.Get<Execute> ().Add (new ActionEntity (monster, (_) => {
 				DoPatrol (monster);
 			}), "patrol_loop");
@@ -92,150 +121,50 @@ namespace mogate
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 
 			var map = world.GetLevel(gameState.Level);
+			var player = Scene.GetLayer ("hero").GetEntityByTag("player");
 
 			var newPos = monster.Get<Position> ().MapPos;
-			if (monster.Get<Patrol> ().Direction == Utils.Direction.Down)
+			if (monster.Get<LookDirection> ().Direction == Utils.Direction.Down)
 				newPos.Y++;
-			else if (monster.Get<Patrol> ().Direction == Utils.Direction.Up)
+			else if (monster.Get<LookDirection> ().Direction == Utils.Direction.Up)
 				newPos.Y--;
-			else if (monster.Get<Patrol> ().Direction == Utils.Direction.Right)
+			else if (monster.Get<LookDirection> ().Direction == Utils.Direction.Right)
 				newPos.X++;
-			else if (monster.Get<Patrol> ().Direction == Utils.Direction.Left)
+			else if (monster.Get<LookDirection> ().Direction == Utils.Direction.Left)
 				newPos.X--;
 
-			if (map.GetID (newPos.X, newPos.Y) != MapGridTypes.ID.Tunnel) {
+			if (map.GetID (newPos.X, newPos.Y) != monster.Get<AllowedMapArea>().Area) {
+				monster.Get<Patrol> ().Steps = 0;
 				monster.Get<Execute> ().Add (new ActionEntity (monster, (_) => {
 					StartPatrol (monster);
 				}), "patrol_loop");
 			} else {
-				var seq = new Sequence ();
-				seq.Add (new MoveSpriteTo (monster, new Vector2(newPos.X*Globals.CELL_WIDTH, newPos.Y*Globals.CELL_HEIGHT), monster.Get<MoveSpeed>().Speed));
-				seq.Add (new ActionEntity (monster, (_) => {
-					monster.Get<Position> ().MapPos = newPos;
-				}));
-				seq.Add (new ActionEntity (monster, (_) => {
-					monster.Get<Patrol> ().Steps--;
-				})); 
-				if (monster.Get<Patrol> ().Steps > 1) {
-					seq.Add (new ActionEntity (monster, (_) => {
-						DoPatrol (monster);
-					}));
-				} else {
+				if (newPos == player.Get<Position> ().MapPos) {
+					var stepBackPos = monster.Get<Position> ().MapPos;
+					var seq = new Sequence ();
+					seq.Add (new MoveSpriteTo (monster, new Vector2(newPos.X * Globals.CELL_WIDTH, newPos.Y * Globals.CELL_HEIGHT), monster.Get<AttackSpeed>().Speed));
+					seq.Add (new AttackEntity (monster, player));
+					seq.Add (new MoveSpriteTo (monster, new Vector2(stepBackPos.X * Globals.CELL_WIDTH, stepBackPos.Y * Globals.CELL_HEIGHT), monster.Get<AttackSpeed>().Speed));
 					seq.Add (new ActionEntity (monster, (_) => {
 						StartPatrol (monster);
 					}));
+					monster.Get<Execute> ().Add (seq, "patrol_loop");
+				} else {
+					var seq = new Sequence ();
+					seq.Add (new MoveSpriteTo (monster, new Vector2 (newPos.X * Globals.CELL_WIDTH, newPos.Y * Globals.CELL_HEIGHT), monster.Get<MoveSpeed> ().Speed));
+					seq.Add (new ActionEntity (monster, (_) => {
+						monster.Get<Position> ().MapPos = newPos;
+					}));
+					seq.Add (new ActionEntity (monster, (_) => {
+						monster.Get<Patrol> ().Steps--;
+					})); 
+					seq.Add (new ActionEntity (monster, (_) => {
+						StartPatrol (monster);
+					}));
+					monster.Get<Execute> ().Add (seq, "patrol_loop");
 				}
-				monster.Get<Execute> ().Add (seq, "patrol_loop");
 			}
 		}
-
-		void UpdateBoss (Entity boss)
-		{
-			if (boss.Get<State<MonsterState>> ().EState == MonsterState.Idle) {
-				var newPos = ProtectArtefact (boss);
-
-				if (boss.Get<Position> ().MapPos != newPos)
-					MonsterMove (boss, newPos);
-			}
-		}
-
-		void UpdateMonster (Entity monster)
-		{
-			if (monster.Get<State<MonsterState>> ().EState == MonsterState.Idle) {
-				var newPos = TryChasePlayer (monster);
-
-				if (monster.Get<Position> ().MapPos != newPos)
-					MonsterMove (monster, newPos);
-			}
-		}
-
-		Point TryChasePlayer (Entity monster)
-		{
-			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
-			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
-
-			var map = world.GetLevel(gameState.Level);
-
-			var player = Scene.GetLayer ("hero").GetEntityByTag("player");
-
-			Point newPos = monster.Get<Position>().MapPos;
-			Point curPos = monster.Get<Position>().MapPos;
-
-			if (Utils.Dist (curPos, player.Get<Position> ().MapPos) < 6) {
-				if (player.Get<Position> ().MapPos.X < monster.Get<Position> ().MapPos.X)
-					newPos.X--;
-				else if (player.Get<Position> ().MapPos.X > monster.Get<Position> ().MapPos.X)
-					newPos.X++;
-				else if (player.Get<Position> ().MapPos.Y < monster.Get<Position> ().MapPos.Y)
-					newPos.Y--;
-				else if (player.Get<Position> ().MapPos.Y > monster.Get<Position> ().MapPos.Y)
-					newPos.Y++;
-
-				if (map.GetID (newPos.X, newPos.Y) != MapGridTypes.ID.Tunnel)
-					newPos = curPos;
-			}
-			return newPos;
-		}
-
-		Point ProtectArtefact (Entity boss)
-		{
-			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
-			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
-
-			var map = world.GetLevel(gameState.Level);
-
-			var player = Scene.GetLayer ("hero").GetEntityByTag("player");
-
-			Point newPos = boss.Get<Position>().MapPos;
-			Point curPos = boss.Get<Position>().MapPos;
-
-			if (Utils.Dist (curPos, player.Get<Position> ().MapPos) < 10) {
-				if (player.Get<Position> ().MapPos.X < boss.Get<Position> ().MapPos.X)
-					newPos.X--;
-				else if (player.Get<Position> ().MapPos.X > boss.Get<Position> ().MapPos.X)
-					newPos.X++;
-				else if (player.Get<Position> ().MapPos.Y < boss.Get<Position> ().MapPos.Y)
-					newPos.Y--;
-				else if (player.Get<Position> ().MapPos.Y > boss.Get<Position> ().MapPos.Y)
-					newPos.Y++;
-
-				if (map.GetID (newPos.X, newPos.Y) != MapGridTypes.ID.Room)
-					newPos = curPos;
-			}
-			return newPos;
-		}
-
-
-		void MonsterMove (Entity monster, Point newPos)
-		{
-			var player = Scene.GetLayer ("hero").GetEntityByTag("player");
-
-			Point curPos = monster.Get<Position>().MapPos;
-
-			if (newPos == player.Get<Position> ().MapPos) {
-				var seq = new Sequence ();
-				seq.Add (new MoveSpriteTo (monster, new Vector2(newPos.X*Globals.CELL_WIDTH, newPos.Y*Globals.CELL_HEIGHT), monster.Get<AttackSpeed>().Speed));
-				seq.Add (new AttackEntity (monster, player));
-				seq.Add (new MoveSpriteTo (monster, new Vector2(curPos.X*Globals.CELL_WIDTH, curPos.Y*Globals.CELL_HEIGHT), monster.Get<AttackSpeed>().Speed));
-				seq.Add (new ActionEntity(monster, (_) => {
-					monster.Get<State<MonsterState>>().EState = MonsterState.Idle;
-				}));
-				monster.Get<Execute> ().Add (seq);
-				monster.Get<State<MonsterState>>().EState = MonsterState.Attacking;
-			} else {
-				var seq = new Sequence ();
-				seq.Add (new MoveSpriteTo (monster, new Vector2(newPos.X*Globals.CELL_WIDTH, newPos.Y*Globals.CELL_HEIGHT), monster.Get<MoveSpeed>().Speed));
-				seq.Add (new ActionEntity (monster, (_) => {
-					monster.Get<Position> ().MapPos = newPos;
-				}));
-				seq.Add (new ActionEntity(monster, (_) => {
-					monster.Get<State<MonsterState>>().EState = MonsterState.Idle;
-				}));
-				monster.Get<Execute> ().Add (seq);
-				monster.Get<State<MonsterState>>().EState = MonsterState.Chasing;
-			}
-		}
-
 
 		void OnAttacked (Entity monster, Entity attacker)
 		{

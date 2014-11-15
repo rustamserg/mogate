@@ -6,13 +6,16 @@ namespace mogate
 	{
 		public Type Behavior { get { return typeof(Patrol); } }
 
-		public Utils.Direction Direction { get; set; }
 		public int Steps { get; set; }
 
-		public Patrol ()
+		public int MinSteps { get; private set; }
+		public int MaxSteps { get; private set; }
+
+		public Patrol (int minSteps, int maxSteps)
 		{
-			Direction = Utils.Direction.Down;
 			Steps = 0;
+			MinSteps = minSteps;
+			MaxSteps = maxSteps;
 		}
 	}
 }
