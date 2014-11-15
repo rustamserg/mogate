@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace mogate
 {
@@ -35,19 +36,11 @@ namespace mogate
 
 			var hero = Scene.GetLayer ("hero");
 			var items = Scene.GetLayer ("items");
+			var maps = Scene.GetLayer ("map");
 
-			var toLight = new List<Entity> ();
-
-			foreach (var ent in hero.GetAllEntities()) {
-				if (ent.Has<PointLight> () && ent.Has<Position> ()) {
-					toLight.Add (ent);
-				}
-			}
-			foreach (var ent in items.GetAllEntities()) {
-				if (ent.Has<PointLight> () && ent.Has<Position> ()) {
-					toLight.Add (ent);
-				}
-			}
+			var toLight = hero.GetAllEntities ().Where (e => e.Has<PointLight> () && e.Has<Position> ()).ToList();
+			toLight.AddRange (items.GetAllEntities ().Where (e => e.Has<PointLight> () && e.Has<Position> ()));
+			toLight.AddRange (maps.GetAllEntities ().Where (e => e.Has<PointLight> () && e.Has<Position> ()));
 
 			foreach (var ent in fogent) {
 				var fp = ent.Get<Position> ().MapPos;

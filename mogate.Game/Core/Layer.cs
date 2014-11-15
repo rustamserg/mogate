@@ -56,7 +56,9 @@ namespace mogate
 				}
 			}
 
-			OnPostUpdate (gameTime);
+			if (m_isActivated)
+				OnPostUpdate (gameTime);
+
 			base.Update (gameTime);
 		}
 

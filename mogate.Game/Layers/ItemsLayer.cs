@@ -61,7 +61,6 @@ namespace mogate
 					ent.Register (new Triggerable (1, (from) => OnHealthTriggered(ent, from)));
 				}
 				ent.Register (new Position (mp.X, mp.Y));
-				ent.Register (new Triggerable (1, (from) => OnHealthTriggered(ent, from)));
 			}
 		}
 
