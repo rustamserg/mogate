@@ -56,14 +56,29 @@ namespace mogate
 						new Vector2 (mp.X * Globals.CELL_WIDTH, mp.Y * Globals.CELL_HEIGHT)));
 					ent.Register (new Triggerable (1, (from) => OnArtefactTriggered(ent, from)));
 				} else {
-					ent.Register (new Drawable (sprites.GetSprite ("items_life"),
-						new Vector2 (mp.X * Globals.CELL_WIDTH, mp.Y * Globals.CELL_HEIGHT)));
-					ent.Register (new Triggerable (1, (from) => OnHealthTriggered(ent, from)));
+					if (m_rand.Next (100) < 50) {
+						ent.Register (new Drawable (sprites.GetSprite ("items_life"),
+							new Vector2 (mp.X * Globals.CELL_WIDTH, mp.Y * Globals.CELL_HEIGHT)));
+						ent.Register (new Triggerable (1, (from) => OnHealthTriggered (ent, from)));
+					} else {
+						ent.Register (new Drawable (sprites.GetSprite ("items_shield"),
+							new Vector2 (mp.X * Globals.CELL_WIDTH, mp.Y * Globals.CELL_HEIGHT)));
+						ent.Register (new Triggerable (1, (from) => OnArmorTriggered (ent, from)));
+					}
 				}
 				ent.Register (new Position (mp.X, mp.Y));
 			}
 		}
 
+		void OnArmorTriggered (Entity item, Entity from)
+		{
+			if (from.Has<Armor> ()) {
+				from.Get<Armor> ().Value = Math.Min (from.Get<Armor> ().MaxArmor,
+					from.Get<Armor> ().Value + 20);
+			}
+			RemoveEntityByTag (item.Tag);
+		}
+			
 		void OnHealthTriggered (Entity item, Entity from)
 		{
 			if (from.Has<Health> ()) {

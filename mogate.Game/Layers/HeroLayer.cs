@@ -16,6 +16,7 @@ namespace mogate
 	public class HeroLayer : Layer
 	{
 		Sprite2D m_life;
+		Sprite2D m_armor;
 		Point m_toMove;
 		bool m_isLevelCompleted = false;
 
@@ -36,6 +37,7 @@ namespace mogate
 			player.Register (new State<HeroState> (HeroState.Idle));
 			player.Register (new Health (gameState.PlayerHealth));
 			player.Register (new Attack (10));
+			player.Register (new Armor (gameState.PlayerArmor));
 			player.Register (new PointLight (6));
 			player.Register (new Attackable (OnAttacked));
 			player.Register (new Position (mapGrid.StairDown.X, mapGrid.StairDown.Y));
@@ -47,6 +49,7 @@ namespace mogate
 			StartIdle ();
 
 			m_life = sprites.GetSprite ("items_life");
+			m_armor = sprites.GetSprite ("items_shield");
 		}
 
 		public override void OnDeactivated ()
@@ -63,6 +66,10 @@ namespace mogate
 			for (int i = 0; i < (int)(player.Get<Health> ().HP / 20); i++) {
 				var drawPos = new Vector2 (Globals.WORLD_WIDTH * Globals.CELL_WIDTH, i  * Globals.CELL_HEIGHT);
 				spriteBatch.Draw (m_life.Texture, drawPos, m_life.GetFrameRect (0), Color.White);
+			}
+			for (int i = 0; i < (int)(player.Get<Armor> ().Value / 20); i++) {
+				var drawPos = new Vector2 (Globals.WORLD_WIDTH * Globals.CELL_WIDTH, 400 + i  * Globals.CELL_HEIGHT);
+				spriteBatch.Draw (m_armor.Texture, drawPos, m_armor.GetFrameRect (0), Color.White);
 			}
 		}
 

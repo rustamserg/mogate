@@ -8,6 +8,7 @@ namespace mogate
 	{
 		int Level { get; }
 		int PlayerHealth { get; set; }
+		int PlayerArmor { get; set; }
 		bool IsGameEnd { get; }
 
 		void NewGame();
@@ -19,6 +20,8 @@ namespace mogate
 		public int Level { get; private set; }
 		public bool IsGameEnd { get; private set; }
 		public int PlayerHealth { get; set; }
+		public int PlayerArmor { get; set; }
+
 
 		public GameState (Game game) : base(game)
 		{
@@ -39,6 +42,7 @@ namespace mogate
 
 			Level = 0;
 			PlayerHealth = 200;
+			PlayerArmor = 200;
 			IsGameEnd = false;
 		}
 		 
