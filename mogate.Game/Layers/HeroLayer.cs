@@ -155,20 +155,13 @@ namespace mogate
 
 		private void OnEndMove(Entity hero)
 		{
-			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
-			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
-
-			var mapGrid = world.GetLevel(gameState.Level);
-			var player = GetEntityByTag("player");
-
-			var mt = mapGrid.GetID (player.Get<Position>().MapPos.X, player.Get<Position>().MapPos.Y);
-			if (mt == MapGridTypes.ID.StairUp) {
-				m_isLevelCompleted = true;
-			}
-
+			var player = GetEntityByTag ("player");
 			var items = (ItemsLayer)Scene.GetLayer ("items");
+			var maps = (MapGridLayer)Scene.GetLayer ("map");
 
-			var toTrigger = items.GetAllEntities ().Where (m => m.Has<Triggerable>());
+			var toTrigger = items.GetAllEntities ().Where (m => m.Has<Triggerable>()).ToList();
+			toTrigger.AddRange(maps.GetAllEntities ().Where (m => m.Has<Triggerable>()));
+
 			foreach (var item in toTrigger) {
 				player.Get<Execute> ().Add (new TriggerEntity (player, item));
 			}

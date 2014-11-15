@@ -7,8 +7,6 @@
     <OutputType>Library</OutputType>
     <RootNamespace>mogate</RootNamespace>
     <AssemblyName>mogate.Game</AssemblyName>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -78,6 +76,8 @@
     <Compile Include="Behaviors\PointLight.cs" />
     <Compile Include="Actions\Gameplay\TriggerEntity.cs" />
     <Compile Include="Behaviors\Triggerable.cs" />
+    <Compile Include="Behaviors\MoveSpeed.cs" />
+    <Compile Include="Behaviors\AttackSpeed.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MonoGame.Binaries.3.2.0\build\net40\MonoGame.Binaries.targets" />

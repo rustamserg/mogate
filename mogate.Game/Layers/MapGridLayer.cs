@@ -31,13 +31,41 @@ namespace mogate
 						var ent = CreateEntity ();
 						ent.Register (new Drawable (sprites.GetSprite ("grid_wall"),
 							new Vector2 (x * Globals.CELL_WIDTH, y * Globals.CELL_HEIGHT)));
-					} if (id == MapGridTypes.ID.StairDown || id == MapGridTypes.ID.StairUp) {
+					} else if (id == MapGridTypes.ID.StairDown) {
 						var ent = CreateEntity ();
 						ent.Register (new Drawable (sprites.GetSprite ("grid_ladder"),
 							new Vector2 (x * Globals.CELL_WIDTH, y * Globals.CELL_HEIGHT)));
+					} else if (id == MapGridTypes.ID.StairUp) {
+						if (gameState.Level < Globals.MAX_LEVELS - 1) {
+							AddExitPoint (false);
+						}
 					}
 				}
 			}
+		}
+
+		public void AddExitPoint(bool lightExit)
+		{
+			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
+			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
+			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
+
+			var mapGrid = world.GetLevel (gameState.Level);
+
+			var ent = CreateEntity ();
+			ent.Register (new Drawable (sprites.GetSprite ("grid_ladder"),
+				new Vector2 (mapGrid.StairUp.X * Globals.CELL_WIDTH, mapGrid.StairUp.Y * Globals.CELL_HEIGHT)));
+			if (lightExit) {
+				ent.Register (new PointLight (5));
+			}
+			ent.Register (new Position (mapGrid.StairUp.X, mapGrid.StairUp.Y));
+			ent.Register (new Triggerable(1, (from) => OnExitTriggered(ent, from)));
+		}
+
+		void OnExitTriggered(Entity stair, Entity from)
+		{
+			var director = (IDirector)Game.Services.GetService (typeof(IDirector));
+			director.ActivateScene ("inter", TimeSpan.FromSeconds (1));
 		}
 
 		protected override void OnPreDraw(SpriteBatch spriteBatch, GameTime gameTime)

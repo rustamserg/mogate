@@ -38,6 +38,8 @@ namespace mogate
 							me.Register (new Position (x, y));
 							me.Register (new Health (100));
 							me.Register (new Attack (20));
+							me.Register (new MoveSpeed (600));
+							me.Register (new AttackSpeed (500));
 							me.Register (new Attackable ((attacker) => OnAttacked(me, attacker)));
 							me.Register (new Execute ());
 							me.Register (new Drawable (sprites.GetSprite("monsters_mob"), new Vector2 (x * Globals.CELL_WIDTH, y * Globals.CELL_HEIGHT)));
@@ -58,9 +60,10 @@ namespace mogate
 
 				boss.Register (new State<MonsterState> (MonsterState.Idle));
 				boss.Register (new Position (pos.X, pos.Y));
-				boss.Register (new Health (100));
-				boss.Register (new Attack (20));
-				boss.Register (new PointLight (5));
+				boss.Register (new Health (1000));
+				boss.Register (new Attack (30));
+				boss.Register (new MoveSpeed (400));
+				boss.Register (new AttackSpeed (300));
 				boss.Register (new Attackable ((attacker) => OnAttacked(boss, attacker)));
 				boss.Register (new Execute ());
 				boss.Register (new Drawable (sprites.GetSprite("monsters_boss"), new Vector2 (pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
@@ -157,9 +160,9 @@ namespace mogate
 
 			if (newPos == player.Get<Position> ().MapPos) {
 				var seq = new Sequence ();
-				seq.Add (new MoveSpriteTo (monster, new Vector2(newPos.X*Globals.CELL_WIDTH, newPos.Y*Globals.CELL_HEIGHT), 500));
+				seq.Add (new MoveSpriteTo (monster, new Vector2(newPos.X*Globals.CELL_WIDTH, newPos.Y*Globals.CELL_HEIGHT), monster.Get<AttackSpeed>().Speed));
 				seq.Add (new AttackEntity (monster, player));
-				seq.Add (new MoveSpriteTo (monster, new Vector2(curPos.X*Globals.CELL_WIDTH, curPos.Y*Globals.CELL_HEIGHT), 500));
+				seq.Add (new MoveSpriteTo (monster, new Vector2(curPos.X*Globals.CELL_WIDTH, curPos.Y*Globals.CELL_HEIGHT), monster.Get<AttackSpeed>().Speed));
 				seq.Add (new ActionEntity(monster, (_) => {
 					monster.Get<State<MonsterState>>().EState = MonsterState.Idle;
 				}));
@@ -167,7 +170,7 @@ namespace mogate
 				monster.Get<State<MonsterState>>().EState = MonsterState.Attacking;
 			} else {
 				var seq = new Sequence ();
-				seq.Add (new MoveSpriteTo (monster, new Vector2(newPos.X*Globals.CELL_WIDTH, newPos.Y*Globals.CELL_HEIGHT), 600));
+				seq.Add (new MoveSpriteTo (monster, new Vector2(newPos.X*Globals.CELL_WIDTH, newPos.Y*Globals.CELL_HEIGHT), monster.Get<MoveSpeed>().Speed));
 				seq.Add (new ActionEntity (monster, (_) => {
 					monster.Get<Position> ().MapPos = newPos;
 				}));

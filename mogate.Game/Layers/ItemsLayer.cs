@@ -76,10 +76,9 @@ namespace mogate
 
 		void OnArtefactTriggered (Entity item, Entity from)
 		{
-			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
-			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
+			var mapGridLayer = (MapGridLayer)Scene.GetLayer ("map");
 
-			var map = world.GetLevel (gameState.Level);
+			mapGridLayer.AddExitPoint (true);
 			RemoveEntityByTag (item.Tag);
 		}
 	}
