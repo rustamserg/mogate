@@ -38,15 +38,18 @@ namespace mogate
 							me.Register (new Attack (1));
 							me.Register (new MoveSpeed (600));
 							me.Register (new AttackSpeed (500));
-							//me.Register (new DirectLight (3, Utils.Direction.Down));
 							me.Register (new Attackable ((attacker) => OnAttacked(me, attacker)));
 							me.Register (new Execute ());
+							me.Register (new Patrol ());
 							me.Register (new Drawable (sprites.GetSprite("monsters_mob"), new Vector2 (x * Globals.CELL_WIDTH, y * Globals.CELL_HEIGHT)));
 
-							var updateLoop = new Loop (new ActionEntity(me, (_) => {
+							/*var updateLoop = new Loop (new ActionEntity(me, (_) => {
 								UpdateMonster(me);
 							}));
-							me.Get<Execute> ().Add (updateLoop, "update_loop");
+							me.Get<Execute> ().Add (updateLoop, "update_loop");*/
+							me.Get<Execute> ().Add (new ActionEntity (me, (_) => {
+								StartPatrol (me);
+							}), "patrol_loop");
 						}
 					}
 				}
@@ -71,6 +74,58 @@ namespace mogate
 					UpdateBoss(boss);
 				}));
 				boss.Get<Execute> ().Add (updateLoop, "update_loop");
+			}
+		}
+
+		void StartPatrol(Entity monster)
+		{
+			monster.Get<Patrol>().Direction = Utils.RandomEnumValue<Utils.Direction> ();
+			monster.Get<Patrol>().Steps = Utils.Rand.Next (10) + 3;
+			monster.Get<Execute> ().Add (new ActionEntity (monster, (_) => {
+				DoPatrol (monster);
+			}), "patrol_loop");
+		}
+
+		void DoPatrol(Entity monster)
+		{
+			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
+			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
+
+			var map = world.GetLevel(gameState.Level);
+
+			var newPos = monster.Get<Position> ().MapPos;
+			if (monster.Get<Patrol> ().Direction == Utils.Direction.Down)
+				newPos.Y++;
+			else if (monster.Get<Patrol> ().Direction == Utils.Direction.Up)
+				newPos.Y--;
+			else if (monster.Get<Patrol> ().Direction == Utils.Direction.Right)
+				newPos.X++;
+			else if (monster.Get<Patrol> ().Direction == Utils.Direction.Left)
+				newPos.X--;
+
+			if (map.GetID (newPos.X, newPos.Y) != MapGridTypes.ID.Tunnel) {
+				monster.Get<Execute> ().Add (new ActionEntity (monster, (_) => {
+					StartPatrol (monster);
+				}), "patrol_loop");
+			} else {
+				var seq = new Sequence ();
+				seq.Add (new MoveSpriteTo (monster, new Vector2(newPos.X*Globals.CELL_WIDTH, newPos.Y*Globals.CELL_HEIGHT), monster.Get<MoveSpeed>().Speed));
+				seq.Add (new ActionEntity (monster, (_) => {
+					monster.Get<Position> ().MapPos = newPos;
+				}));
+				seq.Add (new ActionEntity (monster, (_) => {
+					monster.Get<Patrol> ().Steps--;
+				})); 
+				if (monster.Get<Patrol> ().Steps > 1) {
+					seq.Add (new ActionEntity (monster, (_) => {
+						DoPatrol (monster);
+					}));
+				} else {
+					seq.Add (new ActionEntity (monster, (_) => {
+						StartPatrol (monster);
+					}));
+				}
+				monster.Get<Execute> ().Add (seq, "patrol_loop");
 			}
 		}
 
