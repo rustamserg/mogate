@@ -36,8 +36,8 @@ namespace mogate
 							var me = CreateEntity ();
 							me.Register (new State<MonsterState> (MonsterState.Idle));
 							me.Register (new Position (x, y));
-							me.Register (new Health (100));
-							me.Register (new Attack (20));
+							me.Register (new Health (2, 2));
+							me.Register (new Attack (1));
 							me.Register (new MoveSpeed (600));
 							me.Register (new AttackSpeed (500));
 							me.Register (new Attackable ((attacker) => OnAttacked(me, attacker)));
@@ -60,8 +60,8 @@ namespace mogate
 
 				boss.Register (new State<MonsterState> (MonsterState.Idle));
 				boss.Register (new Position (pos.X, pos.Y));
-				boss.Register (new Health (1000));
-				boss.Register (new Attack (30));
+				boss.Register (new Health (10, 10));
+				boss.Register (new Attack (2));
 				boss.Register (new MoveSpeed (400));
 				boss.Register (new AttackSpeed (300));
 				boss.Register (new Attackable ((attacker) => OnAttacked(boss, attacker)));
@@ -135,7 +135,7 @@ namespace mogate
 			Point newPos = boss.Get<Position>().MapPos;
 			Point curPos = boss.Get<Position>().MapPos;
 
-			if (Utils.Dist (curPos, player.Get<Position> ().MapPos) < 6) {
+			if (Utils.Dist (curPos, player.Get<Position> ().MapPos) < 10) {
 				if (player.Get<Position> ().MapPos.X < boss.Get<Position> ().MapPos.X)
 					newPos.X--;
 				else if (player.Get<Position> ().MapPos.X > boss.Get<Position> ().MapPos.X)

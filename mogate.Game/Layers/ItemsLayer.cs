@@ -31,7 +31,7 @@ namespace mogate
 				ent.Register (new Drawable (sprites.GetSprite ("items_barrel"),
 					new Vector2(pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
 				ent.Register (new Position (pos.X, pos.Y));
-				ent.Register (new Health (10));
+				ent.Register (new Health (1, 1));
 				ent.Register (new Attackable ((attacker) => OnBarrelAttacked(ent, attacker)));
 				ent.Register (new PointLight (4));
 			}
@@ -55,6 +55,8 @@ namespace mogate
 					ent.Register (new Drawable (sprites.GetSprite ("items_artefact"),
 						new Vector2 (mp.X * Globals.CELL_WIDTH, mp.Y * Globals.CELL_HEIGHT)));
 					ent.Register (new Triggerable (1, (from) => OnArtefactTriggered(ent, from)));
+					ent.Register (new Position (mp.X, mp.Y));
+					ent.Register (new PointLight (5));
 				} else {
 					if (m_rand.Next (100) < 50) {
 						ent.Register (new Drawable (sprites.GetSprite ("items_life"),
@@ -65,6 +67,8 @@ namespace mogate
 							new Vector2 (mp.X * Globals.CELL_WIDTH, mp.Y * Globals.CELL_HEIGHT)));
 						ent.Register (new Triggerable (1, (from) => OnArmorTriggered (ent, from)));
 					}
+					ent.Register (new Position (mp.X, mp.Y));
+					ent.Register (new PointLight (3));
 				}
 				ent.Register (new Position (mp.X, mp.Y));
 			}
@@ -73,19 +77,21 @@ namespace mogate
 		void OnArmorTriggered (Entity item, Entity from)
 		{
 			if (from.Has<Armor> ()) {
-				from.Get<Armor> ().Value = Math.Min (from.Get<Armor> ().MaxArmor,
-					from.Get<Armor> ().Value + 20);
+				if (from.Get<Armor> ().Value < from.Get<Armor> ().MaxArmor) {
+					from.Get<Armor> ().Value = from.Get<Armor> ().Value + 1;
+					RemoveEntityByTag (item.Tag);
+				}
 			}
-			RemoveEntityByTag (item.Tag);
 		}
 			
 		void OnHealthTriggered (Entity item, Entity from)
 		{
 			if (from.Has<Health> ()) {
-				from.Get<Health> ().HP = Math.Min (from.Get<Health> ().MaxHP,
-					from.Get<Health> ().HP + 20);
+				if (from.Get<Health> ().HP < from.Get<Health> ().MaxHP) {
+					from.Get<Health> ().HP = from.Get<Health> ().HP + 1;
+					RemoveEntityByTag (item.Tag);
+				}
 			}
-			RemoveEntityByTag (item.Tag);
 		}
 
 		void OnArtefactTriggered (Entity item, Entity from)

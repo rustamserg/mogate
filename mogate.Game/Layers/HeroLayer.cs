@@ -35,15 +35,16 @@ namespace mogate
 			var player = CreateEntity ("player");
 
 			player.Register (new State<HeroState> (HeroState.Idle));
-			player.Register (new Health (gameState.PlayerHealth));
-			player.Register (new Attack (10));
-			player.Register (new Armor (gameState.PlayerArmor));
+			player.Register (new Health (gameState.PlayerHealth, gameState.MaxPlayerHealth));
+			player.Register (new Attack (1));
+			player.Register (new Armor (gameState.PlayerArmor, gameState.MaxPlayerArmor));
 			player.Register (new PointLight (6));
+			player.Register (new MoveSpeed (300));
 			player.Register (new Attackable (OnAttacked));
 			player.Register (new Position (mapGrid.StairDown.X, mapGrid.StairDown.Y));
 			player.Register (new Execute ());
 			player.Register (new Drawable (sprites.GetSprite ("hero_idle"),
-				new Vector2(mapGrid.StairDown.X*Globals.CELL_WIDTH, mapGrid.StairDown.Y*Globals.CELL_HEIGHT)));
+				new Vector2(mapGrid.StairDown.X * Globals.CELL_WIDTH, mapGrid.StairDown.Y * Globals.CELL_HEIGHT)));
 
 			m_toMove = mapGrid.StairDown;
 			StartIdle ();
@@ -63,11 +64,11 @@ namespace mogate
 		{
 			var player = GetEntityByTag("player");
 
-			for (int i = 0; i < (int)(player.Get<Health> ().HP / 20); i++) {
+			for (int i = 0; i < player.Get<Health> ().HP; i++) {
 				var drawPos = new Vector2 (Globals.WORLD_WIDTH * Globals.CELL_WIDTH, i  * Globals.CELL_HEIGHT);
 				spriteBatch.Draw (m_life.Texture, drawPos, m_life.GetFrameRect (0), Color.White);
 			}
-			for (int i = 0; i < (int)(player.Get<Armor> ().Value / 20); i++) {
+			for (int i = 0; i < player.Get<Armor> ().Value; i++) {
 				var drawPos = new Vector2 (Globals.WORLD_WIDTH * Globals.CELL_WIDTH, 400 + i  * Globals.CELL_HEIGHT);
 				spriteBatch.Draw (m_armor.Texture, drawPos, m_armor.GetFrameRect (0), Color.White);
 			}
@@ -128,7 +129,7 @@ namespace mogate
 					var seq = new Sequence ();
 					var spawn = new Spawn ();
 					spawn.Add (new MoveSpriteTo (player, new Vector2 (mapPos.X * Globals.CELL_WIDTH, mapPos.Y * Globals.CELL_HEIGHT), 300));
-					spawn.Add (new AnimSprite (player, sprites.GetSprite("hero_move"), 300));
+					spawn.Add (new AnimSprite (player, sprites.GetSprite("hero_move"), player.Get<MoveSpeed>().Speed));
 					seq.Add (spawn);
 					seq.Add (new ActionEntity (player, (_) => {
 						player.Get<Position> ().MapPos = mapPos;

@@ -9,10 +9,10 @@ namespace mogate
 		public int Value { get; set; }
 		public int MaxArmor { get; private set; }
 
-		public Armor(int armor)
+		public Armor(int armor, int maxarmor)
 		{
 			Value = armor;
-			MaxArmor= armor;
+			MaxArmor= maxarmor;
 		}
 	}
 }

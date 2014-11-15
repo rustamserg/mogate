@@ -9,10 +9,10 @@ namespace mogate
 		public int HP { get; set; }
 		public int MaxHP { get; private set; }
 
-		public Health(int hp)
+		public Health(int hp, int maxhp)
 		{
 			HP = hp;
-			MaxHP = hp;
+			MaxHP = maxhp;
 		}
 	}
 }
