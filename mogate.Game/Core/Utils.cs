@@ -7,11 +7,12 @@ namespace mogate
 {
 	public static class Utils
 	{
-		static Random m_rand = new Random(DateTime.UtcNow.Millisecond);
+		public static Random Rand = new Random(DateTime.UtcNow.Millisecond);
+		public enum Direction { Up, Down, Left, Right };
 
 		public static T RandomEnumValue<T> ()
 		{
-			return Enum.GetValues(typeof (T)).Cast<T>().OrderBy(x => m_rand.Next()).FirstOrDefault();
+			return Enum.GetValues(typeof (T)).Cast<T>().OrderBy(x => Rand.Next()).FirstOrDefault();
 		}
 
 		public static double Dist (Point from, Point to)
@@ -19,12 +20,25 @@ namespace mogate
 			return Math.Sqrt(Math.Pow(from.X  - to.X, 2) + Math.Pow(from.Y - to.Y, 2));
 		}
 
+		public static double DirectionDist (Point from, Point to, Direction fromDir)
+		{
+			if (fromDir == Direction.Up && (from.X != to.X || from.Y < to.Y))
+				return -1;
+			if (fromDir == Direction.Down && (from.X != to.X || from.Y > to.Y))
+				return -1;
+			if (fromDir == Direction.Left && (from.X < to.X || from.Y != to.Y))
+				return -1;
+			if (fromDir == Direction.Right && (from.X > to.X || from.Y != to.Y))
+				return -1;
+			return Dist (from, to);
+		}
+
 		public static void Shuffle<T>(this IList<T> list)  
 		{  
 			int n = list.Count;  
 			while (n > 1) {  
 				n--;  
-				int k = m_rand.Next(n + 1);
+				int k = Rand.Next(n + 1);
 				T value = list[k];  
 				list[k] = list[n];  
 				list[n] = value;  

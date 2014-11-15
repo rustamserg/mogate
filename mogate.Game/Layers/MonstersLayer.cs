@@ -15,8 +15,6 @@ namespace mogate
 
 	public class MonstersLayer : Layer
 	{
-		Random m_rand = new Random(DateTime.UtcNow.Millisecond);
-
 		public MonstersLayer (Game game, string name, Scene scene, int z) : base(game, name, scene, z)
 		{
 		}
@@ -32,7 +30,7 @@ namespace mogate
 			for (int x = 0; x < map.Width; x++) {
 				for (int y = 0; y < map.Height; y++) {
 					if (map.GetID (x, y) == MapGridTypes.ID.Tunnel) {
-						if (m_rand.Next (100) < Globals.MONSTER_PROB[gameState.Level]) {
+						if (Utils.Rand.Next (100) < Globals.MONSTER_PROB[gameState.Level]) {
 							var me = CreateEntity ();
 							me.Register (new State<MonsterState> (MonsterState.Idle));
 							me.Register (new Position (x, y));
@@ -40,6 +38,7 @@ namespace mogate
 							me.Register (new Attack (1));
 							me.Register (new MoveSpeed (600));
 							me.Register (new AttackSpeed (500));
+							//me.Register (new DirectLight (3, Utils.Direction.Down));
 							me.Register (new Attackable ((attacker) => OnAttacked(me, attacker)));
 							me.Register (new Execute ());
 							me.Register (new Drawable (sprites.GetSprite("monsters_mob"), new Vector2 (x * Globals.CELL_WIDTH, y * Globals.CELL_HEIGHT)));
@@ -56,7 +55,7 @@ namespace mogate
 			if (gameState.Level == Globals.MAX_LEVELS - 1) {
 				var boss = CreateEntity ();
 				var bossRoom = map.GetRooms ().First ();
-				var pos = new Point (bossRoom.Pos.X + m_rand.Next (bossRoom.Width), bossRoom.Pos.Y + m_rand.Next (bossRoom.Height));
+				var pos = new Point (bossRoom.Pos.X + Utils.Rand.Next (bossRoom.Width), bossRoom.Pos.Y + Utils.Rand.Next (bossRoom.Height));
 
 				boss.Register (new State<MonsterState> (MonsterState.Idle));
 				boss.Register (new Position (pos.X, pos.Y));

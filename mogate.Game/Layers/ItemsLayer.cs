@@ -10,8 +10,6 @@ namespace mogate
 {
 	public class ItemsLayer : Layer
 	{
-		Random m_rand = new Random(DateTime.UtcNow.Millisecond);
-
 		public ItemsLayer(Game game, string name, Scene scene, int z) : base(game, name, scene, z)
 		{
 		}
@@ -25,7 +23,7 @@ namespace mogate
 			var mapGrid = world.GetLevel(gameState.Level);
 
 			foreach (var room in mapGrid.GetRooms()) {
-				var pos = new Point (room.Pos.X + m_rand.Next (room.Width), room.Pos.Y + m_rand.Next (room.Height));
+				var pos = new Point (room.Pos.X + Utils.Rand.Next (room.Width), room.Pos.Y + Utils.Rand.Next (room.Height));
 
 				var ent = CreateEntity ();
 				ent.Register (new Drawable (sprites.GetSprite ("items_barrel"),
@@ -58,7 +56,7 @@ namespace mogate
 					ent.Register (new Position (mp.X, mp.Y));
 					ent.Register (new PointLight (5));
 				} else {
-					if (m_rand.Next (100) < 50) {
+					if (Utils.Rand.Next (100) < 50) {
 						ent.Register (new Drawable (sprites.GetSprite ("items_life"),
 							new Vector2 (mp.X * Globals.CELL_WIDTH, mp.Y * Globals.CELL_HEIGHT)));
 						ent.Register (new Triggerable (1, (from) => OnHealthTriggered (ent, from)));

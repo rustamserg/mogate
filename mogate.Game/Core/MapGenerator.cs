@@ -36,7 +36,6 @@ namespace mogate
 		}
 
 		static Params m_params;
-		static Random m_rand = new Random(DateTime.UtcNow.Millisecond);
 
 		public static void Generate (IMapGrid map, Params param)
 		{
@@ -122,7 +121,7 @@ namespace mogate
 			var dirs = new List<Direction>();
 
 			all_dirs.Shuffle();
-			if (m_rand.Next (100) < m_params.TunnelsCurveWeight) dirs.Add(last_dir);
+			if (Utils.Rand.Next (100) < m_params.TunnelsCurveWeight) dirs.Add(last_dir);
 			dirs.AddRange(all_dirs.Where(x => !dirs.Contains(x)));
 
 			foreach (var dir in dirs)
@@ -174,8 +173,8 @@ namespace mogate
 			for (int i = 0; i < map.Width/2; i++) {
 				for (int j = 0; j < map.Height/2; j++) {
 					MapGridTypes.Room r = new MapGridTypes.Room(new Point(i*2 + 1, j*2 + 1));
-					r.Width = Math.Max (m_params.RoomMinSize, m_rand.Next (m_params.RoomMaxSize/2)*2 + 1);
-					r.Height = Math.Max (m_params.RoomMinSize, m_rand.Next (m_params.RoomMaxSize/2)*2 + 1);
+					r.Width = Math.Max (m_params.RoomMinSize, Utils.Rand.Next (m_params.RoomMaxSize/2)*2 + 1);
+					r.Height = Math.Max (m_params.RoomMinSize, Utils.Rand.Next (m_params.RoomMaxSize/2)*2 + 1);
 
 					bool isFree = true;
 					for (int x = r.Pos.X - 3; x < (r.Pos.X + r.Width + 3) && isFree; x++)
@@ -226,7 +225,7 @@ namespace mogate
 					Direction dir = Utils.RandomEnumValue<Direction>();
 					MapGridTypes.Door door = null;
 					if (dir == Direction.Right) { // right 
-						int y = r.Pos.Y + m_rand.Next(r.Height/2)*2;
+						int y = r.Pos.Y + Utils.Rand.Next(r.Height/2)*2;
 						if (map.GetID (r.Pos.X + r.Width + 1, y) == MapGridTypes.ID.Empty
 						    && map.GetID (r.Pos.X + r.Width + 2, y) == MapGridTypes.ID.Empty
 							&& map.GetID (r.Pos.X + r.Width, y - 1) != MapGridTypes.ID.Door
@@ -235,7 +234,7 @@ namespace mogate
 						}
 					}
 					if (dir == Direction.Down) { // down 
-						int x = r.Pos.X + m_rand.Next(r.Width/2)*2;
+						int x = r.Pos.X + Utils.Rand.Next(r.Width/2)*2;
 						if (map.GetID (x, r.Pos.Y + r.Height + 1) == MapGridTypes.ID.Empty
 						    && map.GetID (x, r.Pos.Y + r.Height + 2) == MapGridTypes.ID.Empty
 						    && map.GetID (x - 1, r.Pos.Y + r.Height) != MapGridTypes.ID.Door
@@ -244,7 +243,7 @@ namespace mogate
 						}
 					}
 					if (dir == Direction.Left) { // left 
-						int y = r.Pos.Y + m_rand.Next(r.Height/2)*2;
+						int y = r.Pos.Y + Utils.Rand.Next(r.Height/2)*2;
 						if (map.GetID (r.Pos.X - 1, y) == MapGridTypes.ID.Empty
 						    && map.GetID (r.Pos.X - 2, y) == MapGridTypes.ID.Empty
 						    && map.GetID (r.Pos.X, y - 1) != MapGridTypes.ID.Door
@@ -253,7 +252,7 @@ namespace mogate
 						}
 					}
 					if (dir == Direction.Up) { // up 
-						int x = r.Pos.X + m_rand.Next(r.Width/2)*2;
+						int x = r.Pos.X + Utils.Rand.Next(r.Width/2)*2;
 						if (map.GetID (x, r.Pos.Y - 1) == MapGridTypes.ID.Empty
 						    && map.GetID (x, r.Pos.Y - 2) == MapGridTypes.ID.Empty
 						    && map.GetID (x - 1, r.Pos.Y) != MapGridTypes.ID.Door
