@@ -61,6 +61,7 @@ namespace mogate
 		void SetID(int x, int y, MapGridTypes.ID id);
 		IEnumerable<MapGridTypes.Cell> GetBBox (int x, int y);
 		IEnumerable<MapGridTypes.Cell> GetBCross (int x, int y);
+		IEnumerable<MapGridTypes.Cell> GetLine (Point from, Point to);
 		Point ScreenToWorld (int x, int y);
 
 		void AddRoom(MapGridTypes.Room room);
@@ -143,6 +144,30 @@ namespace mogate
 			box.Add (new MapGridTypes.Cell(new Point(x, y + 1), GetID (x, y + 1)));
 
 			return box;
+		}
+
+		public IEnumerable<MapGridTypes.Cell> GetLine(Point from, Point to)
+		{
+			var ids = new List<MapGridTypes.Cell> ();
+
+			if (from.X == to.X && from.Y < to.Y) {
+				for (int pos = from.Y; pos <= to.Y; pos++) {
+					ids.Add(new MapGridTypes.Cell (new Point (from.X, pos), GetID (from.X, pos)));
+				}
+			} else if (from.X == to.X && from.Y > to.Y) {
+				for (int pos = from.Y; pos >= to.Y; pos--) {
+					ids.Add(new MapGridTypes.Cell (new Point (from.X, pos), GetID (from.X, pos)));
+				}
+			} else if (from.Y == to.Y && from.X < to.X) {
+				for (int pos = from.X; pos <= to.X; pos++) {
+					ids.Add(new MapGridTypes.Cell (new Point (pos, from.Y), GetID (pos, from.Y)));
+				}
+			} else if (from.Y == to.Y && from.X > to.X) {
+				for (int pos = from.X; pos >= to.X; pos--) {
+					ids.Add(new MapGridTypes.Cell (new Point (pos, from.Y), GetID (pos, from.Y)));
+				}
+			}
+			return ids;
 		}
 
 		public Point ScreenToWorld (int x, int y)

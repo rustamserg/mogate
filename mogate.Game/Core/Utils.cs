@@ -23,14 +23,33 @@ namespace mogate
 		public static double DirectionDist (Point from, Point to, Direction fromDir)
 		{
 			if (fromDir == Direction.Up && (from.X != to.X || from.Y < to.Y))
-				return -1;
+				return double.MaxValue;
 			if (fromDir == Direction.Down && (from.X != to.X || from.Y > to.Y))
-				return -1;
+				return double.MaxValue;
 			if (fromDir == Direction.Left && (from.X < to.X || from.Y != to.Y))
-				return -1;
+				return double.MaxValue;
 			if (fromDir == Direction.Right && (from.X > to.X || from.Y != to.Y))
-				return -1;
+				return double.MaxValue;
 			return Dist (from, to);
+		}
+
+		public static bool FindDirection(Point from, Point to, out Direction direction)
+		{
+			if (from.X == to.X && from.Y < to.Y) {
+				direction = Direction.Down;
+				return true;
+			} else if (from.X == to.X && from.Y > to.Y) {
+				direction = Direction.Up;
+				return true;
+			}  else if (from.X < to.X && from.Y == to.Y) {
+				direction = Direction.Right;
+				return true;
+			} else if (from.X > to.X && from.Y == to.Y) {
+				direction = Direction.Left;
+				return true;
+			}
+			direction = Direction.Up;
+			return false;
 		}
 
 		public static void Shuffle<T>(this IList<T> list)  
