@@ -79,7 +79,7 @@ namespace mogate
 					PatrolRandomDirection (monster);
 				}
 			} else {
-				TryFindEnemyAround (monster, player);
+				TryFindEnemyOnRoute (monster, player);
 			}
 
 			monster.Get<Execute> ().Add (new ActionEntity (monster, (_) => {
