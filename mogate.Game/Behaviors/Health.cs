@@ -6,13 +6,32 @@ namespace mogate
 	{
 		public Type Behavior { get { return typeof(Health); } }
 
-		public int HP { get; set; }
 		public int MaxHP { get; private set; }
 
-		public Health(int hp, int maxhp)
+		private int m_hp;
+		private Action m_onChanged;
+
+		public Health(int hp, int maxhp, Action onChanged)
 		{
-			HP = hp;
+			m_hp = hp;
 			MaxHP = maxhp;
+			m_onChanged = onChanged;
+		}
+
+		public Health(int hp, Action onChanged)
+		{
+			m_hp = hp;
+			MaxHP = hp;
+			m_onChanged = onChanged;
+		}
+
+		public int HP {
+			get { return m_hp; }
+			set {
+				m_hp = value;
+				if (m_onChanged != null)
+					m_onChanged ();
+			}
 		}
 	}
 }

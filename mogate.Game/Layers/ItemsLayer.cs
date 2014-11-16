@@ -29,7 +29,7 @@ namespace mogate
 				ent.Register (new Drawable (sprites.GetSprite ("items_barrel"),
 					new Vector2(pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
 				ent.Register (new Position (pos.X, pos.Y));
-				ent.Register (new Health (1, 1));
+				ent.Register (new Health (1, () => OnBarrelDestroyed(ent)));
 				ent.Register (new Attackable ((attacker) => OnBarrelAttacked(ent, attacker)));
 				ent.Register (new PointLight (4));
 			}
@@ -38,38 +38,39 @@ namespace mogate
 		void OnBarrelAttacked (Entity item, Entity attacker)
 		{
 			var effects = (EffectsLayer)Scene.GetLayer ("effects");
+			effects.AttachEffect (item, "effects_damage", 400);
+		}
+
+		void OnBarrelDestroyed(Entity barrel)
+		{
 			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 
-			effects.AttachEffect (item, "effects_damage", 400);
+			RemoveEntityByTag (barrel.Tag);
 
-			if (item.Get<Health> ().HP == 0) {
-				RemoveEntityByTag (item.Tag);
-		
-				var mp = item.Get<Position> ().MapPos;
-				var ent = CreateEntity ();
+			var mp = barrel.Get<Position> ().MapPos;
+			var ent = CreateEntity ();
 
-				if (gameState.Level == Globals.MAX_LEVELS - 1) {
-					ent.Register (new Drawable (sprites.GetSprite ("items_artefact"),
+			if (gameState.Level == Globals.MAX_LEVELS - 1) {
+				ent.Register (new Drawable (sprites.GetSprite ("items_artefact"),
+					new Vector2 (mp.X * Globals.CELL_WIDTH, mp.Y * Globals.CELL_HEIGHT)));
+				ent.Register (new Triggerable (1, (from) => OnArtefactTriggered(ent, from)));
+				ent.Register (new Position (mp.X, mp.Y));
+				ent.Register (new PointLight (5));
+			} else {
+				if (Utils.Rand.Next (100) < 50) {
+					ent.Register (new Drawable (sprites.GetSprite ("items_life"),
 						new Vector2 (mp.X * Globals.CELL_WIDTH, mp.Y * Globals.CELL_HEIGHT)));
-					ent.Register (new Triggerable (1, (from) => OnArtefactTriggered(ent, from)));
-					ent.Register (new Position (mp.X, mp.Y));
-					ent.Register (new PointLight (5));
+					ent.Register (new Triggerable (1, (from) => OnHealthTriggered (ent, from)));
 				} else {
-					if (Utils.Rand.Next (100) < 50) {
-						ent.Register (new Drawable (sprites.GetSprite ("items_life"),
-							new Vector2 (mp.X * Globals.CELL_WIDTH, mp.Y * Globals.CELL_HEIGHT)));
-						ent.Register (new Triggerable (1, (from) => OnHealthTriggered (ent, from)));
-					} else {
-						ent.Register (new Drawable (sprites.GetSprite ("items_shield"),
-							new Vector2 (mp.X * Globals.CELL_WIDTH, mp.Y * Globals.CELL_HEIGHT)));
-						ent.Register (new Triggerable (1, (from) => OnArmorTriggered (ent, from)));
-					}
-					ent.Register (new Position (mp.X, mp.Y));
-					ent.Register (new PointLight (3));
+					ent.Register (new Drawable (sprites.GetSprite ("items_shield"),
+						new Vector2 (mp.X * Globals.CELL_WIDTH, mp.Y * Globals.CELL_HEIGHT)));
+					ent.Register (new Triggerable (1, (from) => OnArmorTriggered (ent, from)));
 				}
 				ent.Register (new Position (mp.X, mp.Y));
+				ent.Register (new PointLight (3));
 			}
+			ent.Register (new Position (mp.X, mp.Y));
 		}
 
 		void OnArmorTriggered (Entity item, Entity from)

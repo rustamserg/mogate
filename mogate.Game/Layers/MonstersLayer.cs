@@ -26,7 +26,7 @@ namespace mogate
 						if (Utils.Rand.Next (100) < Globals.MONSTER_PROB[gameState.Level]) {
 							var me = CreateEntity ();
 							me.Register (new Position (x, y));
-							me.Register (new Health (2, 2));
+							me.Register (new Health (2, () => OnMonsterHealthChanged(me)));
 							me.Register (new Attack (1));
 							me.Register (new MoveSpeed (600));
 							me.Register (new AttackSpeed (500));
@@ -52,7 +52,7 @@ namespace mogate
 				var pos = new Point (bossRoom.Pos.X + Utils.Rand.Next (bossRoom.Width), bossRoom.Pos.Y + Utils.Rand.Next (bossRoom.Height));
 
 				boss.Register (new Position (pos.X, pos.Y));
-				boss.Register (new Health (10, 10));
+				boss.Register (new Health (10, () => OnMonsterHealthChanged(boss)));
 				boss.Register (new Attack (2));
 				boss.Register (new MoveSpeed (400));
 				boss.Register (new AttackSpeed (300));
@@ -160,9 +160,12 @@ namespace mogate
 		void OnAttacked (Entity monster, Entity attacker)
 		{
 			var effects = (EffectsLayer)Scene.GetLayer ("effects");
-
 			effects.AttachEffect (monster, "effects_damage", 400);
 
+		}
+
+		void OnMonsterHealthChanged(Entity monster)
+		{
 			if (monster.Get<Health> ().HP == 0)
 				RemoveEntityByTag (monster.Tag);
 		}

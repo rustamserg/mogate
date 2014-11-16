@@ -35,7 +35,8 @@ namespace mogate
 			var player = CreateEntity ("player");
 
 			player.Register (new State<HeroState> (HeroState.Idle));
-			player.Register (new Health (gameState.PlayerHealth, gameState.MaxPlayerHealth));
+			player.Register (new Health (gameState.PlayerHealth, gameState.MaxPlayerHealth,
+											() => OnHealthChanged(player)));
 			player.Register (new Attack (1));
 			player.Register (new Armor (gameState.PlayerArmor, gameState.MaxPlayerArmor));
 			player.Register (new PointLight (6));
@@ -178,11 +179,15 @@ namespace mogate
 
 		private void OnAttacked(Entity attacker)
 		{
-			var director = (IDirector)Game.Services.GetService (typeof(IDirector));
 			var effects = (EffectsLayer)Scene.GetLayer ("effects");
 			var player = GetEntityByTag("player");
 	
 			effects.AttachEffect (player, "effects_damage", 400);
+		}
+
+		private void OnHealthChanged(Entity player)
+		{
+			var director = (IDirector)Game.Services.GetService (typeof(IDirector));
 
 			if (player.Get<Health> ().HP == 0)
 				director.ActivateScene ("main");
