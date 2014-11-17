@@ -41,6 +41,7 @@ namespace mogate
 			player.Register (new Armor (gameState.PlayerArmor, gameState.MaxPlayerArmor));
 			player.Register (new PointLight (6));
 			player.Register (new MoveSpeed (300));
+			player.Register (new IFFSystem (Globals.IFF_PLAYER_ID, 2));
 			player.Register (new Attackable (OnAttacked));
 			player.Register (new Position (mapGrid.StairDown.X, mapGrid.StairDown.Y));
 			player.Register (new Execute ());

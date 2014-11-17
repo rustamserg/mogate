@@ -2,6 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Linq;
+using System.Collections.Generic;
 
 
 namespace mogate
@@ -33,6 +34,7 @@ namespace mogate
 							me.Register (new Attackable ((attacker) => OnAttacked(me, attacker)));
 							me.Register (new Execute ());
 							me.Register (new Patrol (3, 5));
+							me.Register (new IFFSystem (Globals.IFF_MONSTER_ID, 0));
 							me.Register (new LookDirection (Utils.Direction.Down));
 							me.Register (new Perception (5));
 							me.Register (new AllowedMapArea(MapGridTypes.ID.Tunnel));
@@ -58,7 +60,8 @@ namespace mogate
 				boss.Register (new AttackSpeed (300));
 				boss.Register (new Attackable ((attacker) => OnAttacked(boss, attacker)));
 				boss.Register (new Execute ());
-				boss.Register (new Patrol (1, 2));
+				boss.Register (new Patrol (1, 3));
+				boss.Register (new IFFSystem (Globals.IFF_MONSTER_ID, 0));
 				boss.Register (new LookDirection (Utils.Direction.Down));
 				boss.Register (new Perception (10));
 				boss.Register (new AllowedMapArea(MapGridTypes.ID.Room));
@@ -72,56 +75,69 @@ namespace mogate
 
 		void StartPatrol(Entity monster)
 		{
-			var player = Scene.GetLayer ("hero").GetEntityByTag("player");
+			var targets = Scene.GetLayer ("hero").GetAllEntities ().ToList ();
+			targets.AddRange (Scene.GetLayer ("items").GetAllEntities ());
+			targets.AddRange (GetAllEntities ());
 
 			if (monster.Get<Patrol> ().Steps == 0) {
-				if (!TryFindEnemyAround (monster, player)) {
+				if (!TryFindEnemyAround (monster, targets)) {
 					PatrolRandomDirection (monster);
 				}
 			} else {
-				TryFindEnemyOnRoute (monster, player);
+				TryFindEnemyOnRoute (monster, targets);
 			}
 
 			monster.Get<Execute> ().Add (new ActionEntity (monster, (_) => {
-				DoPatrol (monster);
+				DoPatrol (monster, targets);
 			}), "patrol_loop");
 		}
 
 
-		bool TryFindEnemyAround(Entity monster, Entity enemy)
+		bool TryFindEnemyAround(Entity monster, IEnumerable<Entity> targets)
 		{
+			if (!monster.Has<IFFSystem> ())
+				return false;
+
 			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 			var mapGrid = world.GetLevel(gameState.Level);
 
-			var enemyPos = enemy.Get<Position> ().MapPos;
-			var monsterPos = monster.Get<Position> ().MapPos;
+			foreach (var enemy in monster.Get<IFFSystem> ().GetFoes (targets)) {
+				var enemyPos = enemy.Get<Position> ().MapPos;
+				var monsterPos = monster.Get<Position> ().MapPos;
 
-			var mapLine = mapGrid.GetLine (monsterPos, enemyPos);
+				var mapLine = mapGrid.GetLine (monsterPos, enemyPos);
 
-			if (!mapLine.Any (e => e.Type != monster.Get<AllowedMapArea> ().Area)) {
-				Utils.Direction lookDir;
-				if (Utils.FindDirection (monsterPos, enemyPos, out lookDir)) {
-					var distToEnemy = (int)Utils.DirectionDist (monsterPos, enemyPos, lookDir);
-					if (distToEnemy < monster.Get<Perception> ().AlertDistance) {
-						monster.Get<LookDirection> ().Direction = lookDir;
-						monster.Get<Patrol> ().Steps = Math.Min(monster.Get<Patrol>().MaxSteps,
-							monster.Get<Perception> ().AlertDistance - distToEnemy + 1);
-						return true;
+				if (!mapLine.Any (e => e.Type != monster.Get<AllowedMapArea> ().Area)) {
+					Utils.Direction lookDir;
+					if (Utils.FindDirection (monsterPos, enemyPos, out lookDir)) {
+						var distToEnemy = (int)Utils.DirectionDist (monsterPos, enemyPos, lookDir);
+						if (distToEnemy < monster.Get<Perception> ().AlertDistance) {
+							monster.Get<LookDirection> ().Direction = lookDir;
+							monster.Get<Patrol> ().Steps = Math.Min (monster.Get<Patrol> ().MaxSteps,
+								monster.Get<Perception> ().AlertDistance - distToEnemy + 1);
+							return true;
+						}
 					}
 				}
 			}
 			return false;
 		}
 
-		void TryFindEnemyOnRoute(Entity monster, Entity enemy)
+		void TryFindEnemyOnRoute(Entity monster, IEnumerable<Entity> targets)
 		{
-			var enemyPos = enemy.Get<Position> ().MapPos;
-			var monsterPos = monster.Get<Position> ().MapPos;
+			if (!monster.Has<IFFSystem> ())
+				return;
 
-			var distToEnemy = (int)Utils.DirectionDist (monsterPos, enemyPos, monster.Get<LookDirection> ().Direction);
-			if (distToEnemy < monster.Get<Perception> ().AlertDistance) {
-				monster.Get<Patrol> ().Steps += monster.Get<Perception> ().AlertDistance - distToEnemy + 1;
+			foreach (var enemy in monster.Get<IFFSystem> ().GetFoes (targets)) {
+				var enemyPos = enemy.Get<Position> ().MapPos;
+				var monsterPos = monster.Get<Position> ().MapPos;
+
+				var distToEnemy = (int)Utils.DirectionDist (monsterPos, enemyPos, monster.Get<LookDirection> ().Direction);
+				if (distToEnemy < monster.Get<Perception> ().AlertDistance) {
+					monster.Get<Patrol> ().Steps += monster.Get<Perception> ().AlertDistance - distToEnemy + 1;
+					break;
+				}
 			}
 		}
 
@@ -131,13 +147,15 @@ namespace mogate
 			monster.Get<Patrol> ().Steps = Utils.Rand.Next (monster.Get<Patrol> ().MaxSteps - monster.Get<Patrol> ().MinSteps + 1) + monster.Get<Patrol> ().MinSteps;
 		}
 
-		void DoPatrol(Entity monster)
+		void DoPatrol(Entity monster, IEnumerable<Entity> targets)
 		{
 			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
-
 			var map = world.GetLevel(gameState.Level);
-			var player = Scene.GetLayer ("hero").GetEntityByTag("player");
+
+			var foes = new List<Entity> ();
+			if (monster.Has<IFFSystem> ())
+				foes = monster.Get<IFFSystem> ().GetFoes (targets).ToList();
 
 			var newPos = monster.Get<Position> ().MapPos;
 			if (monster.Get<LookDirection> ().Direction == Utils.Direction.Down)
@@ -155,11 +173,12 @@ namespace mogate
 					StartPatrol (monster);
 				}), "patrol_loop");
 			} else {
-				if (newPos == player.Get<Position> ().MapPos) {
+				var foe = foes.FirstOrDefault (e => e.Get<Position> ().MapPos == newPos);
+				if (foe != null) {
 					var stepBackPos = monster.Get<Position> ().MapPos;
 					var seq = new Sequence ();
 					seq.Add (new MoveSpriteTo (monster, new Vector2(newPos.X * Globals.CELL_WIDTH, newPos.Y * Globals.CELL_HEIGHT), monster.Get<AttackSpeed>().Speed));
-					seq.Add (new AttackEntity (monster, player));
+					seq.Add (new AttackEntity (monster, foe));
 					seq.Add (new MoveSpriteTo (monster, new Vector2(stepBackPos.X * Globals.CELL_WIDTH, stepBackPos.Y * Globals.CELL_HEIGHT), monster.Get<AttackSpeed>().Speed));
 					seq.Add (new ActionEntity (monster, (_) => {
 						StartPatrol (monster);

@@ -12,6 +12,9 @@ namespace mogate
 
 		public static readonly int MAX_LEVELS = 5;
 
+		public static readonly int IFF_PLAYER_ID = 0;
+		public static readonly int IFF_MONSTER_ID = 1;
+
 		public static readonly int[] MONSTER_PROB = {5, 8, 10, 15, 20};
 		public static readonly int[] ROOM_MIN_SIZE = {3, 3, 5, 5, 9};
 		public static readonly int[] ROOM_MAX_SIZE = {3, 5, 5, 6, 9};
