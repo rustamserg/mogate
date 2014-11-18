@@ -8,6 +8,8 @@ using System.Linq;
 
 namespace mogate
 {
+	public enum ConsumableItems { Trap };
+
 	public class ItemsLayer : Layer
 	{
 		public ItemsLayer(Game game, string name, Scene scene, int z) : base(game, name, scene, z)
@@ -35,10 +37,36 @@ namespace mogate
 			}
 		}
 
+		public void AddTrap(Point spawnPoint)
+		{
+			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
+
+			var ent = CreateEntity ();
+			ent.Register (new Drawable (sprites.GetSprite ("effects_fire"),
+				new Vector2(spawnPoint.X * Globals.CELL_WIDTH, spawnPoint.Y * Globals.CELL_HEIGHT)));
+			ent.Register (new Position (spawnPoint.X, spawnPoint.Y));
+			ent.Register (new Health (1, () => OnTrapHealthChanged(ent)));
+			ent.Register (new Attackable ((attacker) => OnTrapAttacked(ent, attacker)));
+			//ent.Register (new PointLight (4));
+			ent.Register (new IFFSystem (Globals.IFF_PLAYER_ID, 1));
+		}
+
+		void OnTrapAttacked (Entity item, Entity attacker)
+		{
+			var effects = (EffectsLayer)Scene.GetLayer ("effects");
+			effects.AttachEffect (item, "effects_damage", 200);
+		}
+
 		void OnBarrelAttacked (Entity item, Entity attacker)
 		{
 			var effects = (EffectsLayer)Scene.GetLayer ("effects");
 			effects.AttachEffect (item, "effects_damage", 400);
+		}
+
+		void OnTrapHealthChanged(Entity trap)
+		{
+			if (trap.Get<Health>().HP == 0)
+				RemoveEntityByTag (trap.Tag);
 		}
 
 		void OnBarrelDestroyed(Entity barrel)
@@ -58,14 +86,19 @@ namespace mogate
 				ent.Register (new Position (mp.X, mp.Y));
 				ent.Register (new PointLight (5));
 			} else {
-				if (Utils.Rand.Next (100) < 50) {
+				var dropChance = Utils.Rand.Next (100); 
+				if (dropChance < 30) {
 					ent.Register (new Drawable (sprites.GetSprite ("items_life"),
 						new Vector2 (mp.X * Globals.CELL_WIDTH, mp.Y * Globals.CELL_HEIGHT)));
 					ent.Register (new Triggerable (1, (from) => OnHealthTriggered (ent, from)));
-				} else {
+				} else if (dropChance < 60) {
 					ent.Register (new Drawable (sprites.GetSprite ("items_shield"),
 						new Vector2 (mp.X * Globals.CELL_WIDTH, mp.Y * Globals.CELL_HEIGHT)));
 					ent.Register (new Triggerable (1, (from) => OnArmorTriggered (ent, from)));
+				} else {
+					ent.Register (new Drawable (sprites.GetSprite ("effects_fire"),
+						new Vector2 (mp.X * Globals.CELL_WIDTH, mp.Y * Globals.CELL_HEIGHT)));
+					ent.Register (new Triggerable (1, (from) => OnTrapTriggered (ent, from)));
 				}
 				ent.Register (new Position (mp.X, mp.Y));
 				ent.Register (new PointLight (3));
@@ -90,6 +123,14 @@ namespace mogate
 					from.Get<Health> ().HP = from.Get<Health> ().HP + 1;
 					RemoveEntityByTag (item.Tag);
 				}
+			}
+		}
+
+		void OnTrapTriggered (Entity item, Entity from)
+		{
+			if (from.Has<Consumable<ConsumableItems>> ()) {
+				from.Get<Consumable<ConsumableItems>> ().Refill (ConsumableItems.Trap, 1);
+				RemoveEntityByTag (item.Tag);
 			}
 		}
 

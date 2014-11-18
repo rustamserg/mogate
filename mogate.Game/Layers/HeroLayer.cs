@@ -17,6 +17,8 @@ namespace mogate
 	{
 		Sprite2D m_life;
 		Sprite2D m_armor;
+		Sprite2D m_trap;
+
 		Point m_toMove;
 		bool m_isLevelCompleted = false;
 
@@ -45,14 +47,17 @@ namespace mogate
 			player.Register (new Attackable (OnAttacked));
 			player.Register (new Position (mapGrid.StairDown.X, mapGrid.StairDown.Y));
 			player.Register (new Execute ());
+			player.Register (new Consumable<ConsumableItems> ());
 			player.Register (new Drawable (sprites.GetSprite ("hero_idle"),
 				new Vector2(mapGrid.StairDown.X * Globals.CELL_WIDTH, mapGrid.StairDown.Y * Globals.CELL_HEIGHT)));
 
+			player.Get<Consumable<ConsumableItems>> ().Refill (ConsumableItems.Trap, 5);
 			m_toMove = mapGrid.StairDown;
 			StartIdle ();
 
 			m_life = sprites.GetSprite ("items_life");
 			m_armor = sprites.GetSprite ("items_shield");
+			m_trap = sprites.GetSprite ("effects_fire");
 		}
 
 		public override void OnDeactivated ()
@@ -71,8 +76,12 @@ namespace mogate
 				spriteBatch.Draw (m_life.Texture, drawPos, m_life.GetFrameRect (0), Color.White);
 			}
 			for (int i = 0; i < player.Get<Armor> ().Value; i++) {
-				var drawPos = new Vector2 (Globals.WORLD_WIDTH * Globals.CELL_WIDTH, 400 + i  * Globals.CELL_HEIGHT);
+				var drawPos = new Vector2 (Globals.WORLD_WIDTH * Globals.CELL_WIDTH, 300 + i  * Globals.CELL_HEIGHT);
 				spriteBatch.Draw (m_armor.Texture, drawPos, m_armor.GetFrameRect (0), Color.White);
+			}
+			for (int i = 0; i < player.Get<Consumable<ConsumableItems>> ().Amount(ConsumableItems.Trap); i++) {
+				var drawPos = new Vector2 (Globals.WORLD_WIDTH * Globals.CELL_WIDTH, 450 + i  * Globals.CELL_HEIGHT);
+				spriteBatch.Draw (m_trap.Texture, drawPos, m_trap.GetFrameRect (0), Color.White);
 			}
 		}
 
@@ -101,7 +110,8 @@ namespace mogate
 
 			if (ms.LeftButton == ButtonState.Pressed) {
 				var clickPos = mapGrid.ScreenToWorld (ms.X, ms.Y);
-				if (mapGrid.GetID (clickPos.X, clickPos.Y) != MapGridTypes.ID.Blocked) {
+				if (mapGrid.GetID (clickPos.X, clickPos.Y) != MapGridTypes.ID.Blocked
+					&& m_toMove != clickPos) {
 					m_toMove = clickPos;
 					effects.SpawnEffect (m_toMove, "effects_marker", 200);
 				}
@@ -110,9 +120,7 @@ namespace mogate
 			if (ms.RightButton == ButtonState.Pressed) {
 				var clickPos = mapGrid.ScreenToWorld (ms.X, ms.Y);
 				if (mapGrid.GetID (clickPos.X, clickPos.Y) != MapGridTypes.ID.Blocked) {
-					if (Utils.Dist (clickPos, mapPos) < 2) {
-						DoAttack (clickPos);
-					}
+					OnAction (mapPos, clickPos);
 				}
 			}
 
@@ -144,22 +152,19 @@ namespace mogate
 			}
 		}
 
-		private void DoAttack(Point attackTo)
+		private void OnAction(Point mapPos, Point actionPos)
 		{
 			var effects = (EffectsLayer)Scene.GetLayer ("effects");
-			var monsters = (MonstersLayer)Scene.GetLayer ("monsters");
 			var items = (ItemsLayer)Scene.GetLayer ("items");
 			var player = GetEntityByTag("player");
 
-			effects.SpawnEffect (attackTo, "items_sword", 100);
-
-			var monster = monsters.GetAllEntities().FirstOrDefault (m => m.Get<Position> ().MapPos == attackTo);
-			if (monster != default(Entity)) {
-				player.Get<Execute> ().Add (new AttackEntity (player, monster));
-			}
-			var item = items.GetAllEntities ().FirstOrDefault (m => m.Get<Position> ().MapPos == attackTo);
-			if (item != default(Entity)) {
+			var item = items.GetAllEntities ().FirstOrDefault (m => m.Get<Position> ().MapPos == actionPos);
+			if (item != default(Entity) && Utils.Dist(mapPos, actionPos) < 2) {
+				effects.SpawnEffect (actionPos, "items_sword", 100);
 				player.Get<Execute> ().Add (new AttackEntity (player, item));
+			} else if (item == default(Entity)) {
+				if (player.Get<Consumable<ConsumableItems>>().TryConsume(ConsumableItems.Trap, 1))
+					items.AddTrap (actionPos);
 			}
 		}
 
