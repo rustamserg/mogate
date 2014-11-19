@@ -24,7 +24,7 @@ namespace mogate
 
 		protected override void OnPostUpdate(GameTime gameTime)
 		{
-			if (Keyboard.GetState ().IsKeyDown (Keys.C)) {
+			if (KeyboardUtils.IsKeyPressed(Keys.C)) {
 				var director = (IDirector)Game.Services.GetService (typeof(IDirector));
 				var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 

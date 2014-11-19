@@ -67,7 +67,7 @@ namespace mogate
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
 
-			if (Keyboard.GetState ().IsKeyDown (Keys.Q))
+			if (KeyboardUtils.IsKeyPressed(Keys.Q))
 				m_isLevelCompleted = true;
 
 			var director = (IDirector)Game.Services.GetService (typeof(IDirector));

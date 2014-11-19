@@ -88,6 +88,7 @@
     <Compile Include="Behaviors\Consumable.cs" />
     <Compile Include="Layers\HUDLayer.cs" />
     <Compile Include="Layers\PlayerLayer.cs" />
+    <Compile Include="Core\KeyboardUtils.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MonoGame.Binaries.3.2.0\build\net40\MonoGame.Binaries.targets" />

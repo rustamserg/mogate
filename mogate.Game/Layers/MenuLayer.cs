@@ -21,7 +21,7 @@ namespace mogate
 
 		protected override void OnPostUpdate(GameTime gameTime)
 		{
-			if (Keyboard.GetState ().IsKeyDown (Keys.N)) {
+			if (KeyboardUtils.IsKeyPressed(Keys.N)) {
 				var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 				gameState.NewGame ();
 	
