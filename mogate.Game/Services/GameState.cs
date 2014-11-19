@@ -15,6 +15,7 @@ namespace mogate
 		int MaxPlayerArmor { get; }
 
 		int PlayerTraps { get; set; }
+		int PlayerAttack { get; set; }
 
 		bool IsGameEnd { get; }
 
@@ -34,6 +35,7 @@ namespace mogate
 		public int MaxPlayerArmor { get; private set; }
 
 		public int PlayerTraps { get; set; }
+		public int PlayerAttack { get; set; }
 
 
 		public GameState (Game game) : base(game)
@@ -54,11 +56,12 @@ namespace mogate
 			world.GenerateLevels (Globals.MAX_LEVELS);
 
 			Level = 0;
-			PlayerHealth = 5;
-			MaxPlayerHealth = 8;
-			PlayerArmor = 3;
-			MaxPlayerArmor = 5;
-			PlayerTraps = 6;
+			PlayerHealth = Globals.PLAYER_HEALTH;
+			MaxPlayerHealth = Globals.PLAYER_HEALTH_MAX;
+			PlayerArmor = Globals.PLAYER_ARMOR;
+			MaxPlayerArmor = Globals.PLAYER_ARMOR_MAX;
+			PlayerTraps = Globals.PLAYER_TRAPS;
+			PlayerAttack = Globals.PLAYER_ATTACK;
 			IsGameEnd = false;
 		}
 		 

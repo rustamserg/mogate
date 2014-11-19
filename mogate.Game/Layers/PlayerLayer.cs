@@ -7,22 +7,18 @@ using System.Linq;
 
 namespace mogate
 {
-	public enum HeroState
+	public enum PlayerState
 	{
 		Idle,
 		Moving
 	};
 
-	public class HeroLayer : Layer
+	public class PlayerLayer : Layer
 	{
-		Sprite2D m_life;
-		Sprite2D m_armor;
-		Sprite2D m_trap;
-
 		Point m_toMove;
 		bool m_isLevelCompleted = false;
 
-		public HeroLayer(Game game, string name, Scene scene, int z) : base(game, name, scene, z)
+		public PlayerLayer(Game game, string name, Scene scene, int z) : base(game, name, scene, z)
 		{
 		}
 
@@ -36,13 +32,13 @@ namespace mogate
 
 			var player = CreateEntity ("player");
 
-			player.Register (new State<HeroState> (HeroState.Idle));
+			player.Register (new State<PlayerState> (PlayerState.Idle));
 			player.Register (new Health (gameState.PlayerHealth, gameState.MaxPlayerHealth,
 											() => OnHealthChanged(player)));
-			player.Register (new Attack (1));
+			player.Register (new Attack (gameState.PlayerAttack));
 			player.Register (new Armor (gameState.PlayerArmor, gameState.MaxPlayerArmor));
 			player.Register (new PointLight (6));
-			player.Register (new MoveSpeed (300));
+			player.Register (new MoveSpeed (Globals.PLAYER_MOVE_SPEED));
 			player.Register (new IFFSystem (Globals.IFF_PLAYER_ID, 2));
 			player.Register (new Attackable (OnAttacked));
 			player.Register (new Position (mapGrid.StairDown.X, mapGrid.StairDown.Y));
@@ -54,10 +50,6 @@ namespace mogate
 			player.Get<Consumable<ConsumableItems>> ().Refill (ConsumableItems.Trap, gameState.PlayerTraps);
 			m_toMove = mapGrid.StairDown;
 			StartIdle ();
-
-			m_life = sprites.GetSprite ("items_life");
-			m_armor = sprites.GetSprite ("items_shield");
-			m_trap = sprites.GetSprite ("effects_fire");
 		}
 
 		public override void OnDeactivated ()
@@ -65,24 +57,8 @@ namespace mogate
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 			var player = GetEntityByTag("player");
 			gameState.PlayerHealth = player.Get<Health> ().HP;
-		}
-
-		protected override void OnPostDraw (SpriteBatch spriteBatch, GameTime gameTime)
-		{
-			var player = GetEntityByTag("player");
-
-			for (int i = 0; i < player.Get<Health> ().HP; i++) {
-				var drawPos = new Vector2 (Globals.WORLD_WIDTH * Globals.CELL_WIDTH, i  * Globals.CELL_HEIGHT);
-				spriteBatch.Draw (m_life.Texture, drawPos, m_life.GetFrameRect (0), Color.White);
-			}
-			for (int i = 0; i < player.Get<Armor> ().Value; i++) {
-				var drawPos = new Vector2 (Globals.WORLD_WIDTH * Globals.CELL_WIDTH, 300 + i  * Globals.CELL_HEIGHT);
-				spriteBatch.Draw (m_armor.Texture, drawPos, m_armor.GetFrameRect (0), Color.White);
-			}
-			for (int i = 0; i < player.Get<Consumable<ConsumableItems>> ().Amount(ConsumableItems.Trap); i++) {
-				var drawPos = new Vector2 (Globals.WORLD_WIDTH * Globals.CELL_WIDTH, 450 + i  * Globals.CELL_HEIGHT);
-				spriteBatch.Draw (m_trap.Texture, drawPos, m_trap.GetFrameRect (0), Color.White);
-			}
+			gameState.PlayerArmor = player.Get<Armor> ().Value;
+			gameState.PlayerTraps = player.Get<Consumable<ConsumableItems>> ().Amount (ConsumableItems.Trap);
 		}
 
 		protected override void OnPostUpdate (GameTime gameTime)
@@ -124,7 +100,7 @@ namespace mogate
 				}
 			}
 
-			if (player.Get<State<HeroState>>().EState == HeroState.Idle) {
+			if (player.Get<State<PlayerState>>().EState == PlayerState.Idle) {
 
 				if (mapPos.X < m_toMove.X && mapGrid.GetID (mapPos.X + 1, mapPos.Y) != MapGridTypes.ID.Blocked)
 					mapPos.X++;
@@ -147,7 +123,7 @@ namespace mogate
 					seq.Add (new ActionEntity (player, OnEndMove));
 
 					player.Get<Execute> ().AddNew (seq, "movement");
-					player.Get<State<HeroState>> ().EState = HeroState.Moving;
+					player.Get<State<PlayerState>> ().EState = PlayerState.Moving;
 				}
 			}
 		}
@@ -210,7 +186,7 @@ namespace mogate
 			var loop = new Loop (new AnimSprite (player, sprites.GetSprite("hero_idle"), 600));
 
 			player.Get<Execute> ().AddNew (loop, "movement");
-			player.Get<State<HeroState>>().EState = HeroState.Idle;
+			player.Get<State<PlayerState>>().EState = PlayerState.Idle;
 		}
 	}
 }

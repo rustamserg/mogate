@@ -20,10 +20,15 @@ namespace mogate
 				if (m_onAttack != null)
 					m_onAttack (attacker);
 
+				int armor = 0;
 				if (defender.Has<Armor> () && defender.Get<Armor> ().Value > 0) {
-					defender.Get<Armor> ().Value = Math.Max (0, defender.Get<Armor> ().Value - attacker.Get<Attack> ().Damage);
-				} else if (defender.Has<Health> ()) {
-					defender.Get<Health> ().HP = Math.Max (0, defender.Get<Health> ().HP - attacker.Get<Attack> ().Damage);
+					armor = defender.Get<Armor> ().Value;
+				}
+				
+				if (defender.Has<Health> ()) {
+					int damage = Utils.ThrowDice (attacker.Get<Attack> ().Damage);
+					damage = Math.Max (0, damage - armor);
+					defender.Get<Health> ().HP = Math.Max (0, defender.Get<Health> ().HP - damage);
 				}
 			}
 		}

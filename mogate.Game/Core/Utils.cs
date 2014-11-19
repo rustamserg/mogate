@@ -20,6 +20,16 @@ namespace mogate
 			return Math.Sqrt(Math.Pow(from.X  - to.X, 2) + Math.Pow(from.Y - to.Y, 2));
 		}
 
+		public static bool DropChance(int chance)
+		{
+			return Rand.Next (100) < chance;
+		}
+
+		public static int ThrowDice(int dice)
+		{
+			return Rand.Next (dice);
+		}
+
 		public static double DirectionDist (Point from, Point to, Direction fromDir)
 		{
 			if (fromDir == Direction.Up && (from.X != to.X || from.Y < to.Y))

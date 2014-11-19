@@ -96,12 +96,11 @@ namespace mogate
 				ent.Register (new Position (mp.X, mp.Y));
 				ent.Register (new PointLight (5));
 			} else {
-				var dropChance = Utils.Rand.Next (100); 
-				if (dropChance < 30) {
+				if (Utils.DropChance(Globals.DROP_HEALTH_PROB[gameState.Level])) {
 					ent.Register (new Drawable (sprites.GetSprite ("items_life"),
 						new Vector2 (mp.X * Globals.CELL_WIDTH, mp.Y * Globals.CELL_HEIGHT)));
 					ent.Register (new Triggerable (1, (from) => OnHealthTriggered (ent, from)));
-				} else if (dropChance < 60) {
+				} else if (Utils.DropChance(Globals.DROP_ARMOR_PROB[gameState.Level])) {
 					ent.Register (new Drawable (sprites.GetSprite ("items_shield"),
 						new Vector2 (mp.X * Globals.CELL_WIDTH, mp.Y * Globals.CELL_HEIGHT)));
 					ent.Register (new Triggerable (1, (from) => OnArmorTriggered (ent, from)));

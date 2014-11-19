@@ -38,7 +38,7 @@ namespace mogate
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 
 			var mapGrid = world.GetLevel (gameState.Level);
-			var hero = Scene.GetLayer ("hero");
+			var hero = Scene.GetLayer ("player");
 			var items = Scene.GetLayer ("items");
 			var maps = Scene.GetLayer ("map");
 

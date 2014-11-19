@@ -24,19 +24,19 @@ namespace mogate
 			for (int x = 0; x < map.Width; x++) {
 				for (int y = 0; y < map.Height; y++) {
 					if (map.GetID (x, y) == MapGridTypes.ID.Tunnel) {
-						if (Utils.Rand.Next (100) < Globals.MONSTER_PROB[gameState.Level]) {
+						if (Utils.DropChance(Globals.MONSTER_PROB[gameState.Level])) {
 							var me = CreateEntity ();
 							me.Register (new Position (x, y));
-							me.Register (new Health (2, () => OnHealthChanged(me)));
-							me.Register (new Attack (1));
-							me.Register (new MoveSpeed (600));
-							me.Register (new AttackSpeed (500));
+							me.Register (new Health (Globals.MONSTER_HEALTH[gameState.Level], () => OnHealthChanged(me)));
+							me.Register (new Attack (Globals.MONSTER_ATTACK[gameState.Level]));
+							me.Register (new MoveSpeed (Globals.MONSTER_MOVE_SPEED[gameState.Level]));
+							me.Register (new AttackSpeed (Globals.MONSTER_ATTACK_SPEED[gameState.Level]));
 							me.Register (new Attackable ((attacker) => OnAttacked(me, attacker)));
 							me.Register (new Execute ());
 							me.Register (new Patrol (3, 5));
 							me.Register (new IFFSystem (Globals.IFF_MONSTER_ID, 0));
 							me.Register (new LookDirection (Utils.Direction.Down));
-							me.Register (new Perception (5));
+							me.Register (new Perception (Globals.MONSTER_PERCEPTION[gameState.Level]));
 							me.Register (new AllowedMapArea(MapGridTypes.ID.Tunnel));
 							me.Register (new Drawable (sprites.GetSprite("monsters_mob"), new Vector2 (x * Globals.CELL_WIDTH, y * Globals.CELL_HEIGHT)));
 
@@ -54,16 +54,16 @@ namespace mogate
 				var pos = new Point (bossRoom.Pos.X + Utils.Rand.Next (bossRoom.Width), bossRoom.Pos.Y + Utils.Rand.Next (bossRoom.Height));
 
 				boss.Register (new Position (pos.X, pos.Y));
-				boss.Register (new Health (10, () => OnHealthChanged(boss)));
-				boss.Register (new Attack (2));
-				boss.Register (new MoveSpeed (400));
-				boss.Register (new AttackSpeed (300));
+				boss.Register (new Health (Globals.BOSS_HEALTH, () => OnHealthChanged(boss)));
+				boss.Register (new Attack (Globals.BOSS_ATTACK));
+				boss.Register (new MoveSpeed (Globals.BOSS_MOVE_SPEED));
+				boss.Register (new AttackSpeed (Globals.BOSS_ATTACK_SPEED));
 				boss.Register (new Attackable ((attacker) => OnAttacked(boss, attacker)));
 				boss.Register (new Execute ());
 				boss.Register (new Patrol (1, 3));
 				boss.Register (new IFFSystem (Globals.IFF_MONSTER_ID));
 				boss.Register (new LookDirection (Utils.Direction.Down));
-				boss.Register (new Perception (10));
+				boss.Register (new Perception (Globals.BOSS_PERCEPTION));
 				boss.Register (new AllowedMapArea(MapGridTypes.ID.Room));
 				boss.Register (new Drawable (sprites.GetSprite("monsters_boss"), new Vector2 (pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
 
@@ -75,7 +75,7 @@ namespace mogate
 
 		void StartPatrol(Entity monster)
 		{
-			var targets = Scene.GetLayer ("hero").GetAllEntities ().ToList ();
+			var targets = Scene.GetLayer ("player").GetAllEntities ().ToList ();
 			targets.AddRange (Scene.GetLayer ("items").GetAllEntities ());
 			targets.AddRange (GetAllEntities ());
 
