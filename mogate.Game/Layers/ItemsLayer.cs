@@ -33,6 +33,7 @@ namespace mogate
 				ent.Register (new Position (pos.X, pos.Y));
 				ent.Register (new Health (1, () => OnBarrelDestroyed(ent)));
 				ent.Register (new Attackable ((attacker) => OnBarrelAttacked(ent, attacker)));
+				ent.Register (new IFFSystem (Globals.IFF_MONSTER_ID));
 				ent.Register (new PointLight (4));
 			}
 		}
@@ -45,9 +46,10 @@ namespace mogate
 			ent.Register (new Drawable (sprites.GetSprite ("effects_fire"),
 				new Vector2(spawnPoint.X * Globals.CELL_WIDTH, spawnPoint.Y * Globals.CELL_HEIGHT)));
 			ent.Register (new Position (spawnPoint.X, spawnPoint.Y));
-			ent.Register (new Health (1, () => OnTrapHealthChanged(ent)));
+			ent.Register (new Health (1));
+			ent.Register (new Attack (100));
 			ent.Register (new Attackable ((attacker) => OnTrapAttacked(ent, attacker)));
-			//ent.Register (new PointLight (4));
+			ent.Register (new Execute ());
 			ent.Register (new IFFSystem (Globals.IFF_PLAYER_ID, 1));
 		}
 
@@ -55,18 +57,26 @@ namespace mogate
 		{
 			var effects = (EffectsLayer)Scene.GetLayer ("effects");
 			effects.AttachEffect (item, "effects_damage", 200);
+
+			if (attacker.Has<Attackable> ()) {
+				var seq = new Sequence ();
+				seq.Add (new AttackEntity (item, attacker));
+				seq.Add (new ActionEntity (item, OnTrapDestroyed));
+				item.Get<Execute> ().Add (seq);
+			} else {
+				RemoveEntityByTag (item.Tag);	
+			}
+		}
+
+		void OnTrapDestroyed(Entity trap)
+		{
+			RemoveEntityByTag (trap.Tag);
 		}
 
 		void OnBarrelAttacked (Entity item, Entity attacker)
 		{
 			var effects = (EffectsLayer)Scene.GetLayer ("effects");
 			effects.AttachEffect (item, "effects_damage", 400);
-		}
-
-		void OnTrapHealthChanged(Entity trap)
-		{
-			if (trap.Get<Health>().HP == 0)
-				RemoveEntityByTag (trap.Tag);
 		}
 
 		void OnBarrelDestroyed(Entity barrel)

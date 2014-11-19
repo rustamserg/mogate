@@ -51,7 +51,7 @@ namespace mogate
 			player.Register (new Drawable (sprites.GetSprite ("hero_idle"),
 				new Vector2(mapGrid.StairDown.X * Globals.CELL_WIDTH, mapGrid.StairDown.Y * Globals.CELL_HEIGHT)));
 
-			player.Get<Consumable<ConsumableItems>> ().Refill (ConsumableItems.Trap, 5);
+			player.Get<Consumable<ConsumableItems>> ().Refill (ConsumableItems.Trap, gameState.PlayerTraps);
 			m_toMove = mapGrid.StairDown;
 			StartIdle ();
 
@@ -160,8 +160,12 @@ namespace mogate
 
 			var item = items.GetAllEntities ().FirstOrDefault (m => m.Get<Position> ().MapPos == actionPos);
 			if (item != default(Entity) && Utils.Dist(mapPos, actionPos) < 2) {
-				effects.SpawnEffect (actionPos, "items_sword", 100);
-				player.Get<Execute> ().Add (new AttackEntity (player, item));
+				if (item.Has<IFFSystem> ()) {
+					if (player.Get<IFFSystem> ().IsFoe (item)) {
+						effects.SpawnEffect (actionPos, "items_sword", 100);
+						player.Get<Execute> ().Add (new AttackEntity (player, item));
+					}
+				}
 			} else if (item == default(Entity)) {
 				if (player.Get<Consumable<ConsumableItems>>().TryConsume(ConsumableItems.Trap, 1))
 					items.AddTrap (actionPos);

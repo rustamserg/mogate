@@ -18,7 +18,7 @@ namespace mogate
 			m_onChanged = onChanged;
 		}
 
-		public Health(int hp, Action onChanged)
+		public Health(int hp, Action onChanged = null)
 		{
 			m_hp = hp;
 			MaxHP = hp;

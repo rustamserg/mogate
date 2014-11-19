@@ -11,7 +11,7 @@ namespace mogate
 		public int Priority { get; private set; }
 		public int ID { get; private set; }
 
-		public IFFSystem (int id, int priority)
+		public IFFSystem (int id, int priority = 0)
 		{
 			ID = id;
 			Priority = priority;

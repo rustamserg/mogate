@@ -61,7 +61,7 @@ namespace mogate
 				boss.Register (new Attackable ((attacker) => OnAttacked(boss, attacker)));
 				boss.Register (new Execute ());
 				boss.Register (new Patrol (1, 3));
-				boss.Register (new IFFSystem (Globals.IFF_MONSTER_ID, 0));
+				boss.Register (new IFFSystem (Globals.IFF_MONSTER_ID));
 				boss.Register (new LookDirection (Utils.Direction.Down));
 				boss.Register (new Perception (10));
 				boss.Register (new AllowedMapArea(MapGridTypes.ID.Room));
