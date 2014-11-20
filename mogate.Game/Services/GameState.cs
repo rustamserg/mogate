@@ -1,6 +1,10 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Storage;
+using Microsoft.Xna.Framework.GamerServices;
+using System.Xml.Serialization;
+using System.IO;
 
 namespace mogate
 {
@@ -18,13 +22,27 @@ namespace mogate
 		int PlayerAttack { get; set; }
 
 		bool IsGameEnd { get; }
+		bool IsLoaded { get; }
 
 		void NewGame();
+
 		void NextLevel();
+	}
+
+	[Serializable]
+	public class SaveData
+	{
+		public int Level;
+		public int PlayerHealth;
+		public int PlayerArmor;
+		public int PlayerTraps;
+		public int PlayerAttack;
 	}
 
 	public class GameState : GameComponent, IGameState
 	{
+		StorageDevice m_storageDevice;
+
 		public int Level { get; private set; }
 		public bool IsGameEnd { get; private set; }
 
@@ -37,20 +55,43 @@ namespace mogate
 		public int PlayerTraps { get; set; }
 		public int PlayerAttack { get; set; }
 
+		public bool IsLoaded { get; private set; }
+
 
 		public GameState (Game game) : base(game)
 		{
+			IsLoaded = false;
 		}
 
 		public override void Update (GameTime gameTime)
 		{
-			if (Keyboard.GetState().IsKeyDown(Keys.Escape)) {
+			if (KeyboardUtils.IsKeyPressed(Keys.Escape)) {
 				Game.Exit ();
+			}
+			if (!IsLoaded) {
+				LoadGame ();
 			}
 			base.Update(gameTime);
 		}
 
 		public void NewGame()
+		{
+			InitGame ();
+			SaveGame ();
+		}
+
+		public void NextLevel()
+		{
+			Level = Level + 1;
+		
+			if (Level == Globals.MAX_LEVELS) {
+				IsGameEnd = true;
+				Level = 0;
+			}
+			SaveGame ();
+		}
+
+		void InitGame()
 		{
 			var world = (IWorld)Game.Services.GetService(typeof(IWorld));
 			world.GenerateLevels (Globals.MAX_LEVELS);
@@ -64,16 +105,84 @@ namespace mogate
 			PlayerAttack = Globals.PLAYER_ATTACK;
 			IsGameEnd = false;
 		}
-		 
-		public void NextLevel()
+
+		void LoadGame()
 		{
-			Level = Level + 1;
-		
-			if (Level == Globals.MAX_LEVELS) {
-				IsGameEnd = true;
-				Level = 0;
-				return;
+			InitGame ();
+
+			if (!Guide.IsVisible) {
+				m_storageDevice = null;
+				StorageDevice.BeginShowSelector (PlayerIndex.One, LoadFromDevice, null);
 			}
+		}
+
+		void SaveGame()
+		{
+			if (!Guide.IsVisible) {
+				m_storageDevice = null;
+				StorageDevice.BeginShowSelector (PlayerIndex.One, SaveToDevice, null);
+			}
+		}
+
+		void SaveToDevice(IAsyncResult result)
+		{
+			m_storageDevice = StorageDevice.EndShowSelector (result);
+
+			if (m_storageDevice != null && m_storageDevice.IsConnected) {
+				var res = m_storageDevice.BeginOpenContainer ("mogate", null, null);
+				result.AsyncWaitHandle.WaitOne ();
+				var container = m_storageDevice.EndOpenContainer (res);
+
+				if (container.FileExists ("mogate.sav"))
+					container.DeleteFile ("mogate.sav");
+
+				var stream = container.CreateFile ("mogate.sav");
+				var serializer = new XmlSerializer (typeof(SaveData));
+
+				var save = new SaveData {
+					Level = this.Level,
+					PlayerHealth = this.PlayerHealth,
+					PlayerArmor = this.PlayerArmor,
+					PlayerTraps = this.PlayerTraps,
+					PlayerAttack = this.PlayerAttack
+				};
+				serializer.Serialize (stream, save);
+				stream.Close ();
+
+				container.Dispose ();
+				result.AsyncWaitHandle.Close ();
+			}
+		}
+
+		void LoadFromDevice(IAsyncResult result)
+		{
+			m_storageDevice = StorageDevice.EndShowSelector (result);
+			var res = m_storageDevice.BeginOpenContainer ("mogate", null, null);
+			result.AsyncWaitHandle.WaitOne ();
+			var container = m_storageDevice.EndOpenContainer (res);
+			result.AsyncWaitHandle.Close ();
+
+			if (container.FileExists ("mogate.sav")) {
+				SaveData save = null;
+				var stream = container.OpenFile("mogate.sav", FileMode.Open);
+
+				try {
+					var serializer = new XmlSerializer(typeof(SaveData));
+					save = (SaveData)serializer.Deserialize(stream);
+				} catch (SystemException) {}
+
+				stream.Close ();
+				container.Dispose ();
+
+				if (save != null) {
+					Level = save.Level;
+					PlayerHealth = save.PlayerHealth;
+					PlayerArmor = save.PlayerArmor;
+					PlayerTraps = save.PlayerTraps;
+					PlayerAttack = save.PlayerAttack;
+				}
+			}
+			IsLoaded = true;
 		}
 	}
 }
