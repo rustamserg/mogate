@@ -26,8 +26,8 @@ namespace mogate
 			for (int w = 0; w < mapGrid.Width; w++) {
 				for (int h = 0; h < mapGrid.Height; h++) {
 					var ent = CreateEntity ();
-					ent.Register(new Drawable(sprites.GetSprite("effects_fog"),
-						new Vector2(w * Globals.CELL_WIDTH, h * Globals.CELL_HEIGHT)));
+					ent.Register (new Sprite (sprites.GetSprite ("effects_fog")));
+					ent.Register(new Drawable(new Vector2(w * Globals.CELL_WIDTH, h * Globals.CELL_HEIGHT)));
 					ent.Register (new Position (w, h));
 				}
 			}

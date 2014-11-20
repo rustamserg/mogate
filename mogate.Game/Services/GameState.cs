@@ -11,6 +11,7 @@ namespace mogate
 	public interface IGameState
 	{
 		int Level { get; }
+		TimeSpan Playtime { get; }
 
 		int PlayerHealth { get; set; }
 		int MaxPlayerHealth { get; }
@@ -23,9 +24,9 @@ namespace mogate
 
 		bool IsGameEnd { get; }
 		bool IsLoaded { get; }
+		bool CountPlaytime { get; set; }
 
 		void NewGame();
-
 		void NextLevel();
 	}
 
@@ -33,6 +34,7 @@ namespace mogate
 	public class SaveData
 	{
 		public int Level;
+		public long PlaytimeTicks;
 		public int PlayerHealth;
 		public int PlayerArmor;
 		public int PlayerTraps;
@@ -44,6 +46,8 @@ namespace mogate
 		StorageDevice m_storageDevice;
 
 		public int Level { get; private set; }
+		public TimeSpan Playtime { get; private set; }
+
 		public bool IsGameEnd { get; private set; }
 
 		public int PlayerHealth { get; set; }
@@ -56,11 +60,13 @@ namespace mogate
 		public int PlayerAttack { get; set; }
 
 		public bool IsLoaded { get; private set; }
+		public bool CountPlaytime { get; set; }
 
 
 		public GameState (Game game) : base(game)
 		{
 			IsLoaded = false;
+			CountPlaytime = false;
 		}
 
 		public override void Update (GameTime gameTime)
@@ -70,6 +76,9 @@ namespace mogate
 			}
 			if (!IsLoaded) {
 				LoadGame ();
+			}
+			if (CountPlaytime) {
+				Playtime += gameTime.ElapsedGameTime;
 			}
 			base.Update(gameTime);
 		}
@@ -97,13 +106,15 @@ namespace mogate
 			world.GenerateLevels (Globals.MAX_LEVELS);
 
 			Level = 0;
+			IsGameEnd = false;
+			Playtime = TimeSpan.Zero;
+
 			PlayerHealth = Globals.PLAYER_HEALTH;
 			MaxPlayerHealth = Globals.PLAYER_HEALTH_MAX;
 			PlayerArmor = Globals.PLAYER_ARMOR;
 			MaxPlayerArmor = Globals.PLAYER_ARMOR_MAX;
 			PlayerTraps = Globals.PLAYER_TRAPS;
 			PlayerAttack = Globals.PLAYER_ATTACK;
-			IsGameEnd = false;
 		}
 
 		void LoadGame()
@@ -141,6 +152,7 @@ namespace mogate
 
 				var save = new SaveData {
 					Level = this.Level,
+					PlaytimeTicks = this.Playtime.Ticks,
 					PlayerHealth = this.PlayerHealth,
 					PlayerArmor = this.PlayerArmor,
 					PlayerTraps = this.PlayerTraps,
@@ -176,6 +188,7 @@ namespace mogate
 
 				if (save != null) {
 					Level = save.Level;
+					Playtime = TimeSpan.FromTicks(save.PlaytimeTicks);
 					PlayerHealth = save.PlayerHealth;
 					PlayerArmor = save.PlayerArmor;
 					PlayerTraps = save.PlayerTraps;

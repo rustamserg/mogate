@@ -8,24 +8,21 @@ namespace mogate
 	{
 		public Type Behavior { get { return typeof(Drawable); } }
 
-		public Sprite2D Sprite;
 		public Vector2 DrawPos;
 		public Color DrawColor;
 		public float DrawAlpha;
-		public int FrameId;
 
-		public Rectangle DrawRect {
-			get {
-				return Sprite.GetFrameRect (FrameId);
-			}
-		}
-
-		public Drawable (Sprite2D sprite, Vector2 drawPos)
+		public Drawable (Vector2 drawPos)
 		{
-			FrameId = 0;
-			Sprite = sprite;
 			DrawPos = drawPos;
 			DrawColor = Color.White;
+			DrawAlpha = 1.0f;
+		}
+
+		public Drawable (Vector2 drawPos, Color drawColor)
+		{
+			DrawPos = drawPos;
+			DrawColor = drawColor;
 			DrawAlpha = 1.0f;
 		}
 	}

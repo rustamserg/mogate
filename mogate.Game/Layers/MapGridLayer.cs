@@ -29,12 +29,12 @@ namespace mogate
 
 					if (id == MapGridTypes.ID.Blocked) {
 						var ent = CreateEntity ();
-						ent.Register (new Drawable (sprites.GetSprite ("grid_wall"),
-							new Vector2 (x * Globals.CELL_WIDTH, y * Globals.CELL_HEIGHT)));
+						ent.Register (new Sprite (sprites.GetSprite ("grid_wall")));
+						ent.Register (new Drawable (new Vector2 (x * Globals.CELL_WIDTH, y * Globals.CELL_HEIGHT)));
 					} else if (id == MapGridTypes.ID.StairDown) {
 						var ent = CreateEntity ();
-						ent.Register (new Drawable (sprites.GetSprite ("grid_ladder"),
-							new Vector2 (x * Globals.CELL_WIDTH, y * Globals.CELL_HEIGHT)));
+						ent.Register (new Sprite (sprites.GetSprite ("grid_ladder")));
+						ent.Register (new Drawable (new Vector2 (x * Globals.CELL_WIDTH, y * Globals.CELL_HEIGHT)));
 					} else if (id == MapGridTypes.ID.StairUp) {
 						if (gameState.Level < Globals.MAX_LEVELS - 1) {
 							AddExitPoint (false);
@@ -53,8 +53,8 @@ namespace mogate
 			var mapGrid = world.GetLevel (gameState.Level);
 
 			var ent = CreateEntity ();
-			ent.Register (new Drawable (sprites.GetSprite ("grid_ladder"),
-				new Vector2 (mapGrid.StairUp.X * Globals.CELL_WIDTH, mapGrid.StairUp.Y * Globals.CELL_HEIGHT)));
+			ent.Register (new Sprite (sprites.GetSprite ("grid_ladder")));
+			ent.Register (new Drawable (new Vector2 (mapGrid.StairUp.X * Globals.CELL_WIDTH, mapGrid.StairUp.Y * Globals.CELL_HEIGHT)));
 			if (lightExit) {
 				ent.Register (new PointLight (5));
 			}

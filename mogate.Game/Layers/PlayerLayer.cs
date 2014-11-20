@@ -44,8 +44,8 @@ namespace mogate
 			player.Register (new Position (mapGrid.StairDown.X, mapGrid.StairDown.Y));
 			player.Register (new Execute ());
 			player.Register (new Consumable<ConsumableItems> ());
-			player.Register (new Drawable (sprites.GetSprite ("hero_idle"),
-				new Vector2(mapGrid.StairDown.X * Globals.CELL_WIDTH, mapGrid.StairDown.Y * Globals.CELL_HEIGHT)));
+			player.Register (new Sprite (sprites.GetSprite ("hero_idle")));
+			player.Register (new Drawable (new Vector2(mapGrid.StairDown.X * Globals.CELL_WIDTH, mapGrid.StairDown.Y * Globals.CELL_HEIGHT)));
 
 			player.Get<Consumable<ConsumableItems>> ().Refill (ConsumableItems.Trap, gameState.PlayerTraps);
 			m_toMove = mapGrid.StairDown;

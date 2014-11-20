@@ -19,6 +19,18 @@ namespace mogate
 			AddLayer (new FogLayer (Game, "fog", this, 5));
 			AddLayer (new HUDLayer (Game, "hud", this, 6));
 		}
+
+		protected override void OnActivated()
+		{
+			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
+			gameState.CountPlaytime = true;
+		}
+
+		protected override void OnDeactivated()
+		{
+			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
+			gameState.CountPlaytime = false;
+		}
 	}
 }
 

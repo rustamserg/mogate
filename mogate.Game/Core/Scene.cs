@@ -113,6 +113,7 @@ namespace mogate
 			foreach (var la in iter) {
 				la.Activate ();
 			}
+			OnActivated ();
 		}
 
 		public void DeactivateScene()
@@ -123,9 +124,18 @@ namespace mogate
 			foreach (var la in iter) {
 				la.Deactivate ();
 			}
+			OnDeactivated ();
 		}
 
 		protected virtual void LoadLayers()
+		{
+		}
+
+		protected virtual void OnActivated()
+		{
+		}
+
+		protected virtual void OnDeactivated()
 		{
 		}
 	}

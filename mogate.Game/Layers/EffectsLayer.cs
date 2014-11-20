@@ -16,8 +16,8 @@ namespace mogate
 
 			var ent = CreateEntity ();
 			ent.Register (new Execute ());
-			ent.Register (new Drawable (sprites.GetSprite (name),
-				new Vector2(pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
+			ent.Register (new Sprite (sprites.GetSprite (name)));
+			ent.Register (new Drawable (new Vector2(pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
 
 			var seq = new Sequence ();
 			seq.Add (new AnimSprite(ent, duration));
@@ -35,8 +35,8 @@ namespace mogate
 
 			var ent = CreateEntity ();
 			ent.Register (new Execute ());
-			ent.Register (new Drawable (sprites.GetSprite (name),
-				new Vector2(pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
+			ent.Register (new Sprite (sprites.GetSprite (name)));
+			ent.Register (new Drawable (new Vector2(pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
 
 			var seq = new Sequence ();
 			var spawn = new Spawn ();

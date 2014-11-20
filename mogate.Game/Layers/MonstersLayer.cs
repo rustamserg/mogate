@@ -38,7 +38,8 @@ namespace mogate
 							me.Register (new LookDirection (Utils.Direction.Down));
 							me.Register (new Perception (Globals.MONSTER_PERCEPTION[gameState.Level]));
 							me.Register (new AllowedMapArea(MapGridTypes.ID.Tunnel));
-							me.Register (new Drawable (sprites.GetSprite("monsters_mob"), new Vector2 (x * Globals.CELL_WIDTH, y * Globals.CELL_HEIGHT)));
+							me.Register (new Sprite (sprites.GetSprite ("monsters_mob")));
+							me.Register (new Drawable (new Vector2 (x * Globals.CELL_WIDTH, y * Globals.CELL_HEIGHT)));
 
 							me.Get<Execute> ().Add (new ActionEntity (me, (_) => {
 								StartPatrol (me);
@@ -65,7 +66,8 @@ namespace mogate
 				boss.Register (new LookDirection (Utils.Direction.Down));
 				boss.Register (new Perception (Globals.BOSS_PERCEPTION));
 				boss.Register (new AllowedMapArea(MapGridTypes.ID.Room));
-				boss.Register (new Drawable (sprites.GetSprite("monsters_boss"), new Vector2 (pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
+				boss.Register (new Sprite (sprites.GetSprite ("monsters_boss")));
+				boss.Register (new Drawable (new Vector2 (pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
 
 				boss.Get<Execute> ().Add (new ActionEntity (boss, (_) => {
 					StartPatrol (boss);
