@@ -81,7 +81,8 @@ namespace mogate
 						drawAspect.DrawPos,
 						sprite.DrawRect,
 						drawColor);
-				} else if (ent.Has<Text> ()) {
+				}
+				if (ent.Has<Text> ()) {
 					var text = ent.Get<Text> ();
 					spriteBatch.DrawString (text.Font,
 						text.Message,
