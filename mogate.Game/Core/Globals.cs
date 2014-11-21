@@ -15,14 +15,14 @@ namespace mogate
 		public static readonly int IFF_PLAYER_ID = 0;
 		public static readonly int IFF_MONSTER_ID = 1;
 
-		public static readonly int HUD_HEALTH_SIZE = 20;
-		public static readonly int HUD_ARMOR_SIZE = 5;
+		public static readonly int HEALTH_PACK = 20;
+		public static readonly int ARMOR_PACK = 5;
 
-		public static readonly int PLAYER_HEALTH = 20;
-		public static readonly int PLAYER_HEALTH_MAX = 80;
+		public static readonly int PLAYER_HEALTH = 2;
+		public static readonly int PLAYER_HEALTH_MAX = 6;
 		public static readonly int PLAYER_ATTACK = 10;
-		public static readonly int PLAYER_ARMOR = 5;
-		public static readonly int PLAYER_ARMOR_MAX = 15;
+		public static readonly int PLAYER_ARMOR = 1;
+		public static readonly int PLAYER_ARMOR_MAX = 3;
 		public static readonly int PLAYER_TRAPS = 5;
 		public static readonly int PLAYER_MOVE_SPEED = 300;
 

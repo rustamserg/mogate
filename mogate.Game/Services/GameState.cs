@@ -109,10 +109,10 @@ namespace mogate
 			IsGameEnd = false;
 			Playtime = TimeSpan.Zero;
 
-			PlayerHealth = Globals.PLAYER_HEALTH;
-			MaxPlayerHealth = Globals.PLAYER_HEALTH_MAX;
-			PlayerArmor = Globals.PLAYER_ARMOR;
-			MaxPlayerArmor = Globals.PLAYER_ARMOR_MAX;
+			PlayerHealth = Globals.PLAYER_HEALTH * Globals.HEALTH_PACK;
+			MaxPlayerHealth = Globals.PLAYER_HEALTH_MAX * Globals.HEALTH_PACK;
+			PlayerArmor = Globals.PLAYER_ARMOR * Globals.ARMOR_PACK;
+			MaxPlayerArmor = Globals.PLAYER_ARMOR_MAX * Globals.ARMOR_PACK;
 			PlayerTraps = Globals.PLAYER_TRAPS;
 			PlayerAttack = Globals.PLAYER_ATTACK;
 		}

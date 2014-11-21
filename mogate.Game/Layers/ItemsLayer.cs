@@ -119,7 +119,7 @@ namespace mogate
 		{
 			if (from.Has<Armor> ()) {
 				if (from.Get<Armor> ().Value < from.Get<Armor> ().MaxArmor) {
-					from.Get<Armor> ().Value = from.Get<Armor> ().Value + 1;
+					from.Get<Armor> ().Value = from.Get<Armor> ().Value + Globals.ARMOR_PACK;
 					RemoveEntityByTag (item.Tag);
 				}
 			}
@@ -129,7 +129,7 @@ namespace mogate
 		{
 			if (from.Has<Health> ()) {
 				if (from.Get<Health> ().HP < from.Get<Health> ().MaxHP) {
-					from.Get<Health> ().HP = from.Get<Health> ().HP + 1;
+					from.Get<Health> ().HP = from.Get<Health> ().HP + Globals.HEALTH_PACK;
 					RemoveEntityByTag (item.Tag);
 				}
 			}

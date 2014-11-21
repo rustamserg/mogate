@@ -47,11 +47,11 @@ namespace mogate
 			var player = Scene.GetLayer("player").GetEntityByTag("player");
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 
-			for (int i = 0; i < Math.Ceiling((float)player.Get<Health> ().HP/Globals.HUD_HEALTH_SIZE); i++) {
+			for (int i = 0; i < Math.Ceiling((float)player.Get<Health> ().HP/Globals.HEALTH_PACK); i++) {
 				var drawPos = new Vector2 (Globals.WORLD_WIDTH * Globals.CELL_WIDTH, i  * Globals.CELL_HEIGHT);
 				spriteBatch.Draw (m_life.Texture, drawPos, m_life.GetFrameRect (0), Color.White);
 			}
-			for (int i = 0; i < Math.Ceiling((float)player.Get<Armor> ().Value/Globals.HUD_ARMOR_SIZE); i++) {
+			for (int i = 0; i < Math.Ceiling((float)player.Get<Armor> ().Value/Globals.ARMOR_PACK); i++) {
 				var drawPos = new Vector2 (Globals.WORLD_WIDTH * Globals.CELL_WIDTH, 300 + i  * Globals.CELL_HEIGHT);
 				spriteBatch.Draw (m_armor.Texture, drawPos, m_armor.GetFrameRect (0), Color.White);
 			}
