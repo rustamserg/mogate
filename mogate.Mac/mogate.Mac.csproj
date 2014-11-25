@@ -80,8 +80,8 @@
   <ItemGroup>
     <None Include="Info.plist" />
     <None Include="packages.config" />
-    <None Include="SDL.dll" />
   </ItemGroup>
+  <Import Project="..\mogate.Shared\mogate.Shared.projitems" Label="Shared" Condition="Exists('..\mogate.Shared\mogate.Shared.projitems')" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MonoGame.Binaries.3.2.0\build\net40\MonoGame.Binaries.targets" Condition="Exists('..\packages\MonoGame.Binaries.3.2.0\build\net40\MonoGame.Binaries.targets')" />
   <ItemGroup>
@@ -94,11 +94,5 @@
     <BundleResource Include="Resources\Content\Shaders\grayscale.xnb" />
     <BundleResource Include="Resources\Content\Sprites\sprites.plist" />
     <BundleResource Include="Resources\Content\Sprites\sprites.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\mogate.Game\mogate.Game.csproj">
-      <Project>{53E46420-5BD0-4FF9-835B-FED9064E9100}</Project>
-      <Name>mogate.Game</Name>
-    </ProjectReference>
   </ItemGroup>
 </Project>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>{019F46A5-D879-4218-8275-5080E6F90E7D}</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>mogate.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\ActionEntity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\AnimSprite.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\FollowSprite.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\Gameplay\AttackEntity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\Gameplay\TriggerEntity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\Loop.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\MoveSpriteTo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\Sequence.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\Spawn.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\Timeline.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\AllowedMapArea.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Armor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Attack.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Attackable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\AttackSpeed.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Consumable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Drawable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Execute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Health.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\IFFSystem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\LookDirection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\MoveSpeed.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Patrol.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Perception.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\PointLight.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Position.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Sprite.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\State.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Text.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Triggerable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Behavior.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Director.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Entity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Globals.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\KeyboardUtils.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Layer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\MapGenerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\PList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Scene.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Utils.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layers\EffectsLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layers\FogLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layers\HUDLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layers\InterLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layers\ItemsLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layers\MapGridLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layers\MenuLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layers\MonstersLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layers\PlayerLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\GameScene.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\InterScene.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\MainScene.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\GameState.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\MapGrid.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\SpriteSheets.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\World.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GameMogate.cs" />
+  </ItemGroup>
+</Project>
