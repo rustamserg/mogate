@@ -20,29 +20,29 @@ namespace mogate
 
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 			gameState.NextLevel ();
-		}
 
-		protected override void OnPostUpdate(GameTime gameTime)
-		{
-			if (KeyboardUtils.IsKeyPressed(Keys.C)) {
-				var director = (IDirector)Game.Services.GetService (typeof(IDirector));
-				var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
+			var ent = CreateEntity ();
+			ent.Register (new Text (m_font));
+			ent.Register (new Drawable (new Vector2 (420, 270)));
+			ent.Register (new Clickable (new Rectangle (420, 270, 200, 22)));
+			ent.Get<Clickable> ().LeftButtonPressed += OnAction;
 
-				if (gameState.IsGameEnd)
-					director.ActivateScene ("main");
-				else
-					director.ActivateScene ("game");
+			if (gameState.IsGameEnd) {
+				ent.Get<Text> ().Message = "Click for new game";
+			} else {
+				ent.Get<Text> ().Message = "Click for next level";
 			}
 		}
 
-		protected override void OnPostDraw(SpriteBatch spriteBatch, GameTime gameTime)
+		private void OnAction(Point _)
 		{
+			var director = (IDirector)Game.Services.GetService (typeof(IDirector));
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 
 			if (gameState.IsGameEnd)
-				spriteBatch.DrawString (m_font, "Press 'C' for new game", new Vector2 (420, 270), Color.White);
+				director.ActivateScene ("main");
 			else
-				spriteBatch.DrawString (m_font, "Press 'C' for next level", new Vector2 (420, 270), Color.White);
+				director.ActivateScene ("game");
 		}
 	}
 }
