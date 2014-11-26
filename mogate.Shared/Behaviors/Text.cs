@@ -14,7 +14,7 @@ namespace mogate
 		public Text (SpriteFont font, string message = "")
 		{
 			Font = font;
-			Message = string.Empty;
+			Message = message;
 		}
 	}
 }

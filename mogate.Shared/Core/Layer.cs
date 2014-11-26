@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace mogate
 {
@@ -47,12 +48,17 @@ namespace mogate
 		public override void Update(GameTime gameTime)
 		{
 			var iter = new List<Entity> (m_entitiesByTag.Values);
+			var mouse = Mouse.GetState ();
+
 			foreach (var ent in iter) {
 				if (!m_isActivated)
 					continue;
 
 				if (ent.Has<Execute> ()) {
 					ent.Get<Execute> ().Update (gameTime);
+				}
+				if (ent.Has<Clickable> ()) {
+					ent.Get<Clickable> ().HandleMouseInput (mouse);
 				}
 			}
 

@@ -6,7 +6,7 @@
     <SharedGUID>{019F46A5-D879-4218-8275-5080E6F90E7D}</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>mogate.Shared</Import_RootNamespace>
+    <Import_RootNamespace>mogate</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Actions\ActionEntity.cs" />
@@ -66,5 +66,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\SpriteSheets.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\World.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameMogate.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Clickable.cs" />
   </ItemGroup>
 </Project>

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -23,27 +24,36 @@ namespace mogate
 		{
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 			if (gameState.IsLoaded) {
-				if (KeyboardUtils.IsKeyPressed (Keys.N)) {
-					gameState.NewGame ();
-	
-					var director = (IDirector)Game.Services.GetService (typeof(IDirector));
-					director.ActivateScene ("game");
-				} else if (KeyboardUtils.IsKeyPressed (Keys.C)) {
-					var director = (IDirector)Game.Services.GetService (typeof(IDirector));
-					director.ActivateScene ("game");
+				if (!GetAllEntities().Any(ent => ent.Tag == "new_game_btn")) {
+					var newGameBtn = CreateEntity ("new_game_btn");
+					newGameBtn.Register (new Text (m_font, "Click to start new game"));
+					newGameBtn.Register (new Drawable (new Vector2 (420, 270)));
+					newGameBtn.Register (new Clickable (new Rectangle (420, 270, 100, 22)));
+					newGameBtn.Get<Clickable> ().LeftButtonPressed += StartNewGame;
+					if (gameState.Level > 0) {
+						var cntGameBtn = CreateEntity ();
+						cntGameBtn.Register (new Text (m_font, "Click to continue last game"));
+						cntGameBtn.Register (new Drawable (new Vector2 (420, 300)));
+						cntGameBtn.Register (new Clickable (new Rectangle (420, 300, 100, 22)));
+						cntGameBtn.Get<Clickable> ().LeftButtonPressed += ContinueGame;
+					}
 				}
 			}
 		}
 
-		protected override void OnPostDraw(SpriteBatch spriteBatch, GameTime gameTime)
+		void StartNewGame(Point _)
 		{
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
-			if (gameState.IsLoaded) {
-				spriteBatch.DrawString (m_font, "Press 'N' to start your adventure", new Vector2 (420, 270), Color.White);
-				if (gameState.Level > 0) {
-					spriteBatch.DrawString (m_font, "Press 'C' to continue your adventure", new Vector2 (420, 300), Color.White);
-				}
-			}
+			gameState.NewGame ();
+
+			var director = (IDirector)Game.Services.GetService (typeof(IDirector));
+			director.ActivateScene ("game");
+		}
+
+		void ContinueGame(Point _)
+		{
+			var director = (IDirector)Game.Services.GetService (typeof(IDirector));
+			director.ActivateScene ("game");
 		}
 	}
 }
