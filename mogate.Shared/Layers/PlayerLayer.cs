@@ -46,8 +46,12 @@ namespace mogate
 			player.Register (new Consumable<ConsumableItems> ());
 			player.Register (new Sprite (sprites.GetSprite ("hero_idle")));
 			player.Register (new Drawable (new Vector2(mapGrid.StairDown.X * Globals.CELL_WIDTH, mapGrid.StairDown.Y * Globals.CELL_HEIGHT)));
+			player.Register (new Clickable (new Rectangle (0, 0, Globals.CELL_WIDTH * Globals.WORLD_WIDTH, Globals.CELL_HEIGHT * Globals.WORLD_HEIGHT)));
 
 			player.Get<Consumable<ConsumableItems>> ().Refill (ConsumableItems.Trap, gameState.PlayerTraps);
+			player.Get<Clickable> ().LeftButtonPressed += OnMoveToPosition;
+			player.Get<Clickable> ().RightButtonPressed += OnAction;
+
 			m_toMove = mapGrid.StairDown;
 			StartIdle ();
 		}
@@ -60,7 +64,7 @@ namespace mogate
 			gameState.PlayerArmor = player.Get<Armor> ().Value;
 			gameState.PlayerTraps = player.Get<Consumable<ConsumableItems>> ().Amount (ConsumableItems.Trap);
 		}
-
+			
 		protected override void OnPostUpdate (GameTime gameTime)
 		{
 			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
@@ -80,25 +84,7 @@ namespace mogate
 	
 			var mapGrid = world.GetLevel(gameState.Level);
 			var player = GetEntityByTag("player");
-
-			var ms = Mouse.GetState ();
 			var mapPos = player.Get<Position>().MapPos;
-
-			if (ms.LeftButton == ButtonState.Pressed) {
-				var clickPos = mapGrid.ScreenToWorld (ms.X, ms.Y);
-				if (mapGrid.GetID (clickPos.X, clickPos.Y) != MapGridTypes.ID.Blocked
-					&& m_toMove != clickPos) {
-					m_toMove = clickPos;
-					effects.SpawnEffect (m_toMove, "effects_marker", 200);
-				}
-			}
-
-			if (ms.RightButton == ButtonState.Pressed) {
-				var clickPos = mapGrid.ScreenToWorld (ms.X, ms.Y);
-				if (mapGrid.GetID (clickPos.X, clickPos.Y) != MapGridTypes.ID.Blocked) {
-					OnAction (mapPos, clickPos);
-				}
-			}
 
 			if (player.Get<State<PlayerState>>().EState == PlayerState.Idle) {
 
@@ -128,11 +114,37 @@ namespace mogate
 			}
 		}
 
-		private void OnAction(Point mapPos, Point actionPos)
+		private void OnMoveToPosition(Point clickPos)
 		{
+			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
+			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
+
+			var effects = (EffectsLayer)Scene.GetLayer ("effects");
+
+			var mapGrid = world.GetLevel(gameState.Level);
+			var actionPos = mapGrid.ScreenToWorld (clickPos.X, clickPos.Y);
+
+			if (mapGrid.GetID (actionPos.X, actionPos.Y) != MapGridTypes.ID.Blocked
+				&& m_toMove != actionPos) {
+				m_toMove = actionPos;
+				effects.SpawnEffect (m_toMove, "effects_marker", 200);
+			}
+		}
+
+		private void OnAction(Point clickPos)
+		{
+			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
+			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
+			var mapGrid = world.GetLevel(gameState.Level);
+
+			var actionPos = mapGrid.ScreenToWorld (clickPos.X, clickPos.Y);
+			if (mapGrid.GetID (actionPos.X, actionPos.Y) == MapGridTypes.ID.Blocked)
+				return;
+				
 			var effects = (EffectsLayer)Scene.GetLayer ("effects");
 			var items = (ItemsLayer)Scene.GetLayer ("items");
 			var player = GetEntityByTag("player");
+			var mapPos = player.Get<Position>().MapPos;
 
 			var item = items.GetAllEntities ().FirstOrDefault (m => m.Get<Position> ().MapPos == actionPos);
 			if (item != default(Entity) && Utils.Dist(mapPos, actionPos) < 2) {
