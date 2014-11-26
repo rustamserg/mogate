@@ -32,9 +32,19 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="MonoGameContentProcessors">
-      <HintPath>..\packages\MonoGame.ContentProcessors.3.2.1\lib\MonoGameContentProcessors.dll</HintPath>
+    <Reference Include="Lidgren.Network">
+      <HintPath>..\packages\MonoGame.Binaries.3.2.0\build\net40\Lidgren.Network.dll</HintPath>
     </Reference>
+    <Reference Include="MonoGame.Framework">
+      <HintPath>..\packages\MonoGame.Binaries.3.2.0\build\net40\MonoGame.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenTK">
+      <HintPath>..\packages\MonoGame.Binaries.3.2.0\build\net40\OpenTK.dll</HintPath>
+    </Reference>
+    <Reference Include="Tao.Sdl">
+      <HintPath>..\packages\MonoGame.Binaries.3.2.0\build\net40\Tao.Sdl.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -43,18 +53,14 @@
   <ItemGroup>
     <None Include="Icon.png" />
     <None Include="packages.config" />
-    <None Include="SDL.dll" />
   </ItemGroup>
+  <Import Project="..\mogate.Shared\mogate.Shared.projitems" Label="Shared" Condition="Exists('..\mogate.Shared\mogate.Shared.projitems')" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MonoGame.Binaries.3.2.0\build\net40\MonoGame.Binaries.targets" />
   <ItemGroup>
     <ProjectReference Include="..\mogate.Content\mogate.Content.csproj">
       <Project>{885B53C3-88D2-4252-8F87-362A7280721E}</Project>
       <Name>mogate.Content</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\mogate.Game\mogate.Game.csproj">
-      <Project>{53E46420-5BD0-4FF9-835B-FED9064E9100}</Project>
-      <Name>mogate.Game</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>
