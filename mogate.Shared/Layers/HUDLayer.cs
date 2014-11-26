@@ -45,7 +45,6 @@ namespace mogate
 		protected override void OnPostDraw (SpriteBatch spriteBatch, GameTime gameTime)
 		{
 			var player = Scene.GetLayer("player").GetEntityByTag("player");
-			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 
 			for (int i = 0; i < Math.Ceiling((float)player.Get<Health> ().HP/Globals.HEALTH_PACK); i++) {
 				var drawPos = new Vector2 (Globals.WORLD_WIDTH * Globals.CELL_WIDTH, i  * Globals.CELL_HEIGHT);

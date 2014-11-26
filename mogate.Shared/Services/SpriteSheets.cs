@@ -3,6 +3,9 @@ using System.Xml;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+#if __IOS__
+using CocosSharp;
+#endif
 
 
 namespace mogate
@@ -48,19 +51,36 @@ namespace mogate
 
 		protected override void LoadContent ()
 		{
-			var texture = Game.Content.Load<Texture2D> ("Sprites/sprites");
+			Texture2D texture = Game.Content.Load<Texture2D> ("Sprites/sprites");
 			var stream = TitleContainer.OpenStream(@"Content/Sprites/sprites.plist");
-			PList pinfo = new PList (stream);
 
+			#if __IOS__
+			PlistDocument pinfo = new PlistDocument(stream);
+			PlistDictionary frames = pinfo.Root.AsDictionary["frames"].AsDictionary;
+
+			foreach (var frame in frames) {
+				string frmName = frame.Key;
+				string texRect = frame.Value.AsDictionary["textureRect"].AsString;
+				var sp = new Sprite2D (frmName, texture, Utils.RectangleFromString (texRect));
+				m_sprites.Add (frmName, sp);
+			}
+			#else
+			PList pinfo = new PList (stream);
 			PList frames = pinfo ["frames"] as PList;
+
 			foreach (var frmName in frames.Keys) {
 				PList frame = frames [frmName] as PList;
 				string texRect = frame ["textureRect"] as string;
 				var sp = new Sprite2D (frmName, texture, Utils.RectangleFromString (texRect));
 				m_sprites.Add (frmName, sp);
 			}
+			#endif
 
+			#if __IOS__
+			m_fonts ["SpriteFont1"] = Game.Content.Load<SpriteFont> ("Fonts/arial-22");
+			#else
 			m_fonts ["SpriteFont1"] = Game.Content.Load<SpriteFont> ("Fonts/SpriteFont1");
+			#endif
 		}
 
 		public Sprite2D GetSprite(string name)

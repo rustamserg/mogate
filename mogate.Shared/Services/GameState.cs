@@ -71,9 +71,11 @@ namespace mogate
 
 		public override void Update (GameTime gameTime)
 		{
+			#if !__IOS__
 			if (KeyboardUtils.IsKeyPressed(Keys.Escape)) {
 				Game.Exit ();
 			}
+			#endif
 			if (!IsLoaded) {
 				LoadGame ();
 			}

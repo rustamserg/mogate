@@ -17,11 +17,13 @@ namespace mogate
 	public class Scene : DrawableGameComponent
 	{
 		private SpriteBatch m_spriteBatch;
+		#if !__IOS__
 		private Effect m_effect;
+		private float m_fade;
+		#endif
 		private Dictionary<string, Layer> m_layersByName = new Dictionary<string, Layer>();
 		private List<Layer> m_orderedLayers = new List<Layer> ();
 		private int m_spent;
-		private float m_fade;
 		private float m_duration;
 
 		public string Name { get; private set; }
@@ -37,9 +39,11 @@ namespace mogate
 		{
 			m_spriteBatch = new SpriteBatch (Game.GraphicsDevice);
 
+			#if !__IOS__
 			using (var reader = new BinaryReader(File.Open("Content/Shaders/fade.xnb", FileMode.Open))) {
 				m_effect = new Effect(Game.GraphicsDevice, reader.ReadBytes((int)reader.BaseStream.Length));
 			}
+			#endif
 		}
 
 		public override void Update (GameTime gameTime)
@@ -47,10 +51,13 @@ namespace mogate
 			if (State != SceneState.Deactivated) {
 				if (State == SceneState.Activating) {
 					m_spent += gameTime.ElapsedGameTime.Milliseconds;
-					if (m_spent < m_duration)
+					if (m_spent < m_duration) {
+						#if !__IOS__
 						m_fade = m_spent / m_duration;
-					else
+						#endif
+					} else {
 						State = SceneState.Activated;
+					}
 				} else {
 					var iter = new List<Layer> (m_orderedLayers);
 					foreach (var la in iter) {
@@ -67,8 +74,10 @@ namespace mogate
 			if (State != SceneState.Deactivated) {
 				m_spriteBatch.Begin (SpriteSortMode.Immediate, BlendState.AlphaBlend); 
 				if (State == SceneState.Activating) {
+					#if !__IOS__
 					m_effect.Parameters ["ColorAmount"].SetValue (m_fade);
 					m_effect.CurrentTechnique.Passes [0].Apply ();
+					#endif
 				}
 				var iter = new List<Layer> (m_orderedLayers);
 				foreach (var la in iter) {

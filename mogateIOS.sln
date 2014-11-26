@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mogateIOS", "mogateIOS\mogateIOS.csproj", "{5C3CEF67-9A27-4A99-91B2-156FC8EC563A}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "mogate.Shared", "mogate.Shared\mogate.Shared.shproj", "{019F46A5-D879-4218-8275-5080E6F90E7D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|iPhoneSimulator = Debug|iPhoneSimulator
+		Release|iPhoneSimulator = Release|iPhoneSimulator
+		Debug|iPhone = Debug|iPhone
+		Release|iPhone = Release|iPhone
+		Ad-Hoc|iPhone = Ad-Hoc|iPhone
+		AppStore|iPhone = AppStore|iPhone
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5C3CEF67-9A27-4A99-91B2-156FC8EC563A}.Ad-Hoc|iPhone.ActiveCfg = Ad-Hoc|iPhone
+		{5C3CEF67-9A27-4A99-91B2-156FC8EC563A}.Ad-Hoc|iPhone.Build.0 = Ad-Hoc|iPhone
+		{5C3CEF67-9A27-4A99-91B2-156FC8EC563A}.AppStore|iPhone.ActiveCfg = AppStore|iPhone
+		{5C3CEF67-9A27-4A99-91B2-156FC8EC563A}.AppStore|iPhone.Build.0 = AppStore|iPhone
+		{5C3CEF67-9A27-4A99-91B2-156FC8EC563A}.Debug|iPhone.ActiveCfg = Debug|iPhone
+		{5C3CEF67-9A27-4A99-91B2-156FC8EC563A}.Debug|iPhone.Build.0 = Debug|iPhone
+		{5C3CEF67-9A27-4A99-91B2-156FC8EC563A}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
+		{5C3CEF67-9A27-4A99-91B2-156FC8EC563A}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
+		{5C3CEF67-9A27-4A99-91B2-156FC8EC563A}.Release|iPhone.ActiveCfg = Release|iPhone
+		{5C3CEF67-9A27-4A99-91B2-156FC8EC563A}.Release|iPhone.Build.0 = Release|iPhone
+		{5C3CEF67-9A27-4A99-91B2-156FC8EC563A}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
+		{5C3CEF67-9A27-4A99-91B2-156FC8EC563A}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = mogateIOS\mogateIOS.csproj
+	EndGlobalSection
+EndGlobal
