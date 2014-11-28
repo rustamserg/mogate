@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Input.Touch;
 
 namespace mogate
 {
@@ -55,6 +56,7 @@ namespace mogate
 
 			var iter = new List<Entity> (m_entitiesByTag.Values);
 			var mouse = Mouse.GetState ();
+			var touch = TouchPanel.GetState ();
 
 			foreach (var ent in iter) {
 				if (!m_isActivated)
@@ -65,6 +67,7 @@ namespace mogate
 				}
 				if (ent.Has<Clickable> ()) {
 					ent.Get<Clickable> ().HandleMouseInput (mouse, m_screenToWorld);
+					ent.Get<Clickable> ().HandleTouchInput (touch, m_screenToWorld);
 				}
 			}
 

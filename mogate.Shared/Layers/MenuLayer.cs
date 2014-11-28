@@ -26,16 +26,18 @@ namespace mogate
 			if (gameState.IsLoaded) {
 				if (!GetAllEntities().Any(ent => ent.Tag == "new_game_btn")) {
 					var newGameBtn = CreateEntity ("new_game_btn");
-					newGameBtn.Register (new Text (m_font, "Click to start new game"));
+					newGameBtn.Register (new Text (m_font, "Start new game"));
 					newGameBtn.Register (new Drawable (new Vector2 (420, 270)));
 					newGameBtn.Register (new Clickable (new Rectangle (420, 270, 200, 22)));
 					newGameBtn.Get<Clickable> ().LeftButtonPressed += StartNewGame;
+					newGameBtn.Get<Clickable> ().TouchPressed += StartNewGame;
 					if (gameState.Level > 0) {
 						var cntGameBtn = CreateEntity ();
-						cntGameBtn.Register (new Text (m_font, "Click to continue game"));
+						cntGameBtn.Register (new Text (m_font, "Continue game"));
 						cntGameBtn.Register (new Drawable (new Vector2 (420, 300)));
 						cntGameBtn.Register (new Clickable (new Rectangle (420, 300, 200, 22)));
 						cntGameBtn.Get<Clickable> ().LeftButtonPressed += ContinueGame;
+						cntGameBtn.Get<Clickable> ().TouchPressed += ContinueGame;
 					}
 				}
 			}

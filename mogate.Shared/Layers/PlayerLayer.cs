@@ -50,6 +50,7 @@ namespace mogate
 
 			player.Get<Consumable<ConsumableItems>> ().Refill (ConsumableItems.Trap, gameState.PlayerTraps);
 			player.Get<Clickable> ().LeftButtonPressed += OnMoveToPosition;
+			player.Get<Clickable> ().TouchPressed += OnMoveToPosition;
 			player.Get<Clickable> ().RightButtonPressed += OnAction;
 
 			m_toMove = mapGrid.StairDown;

@@ -28,9 +28,9 @@ namespace mogate
 			ent.Get<Clickable> ().LeftButtonPressed += OnAction;
 
 			if (gameState.IsGameEnd) {
-				ent.Get<Text> ().Message = "Click for new game";
+				ent.Get<Text> ().Message = "New game";
 			} else {
-				ent.Get<Text> ().Message = "Click for next level";
+				ent.Get<Text> ().Message = "Next level";
 			}
 		}
 
