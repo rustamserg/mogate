@@ -173,12 +173,16 @@ namespace mogate
 			StartIdle ();
 		}
 
-		private void OnAttacked(Entity attacker)
+		private void OnAttacked(Entity attacker, int damage)
 		{
 			var effects = (EffectsLayer)Scene.GetLayer ("effects");
+			var hud = (HUDLayer)Scene.GetLayer ("hud");
+
 			var player = GetEntityByTag("player");
-	
 			effects.AttachEffect (player, "effects_damage", 400);
+
+			string feedbackMsg = string.Format ("Damaged: {0}", damage);
+			hud.FeedbackMessage (feedbackMsg);
 		}
 
 		private void OnHealthChanged(Entity player)

@@ -32,7 +32,7 @@ namespace mogate
 				ent.Register (new Drawable (new Vector2(pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
 				ent.Register (new Position (pos.X, pos.Y));
 				ent.Register (new Health (1, () => OnBarrelDestroyed(ent)));
-				ent.Register (new Attackable ((attacker) => OnBarrelAttacked(ent, attacker)));
+				ent.Register (new Attackable ((attacker, _) => OnBarrelAttacked(ent, attacker)));
 				ent.Register (new IFFSystem (Globals.IFF_MONSTER_ID));
 				ent.Register (new PointLight (4));
 			}
@@ -48,7 +48,7 @@ namespace mogate
 			ent.Register (new Position (spawnPoint.X, spawnPoint.Y));
 			ent.Register (new Health (1));
 			ent.Register (new Attack (100));
-			ent.Register (new Attackable ((attacker) => OnTrapAttacked(ent, attacker)));
+			ent.Register (new Attackable ((attacker, _) => OnTrapAttacked(ent, attacker)));
 			ent.Register (new Execute ());
 			ent.Register (new IFFSystem (Globals.IFF_PLAYER_ID, 1));
 		}

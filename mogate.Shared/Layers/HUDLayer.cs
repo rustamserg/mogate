@@ -32,13 +32,34 @@ namespace mogate
 				UpdateInfoMessage (infoEnt);
 			}));
 			infoEnt.Get<Execute> ().Add (infoMsg, "info_loop");
+
+			var feedbackEnt = CreateEntity ("hud_feedback");
+			feedbackEnt.Register (new Execute ());
+			feedbackEnt.Register (new Text (sprites.GetFont ("SpriteFont1")));
+			feedbackEnt.Register (new Drawable (new Vector2 (20 * Globals.CELL_WIDTH,
+				Globals.CELL_HEIGHT * Globals.WORLD_HEIGHT), Color.Red));
+		}
+
+		public void FeedbackMessage(string message, int duration = 1000)
+		{
+			var feedbackEnt = GetEntityByTag ("hud_feedback");
+			var seq = new Sequence ();
+			seq.Add (new Timeline(new ActionEntity (feedbackEnt, (_) => {
+				feedbackEnt.Get<Text> ().Message = message;
+			}), duration));
+			seq.Add (new ActionEntity (feedbackEnt, (_) => {
+				feedbackEnt.Get<Text> ().Message = string.Empty;
+			}));
+			feedbackEnt.Get<Execute> ().AddNew (seq);
 		}
 
 		private void UpdateInfoMessage(Entity infoEnt)
 		{
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
+			var player = Scene.GetLayer("player").GetEntityByTag("player");
 
-			infoEnt.Get<Text>().Message = string.Format ("LEVEL: {0} TIME: {1:D2}:{2:D2}:{3:D2}", gameState.Level + 1,
+			infoEnt.Get<Text>().Message = string.Format ("Stage: {0} HP: {1} Armor: {2} Time: {1:D2}:{2:D2}:{3:D2}",
+				gameState.Level + 1, player.Get<Health>().HP, player.Get<Armor>().Value,
 				gameState.Playtime.Hours, gameState.Playtime.Minutes, gameState.Playtime.Seconds);
 		}
 

@@ -31,7 +31,7 @@ namespace mogate
 							me.Register (new Attack (Globals.MONSTER_ATTACK[gameState.Level]));
 							me.Register (new MoveSpeed (Globals.MONSTER_MOVE_SPEED[gameState.Level]));
 							me.Register (new AttackSpeed (Globals.MONSTER_ATTACK_SPEED[gameState.Level]));
-							me.Register (new Attackable ((attacker) => OnAttacked(me, attacker)));
+							me.Register (new Attackable ((attacker, _) => OnAttacked(me, attacker)));
 							me.Register (new Execute ());
 							me.Register (new Patrol (3, 5));
 							me.Register (new IFFSystem (Globals.IFF_MONSTER_ID, 0));
@@ -59,7 +59,7 @@ namespace mogate
 				boss.Register (new Attack (Globals.BOSS_ATTACK));
 				boss.Register (new MoveSpeed (Globals.BOSS_MOVE_SPEED));
 				boss.Register (new AttackSpeed (Globals.BOSS_ATTACK_SPEED));
-				boss.Register (new Attackable ((attacker) => OnAttacked(boss, attacker)));
+				boss.Register (new Attackable ((attacker, _) => OnAttacked(boss, attacker)));
 				boss.Register (new Execute ());
 				boss.Register (new Patrol (1, 3));
 				boss.Register (new IFFSystem (Globals.IFF_MONSTER_ID));

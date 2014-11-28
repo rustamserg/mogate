@@ -6,9 +6,9 @@ namespace mogate
 	{
 		public Type Behavior { get { return typeof(Attackable); } }
 
-		private Action<Entity> m_onAttack;
+		private Action<Entity, int> m_onAttack;
 
-		public Attackable(Action<Entity> onAttack = null)
+		public Attackable(Action<Entity, int> onAttack = null)
 		{
 			m_onAttack = onAttack;
 		}
@@ -17,17 +17,18 @@ namespace mogate
 		{
 			if (attacker.Has<Attack> ()) {
 
-				if (m_onAttack != null)
-					m_onAttack (attacker);
-
 				int armor = 0;
 				if (defender.Has<Armor> () && defender.Get<Armor> ().Value > 0) {
 					armor = defender.Get<Armor> ().Value;
 				}
-				
+
 				if (defender.Has<Health> ()) {
 					int damage = Utils.ThrowDice (attacker.Get<Attack> ().Damage);
 					damage = Math.Max (0, damage - armor);
+
+					if (m_onAttack != null)
+						m_onAttack (attacker, damage);
+
 					defender.Get<Health> ().HP = Math.Max (0, defender.Get<Health> ().HP - damage);
 				}
 			}
