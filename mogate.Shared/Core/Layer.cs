@@ -11,6 +11,7 @@ namespace mogate
 		private Dictionary<string, Entity> m_entitiesByTag = new Dictionary<string, Entity>();
 		private int m_id;
 		private bool m_isActivated;
+		private Vector2 m_screenToWorld;
 
 		public string Name { get; private set; }
 		public int ZOrder { get; set; }
@@ -21,6 +22,10 @@ namespace mogate
 			Name = name;
 			ZOrder = z;
 			Scene = scene;
+
+			float horScaling = (float)Globals.VIEWPORT_WIDTH / Game.GraphicsDevice.PresentationParameters.BackBufferWidth;
+			float verScaling = (float)Globals.VIEWPORT_HEIGHT / Game.GraphicsDevice.PresentationParameters.BackBufferHeight;
+			m_screenToWorld = new Vector2 (horScaling, verScaling);
 		}
 
 		public Entity CreateEntity(string tag = "")
@@ -47,6 +52,7 @@ namespace mogate
 
 		public override void Update(GameTime gameTime)
 		{
+
 			var iter = new List<Entity> (m_entitiesByTag.Values);
 			var mouse = Mouse.GetState ();
 
@@ -58,7 +64,7 @@ namespace mogate
 					ent.Get<Execute> ().Update (gameTime);
 				}
 				if (ent.Has<Clickable> ()) {
-					ent.Get<Clickable> ().HandleMouseInput (mouse);
+					ent.Get<Clickable> ().HandleMouseInput (mouse, m_screenToWorld);
 				}
 			}
 

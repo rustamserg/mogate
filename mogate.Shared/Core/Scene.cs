@@ -25,7 +25,7 @@ namespace mogate
 		private List<Layer> m_orderedLayers = new List<Layer> ();
 		private int m_spent;
 		private float m_duration;
-		private Matrix m_transformMtx;
+		private Matrix m_worldToScreenMtx;
 
 		public string Name { get; private set; }
 		public SceneState State { get; private set; }
@@ -46,10 +46,10 @@ namespace mogate
 			}
 			#endif
 
-			float horScaling = (float)Game.GraphicsDevice.PresentationParameters.BackBufferWidth / Globals.WINDOW_WIDTH;
-			float verScaling = (float)Game.GraphicsDevice.PresentationParameters.BackBufferHeight / Globals.WINDOW_HEIGHT;
+			float horScaling = (float)Game.GraphicsDevice.PresentationParameters.BackBufferWidth / Globals.VIEWPORT_WIDTH;
+			float verScaling = (float)Game.GraphicsDevice.PresentationParameters.BackBufferHeight / Globals.VIEWPORT_HEIGHT;
 			var screenScalingFactor = new Vector3(horScaling, verScaling, 1);
-			m_transformMtx = Matrix.CreateScale (screenScalingFactor);
+			m_worldToScreenMtx = Matrix.CreateScale (screenScalingFactor);
 		}
 
 		public override void Update (GameTime gameTime)
@@ -78,7 +78,7 @@ namespace mogate
 		public override void Draw (GameTime gameTime)
 		{
 			if (State != SceneState.Deactivated) {
-				m_spriteBatch.Begin (SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, m_transformMtx); 
+				m_spriteBatch.Begin (SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, m_worldToScreenMtx); 
 				if (State == SceneState.Activating) {
 					#if !__IOS__
 					m_effect.Parameters ["ColorAmount"].SetValue (m_fade);

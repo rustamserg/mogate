@@ -4,8 +4,8 @@ namespace mogate
 {
 	public static class Globals
 	{
-		public static readonly int WINDOW_WIDTH = 1024;
-		public static readonly int WINDOW_HEIGHT = 768;
+		public static readonly int VIEWPORT_WIDTH = 1024;
+		public static readonly int VIEWPORT_HEIGHT = 768;
 
 		public static readonly int WORLD_WIDTH = 31;
 		public static readonly int WORLD_HEIGHT = 23;

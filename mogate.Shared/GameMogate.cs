@@ -22,8 +22,8 @@ namespace mogate
 		{
 			m_graphics = new GraphicsDeviceManager(this);
 			Content.RootDirectory = "Content";
-			m_graphics.PreferredBackBufferHeight = Globals.WINDOW_HEIGHT;
-			m_graphics.PreferredBackBufferWidth = Globals.WINDOW_WIDTH;
+			m_graphics.PreferredBackBufferHeight = Globals.VIEWPORT_HEIGHT;
+			m_graphics.PreferredBackBufferWidth = Globals.VIEWPORT_WIDTH;
 			m_graphics.IsFullScreen = false;
 
 			IsMouseVisible = true;
