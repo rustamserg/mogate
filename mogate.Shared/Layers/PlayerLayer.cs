@@ -79,9 +79,7 @@ namespace mogate
 				director.ActivateScene ("inter", TimeSpan.FromSeconds (1));
 				return;
 			}
-				
-			var effects = (EffectsLayer)Scene.GetLayer ("effects");
-	
+					
 			var mapGrid = world.GetLevel(gameState.Level);
 			var player = GetEntityByTag("player");
 			var mapPos = player.Get<Position>().MapPos;
