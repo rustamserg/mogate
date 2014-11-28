@@ -58,7 +58,7 @@ namespace mogate
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 			var player = Scene.GetLayer("player").GetEntityByTag("player");
 
-			infoEnt.Get<Text>().Message = string.Format ("Stage: {0} HP: {1} Armor: {2} Time: {1:D2}:{2:D2}:{3:D2}",
+			infoEnt.Get<Text>().Message = string.Format ("Stage: {0} HP: {1} Armor: {2} Time: {3:D2}:{4:D2}:{5:D2}",
 				gameState.Level + 1, player.Get<Health>().HP, player.Get<Armor>().Value,
 				gameState.Playtime.Hours, gameState.Playtime.Minutes, gameState.Playtime.Seconds);
 		}
