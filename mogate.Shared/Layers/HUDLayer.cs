@@ -63,6 +63,7 @@ namespace mogate
 				gameState.Playtime.Hours, gameState.Playtime.Minutes, gameState.Playtime.Seconds);
 		}
 
+		// TODO: restore hud
 		/*protected override void OnPostDraw (SpriteBatch spriteBatch, GameTime gameTime)
 		{
 			var player = Scene.GetLayer("player").GetEntityByTag("player");
