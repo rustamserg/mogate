@@ -1,0 +1,39 @@
+# Version: 8.4.0.43 (840a925)
+# [first argument, ignore] # /Users/rustam/Documents/Projects/mogate/mogateIOS/bin/iPhoneSimulator/Debug/mtouch.exe
+/Library/Frameworks/Xamarin.iOS.framework/Versions/8.4.0.43/bin/mtouch \
+	-sdkroot \
+	/Applications/Xcode.app/Contents/Developer \
+	--cache \
+	/Users/rustam/Documents/Projects/mogate/mogateIOS/obj/iPhoneSimulator/Debug/mtouch-cache \
+	--nomanifest \
+	--nosign \
+	-sim \
+	/Users/rustam/Documents/Projects/mogate/mogateIOS/bin/iPhoneSimulator/Debug/mogateIOS.app \
+	-r \
+	/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/2.1/System.dll \
+	-r \
+	/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/2.1/System.Xml.dll \
+	-r \
+	/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/2.1/System.Core.dll \
+	-r \
+	/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/2.1/monotouch.dll \
+	-r \
+	/Users/rustam/Documents/Projects/mogate/packages/CocosSharp.iOS.1.2.1.0/lib/MonoTouch10/CocosSharp.dll \
+	-r \
+	/Users/rustam/Documents/Projects/mogate/packages/CocosSharp.iOS.1.2.1.0/lib/MonoTouch10/ICSharpCode.SharpZipLib.dll \
+	-r \
+	/Users/rustam/Documents/Projects/mogate/packages/CocosSharp.iOS.1.2.1.0/lib/MonoTouch10/Lidgren.Network.dll \
+	-r \
+	/Users/rustam/Documents/Projects/mogate/packages/CocosSharp.iOS.1.2.1.0/lib/MonoTouch10/MonoGame.Framework.Net.dll \
+	-r \
+	/Users/rustam/Documents/Projects/mogate/packages/CocosSharp.iOS.1.2.1.0/lib/MonoTouch10/MonoGame.Framework.dll \
+	-r \
+	/Users/rustam/Documents/Projects/mogate/packages/CocosSharp.iOS.1.2.1.0/lib/MonoTouch10/box2d.dll \
+	-debug \
+	-nolink \
+	-sdk \
+	8.1 \
+	-targetver \
+	7.0 \
+	--abi=i386 \
+	/Users/rustam/Documents/Projects/mogate/mogateIOS/bin/iPhoneSimulator/Debug/mogateIOS.exe \

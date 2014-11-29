@@ -26,6 +26,7 @@ namespace mogate
 			ent.Register (new Drawable (new Vector2 (420, 270)));
 			ent.Register (new Clickable (new Rectangle (420, 270, 200, 22)));
 			ent.Get<Clickable> ().LeftButtonPressed += OnAction;
+			ent.Get<Clickable> ().TouchPressed += OnAction;
 
 			if (gameState.IsGameEnd) {
 				ent.Get<Text> ().Message = "New game";

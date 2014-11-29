@@ -39,8 +39,8 @@ namespace mogate
 					if (gameState.Level > 0) {
 						var cntGameBtn = CreateEntity ();
 						cntGameBtn.Register (new Text (sprites.GetFont ("SpriteFont1"), "Continue game"));
-						cntGameBtn.Register (new Drawable (new Vector2 (420, 300)));
-						cntGameBtn.Register (new Clickable (new Rectangle (420, 300, 200, 22)));
+						cntGameBtn.Register (new Drawable (new Vector2 (420, 320)));
+						cntGameBtn.Register (new Clickable (new Rectangle (420, 320, 200, 22)));
 						cntGameBtn.Get<Clickable> ().LeftButtonPressed += ContinueGame;
 						cntGameBtn.Get<Clickable> ().TouchPressed += ContinueGame;
 					}

@@ -16,7 +16,9 @@ namespace mogate
 			AddLayer (new PlayerLayer (Game, "player", this, 2));
 			AddLayer (new MonstersLayer (Game, "monsters", this, 3));
 			AddLayer (new EffectsLayer (Game, "effects", this, 4));
+			#if !__IOS__
 			AddLayer (new FogLayer (Game, "fog", this, 5));
+			#endif
 			AddLayer (new HUDLayer (Game, "hud", this, 6));
 		}
 

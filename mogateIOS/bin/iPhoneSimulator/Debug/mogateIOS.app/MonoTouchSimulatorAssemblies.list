@@ -1,0 +1,12 @@
+mscorlib.dll
+MonoGame.Framework.dll
+System.dll
+System.Xml.dll
+System.Core.dll
+Mono.Dynamic.Interpreter.dll
+OpenTK.dll
+System.Runtime.Serialization.dll
+MonoGame.Framework.Net.dll
+Lidgren.Network.dll
+CocosSharp.dll
+ICSharpCode.SharpZipLib.dll
