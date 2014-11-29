@@ -44,7 +44,7 @@ namespace mogate
 			if (KeyboardUtils.IsKeyPressed (Keys.F))
 				m_isEnabled = !m_isEnabled;
 
-			var fogent = GetAllEntities ();
+			var fogent = GetAllEntities ().Where( e => e.Has<Position>());
 
 			var hero = Scene.GetLayer ("player");
 			var items = Scene.GetLayer ("items");
