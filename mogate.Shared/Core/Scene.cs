@@ -106,9 +106,8 @@ namespace mogate
 
 		public void RemoveLayer(string name)
 		{
-			var la = m_layersByName [name];
 			m_layersByName.Remove (name);
-			m_orderedLayers.Remove (la);
+			m_orderedLayers.RemoveAll (la => la.Name == name);
 		}
 
 		public void ActivateScene(float duration)

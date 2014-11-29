@@ -31,9 +31,15 @@ namespace mogate
 					ent.Register (new Position (w, h));
 				}
 			}
+
+			var controller = CreateEntity ();
+			controller.Register (new Execute ());
+			controller.Get<Execute> ().Add (new Loop (new ActionEntity (controller, (_) => {
+				Update (controller);
+			})));
 		}
 
-		protected override void OnPostUpdate(GameTime gameTime)
+		private void Update(Entity controller)
 		{
 			if (KeyboardUtils.IsKeyPressed (Keys.F))
 				m_isEnabled = !m_isEnabled;

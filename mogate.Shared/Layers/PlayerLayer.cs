@@ -53,6 +53,10 @@ namespace mogate
 			player.Get<Clickable> ().TouchPressed += OnMoveToPosition;
 			player.Get<Clickable> ().RightButtonPressed += OnAction;
 
+			player.Get<Execute> ().Add (new Loop (new ActionEntity (player, (_) => {
+				UpdatePlayer (player);
+			})), "player_update_loop");
+
 			m_toMove = mapGrid.StairDown;
 			StartIdle ();
 		}
@@ -66,7 +70,7 @@ namespace mogate
 			gameState.PlayerTraps = player.Get<Consumable<ConsumableItems>> ().Amount (ConsumableItems.Trap);
 		}
 			
-		protected override void OnPostUpdate (GameTime gameTime)
+		private void UpdatePlayer (Entity player)
 		{
 			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
@@ -82,7 +86,6 @@ namespace mogate
 			}
 					
 			var mapGrid = world.GetLevel(gameState.Level);
-			var player = GetEntityByTag("player");
 			var mapPos = player.Get<Position>().MapPos;
 
 			if (player.Get<State<PlayerState>>().EState == PlayerState.Idle) {

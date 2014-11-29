@@ -8,32 +8,37 @@ namespace mogate
 {
 	public class MenuLayer : Layer
 	{
-		private SpriteFont m_font;
-
 		public MenuLayer (Game game, string name, Scene scene, int z) : base(game, name, scene, z)
 		{
 		}
 
 		public override void OnActivated()
 		{
-			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
-			m_font = sprites.GetFont ("SpriteFont1");
+			var controller = CreateEntity ();
+			controller.Register (new Execute ());
+			controller.Get<Execute> ().Add (new Loop (new ActionEntity (controller, (_) => {
+				Update (controller);
+			})));
 		}
 
-		protected override void OnPostUpdate(GameTime gameTime)
+		private void Update(Entity controller)
 		{
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
+
 			if (gameState.IsLoaded) {
 				if (!GetAllEntities().Any(ent => ent.Tag == "new_game_btn")) {
+					var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
+
 					var newGameBtn = CreateEntity ("new_game_btn");
-					newGameBtn.Register (new Text (m_font, "Start new game"));
+					newGameBtn.Register (new Text (sprites.GetFont ("SpriteFont1"), "Start new game"));
 					newGameBtn.Register (new Drawable (new Vector2 (420, 270)));
 					newGameBtn.Register (new Clickable (new Rectangle (420, 270, 200, 22)));
 					newGameBtn.Get<Clickable> ().LeftButtonPressed += StartNewGame;
 					newGameBtn.Get<Clickable> ().TouchPressed += StartNewGame;
+
 					if (gameState.Level > 0) {
 						var cntGameBtn = CreateEntity ();
-						cntGameBtn.Register (new Text (m_font, "Continue game"));
+						cntGameBtn.Register (new Text (sprites.GetFont ("SpriteFont1"), "Continue game"));
 						cntGameBtn.Register (new Drawable (new Vector2 (420, 300)));
 						cntGameBtn.Register (new Clickable (new Rectangle (420, 300, 200, 22)));
 						cntGameBtn.Get<Clickable> ().LeftButtonPressed += ContinueGame;

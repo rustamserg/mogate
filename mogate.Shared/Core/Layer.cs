@@ -4,12 +4,15 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
+using System.Linq;
 
 namespace mogate
 {
 	public class Layer : GameComponent
 	{
 		private Dictionary<string, Entity> m_entitiesByTag = new Dictionary<string, Entity>();
+		private List<Entity> m_orderedEntity = new List<Entity> ();
+
 		private int m_id;
 		private bool m_isActivated;
 		private Vector2 m_screenToWorld;
@@ -33,6 +36,8 @@ namespace mogate
 		{
 			var ent = new Entity(string.IsNullOrEmpty(tag) ? (++m_id).ToString() : tag);
 			m_entitiesByTag.Add (ent.Tag, ent);
+			m_orderedEntity = new List<Entity> (m_entitiesByTag.Values);
+			m_orderedEntity.OrderBy (la => la.Has<Drawable>() ? la.Get<Drawable>().ZOrder : int.MaxValue);
 			return ent;
 		}
 
@@ -49,11 +54,11 @@ namespace mogate
 		public void RemoveEntityByTag(string tag)
 		{
 			m_entitiesByTag.Remove (tag);
+			m_orderedEntity.RemoveAll (ent => ent.Tag == tag);
 		}
 
 		public override void Update(GameTime gameTime)
 		{
-
 			var iter = new List<Entity> (m_entitiesByTag.Values);
 			var mouse = Mouse.GetState ();
 			var touch = TouchPanel.GetState ();
@@ -71,17 +76,12 @@ namespace mogate
 				}
 			}
 
-			if (m_isActivated)
-				OnPostUpdate (gameTime);
-
 			base.Update (gameTime);
 		}
 
 		public void Draw (SpriteBatch spriteBatch, GameTime gameTime)
-		{
-			OnPreDraw (spriteBatch, gameTime);
-
-			foreach (var ent in m_entitiesByTag.Values) {
+		{		
+			foreach (var ent in m_orderedEntity) {
 
 				if (!ent.Has<Drawable> ())
 					continue;
@@ -105,14 +105,13 @@ namespace mogate
 						drawColor);
 				}
 			}
-
-			OnPostDraw (spriteBatch, gameTime);
 		}
 
 		public void Activate()
 		{
 			m_isActivated = true;
 			m_entitiesByTag.Clear();
+			m_orderedEntity.Clear ();
 			OnActivated ();
 		}
 
@@ -120,20 +119,9 @@ namespace mogate
 		{
 			OnDeactivated ();
 			m_entitiesByTag.Clear();
+			m_orderedEntity.Clear ();
 			m_isActivated = false;
-		}
-
-		protected virtual void OnPostUpdate(GameTime gameTime)
-		{
-		}
-
-		protected virtual void OnPostDraw(SpriteBatch spriteBatch, GameTime gameTime)
-		{
-		}
-
-		protected virtual void OnPreDraw(SpriteBatch spriteBatch, GameTime gameTime)
-		{
-		}
+		}			
 
 		public virtual void OnActivated()
 		{
