@@ -65,8 +65,7 @@ namespace mogate
 						State = SceneState.Activated;
 					}
 				} else {
-					var iter = new List<Layer> (m_orderedLayers);
-					foreach (var la in iter) {
+					foreach (var la in m_orderedLayers) {
 						if (State == SceneState.Activated)
 							la.Update (gameTime);
 					}
@@ -85,8 +84,7 @@ namespace mogate
 					m_effect.CurrentTechnique.Passes [0].Apply ();
 					#endif
 				}
-				var iter = new List<Layer> (m_orderedLayers);
-				foreach (var la in iter) {
+				foreach (var la in m_orderedLayers) {
 					la.Draw (m_spriteBatch, gameTime);
 				}
 				m_spriteBatch.End ();
