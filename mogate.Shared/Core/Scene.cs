@@ -26,6 +26,7 @@ namespace mogate
 		private int m_spent;
 		private float m_duration;
 		private Matrix m_worldToScreenMtx;
+		private RenderTarget2D m_mainTarget;
 
 		public string Name { get; private set; }
 		public SceneState State { get; private set; }
@@ -46,10 +47,15 @@ namespace mogate
 			}
 			#endif
 
-			float horScaling = (float)Game.GraphicsDevice.PresentationParameters.BackBufferWidth / Globals.VIEWPORT_WIDTH;
-			float verScaling = (float)Game.GraphicsDevice.PresentationParameters.BackBufferHeight / Globals.VIEWPORT_HEIGHT;
+			int backBufWidth = Game.GraphicsDevice.PresentationParameters.BackBufferWidth;
+			int backBufHeight = Game.GraphicsDevice.PresentationParameters.BackBufferHeight;
+
+			float horScaling = (float)backBufWidth / Globals.VIEWPORT_WIDTH;
+			float verScaling = (float)backBufHeight / Globals.VIEWPORT_HEIGHT;
 			var screenScalingFactor = new Vector3(horScaling, verScaling, 1);
 			m_worldToScreenMtx = Matrix.CreateScale (screenScalingFactor);
+
+			m_mainTarget = new RenderTarget2D (Game.GraphicsDevice, backBufWidth, backBufHeight);
 		}
 
 		public override void Update (GameTime gameTime)
@@ -77,6 +83,9 @@ namespace mogate
 		public override void Draw (GameTime gameTime)
 		{
 			if (State != SceneState.Deactivated) {
+
+				Game.GraphicsDevice.SetRenderTarget (m_mainTarget);
+				Game.GraphicsDevice.Clear (Color.Black);
 				m_spriteBatch.Begin (SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, m_worldToScreenMtx); 
 				if (State == SceneState.Activating) {
 					#if !__IOS__
@@ -88,6 +97,13 @@ namespace mogate
 					la.Draw (m_spriteBatch, gameTime);
 				}
 				m_spriteBatch.End ();
+
+				Game.GraphicsDevice.SetRenderTarget (null);  
+				Game.GraphicsDevice.Clear (Color.Black);  
+				m_spriteBatch.Begin (SpriteSortMode.Immediate, BlendState.AlphaBlend);  
+				m_spriteBatch.Draw (m_mainTarget, Vector2.Zero, Color.White);  
+				m_spriteBatch.End ();  
+
 			}
 			base.Draw (gameTime);
 		}
