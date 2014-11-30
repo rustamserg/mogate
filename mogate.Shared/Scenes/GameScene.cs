@@ -61,7 +61,11 @@ namespace mogate
 			m_lightEffect.CurrentTechnique.Passes[0].Apply();  
 			#endif
 			spriteBatch.Draw (mainTarget, Vector2.Zero, Color.White);  
-			spriteBatch.End ();  
+			spriteBatch.End ();
+
+			spriteBatch.Begin (SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, worldToScreen);  
+			GetLayer ("hud").Draw (spriteBatch, gameTime);
+			spriteBatch.End ();
 		}
 
 		protected override void LoadLayers()
