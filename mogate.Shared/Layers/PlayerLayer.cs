@@ -192,9 +192,12 @@ namespace mogate
 		private void OnHealthChanged(Entity player)
 		{
 			var director = (IDirector)Game.Services.GetService (typeof(IDirector));
+			var state = (IGameState)Game.Services.GetService (typeof(IGameState));
 
-			if (player.Get<Health> ().HP == 0)
+			if (player.Get<Health> ().HP == 0) {
+				state.NewGame ();
 				director.ActivateScene ("main");
+			}
 		}
 
 		private void StartIdle()
