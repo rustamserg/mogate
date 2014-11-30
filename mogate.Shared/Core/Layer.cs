@@ -105,6 +105,7 @@ namespace mogate
 						drawColor);
 				}
 			}
+			OnPostDraw (spriteBatch, gameTime);
 		}
 
 		public void Activate()
@@ -128,6 +129,10 @@ namespace mogate
 		}
 
 		public virtual void OnDeactivated()
+		{
+		}
+
+		protected virtual void OnPostDraw (SpriteBatch spriteBatch, GameTime gameTime)
 		{
 		}
 	}
