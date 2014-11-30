@@ -2,6 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.IO;
+using System.Linq;
 
 namespace mogate
 {
@@ -35,10 +36,20 @@ namespace mogate
 			Game.GraphicsDevice.SetRenderTarget (m_lightTarget);
 			Game.GraphicsDevice.Clear (Color.Black);
 			spriteBatch.Begin (SpriteSortMode.Immediate, BlendState.Additive, null, null, null, null, worldToScreen);
-			var lightPos = GetLayer("player").GetEntityByTag("player").Get<Drawable>().DrawPos;
-			lightPos.X -= 100;
-			lightPos.Y -= 100;
-			spriteBatch.Draw(m_lightTexture, lightPos, Color.White);
+
+			var player = GetLayer ("player");
+			var items = GetLayer ("items");
+			var maps = GetLayer ("map");
+
+			var toLight = player.GetAllEntities ().Where (e => e.Has<PointLight> () && e.Has<Drawable> ()).ToList();
+			toLight.AddRange (items.GetAllEntities ().Where (e => e.Has<PointLight> () && e.Has<Drawable> ()));
+			toLight.AddRange (maps.GetAllEntities ().Where (e => e.Has<PointLight> () && e.Has<Drawable> ()));
+
+			foreach (var pe in toLight) {
+				var lightPos = pe.Get<Drawable>().DrawPos;
+				lightPos.X -= 100; lightPos.Y -= 100;
+				spriteBatch.Draw(m_lightTexture, lightPos, Color.White);
+			}
 			spriteBatch.End ();
 			#endif
 
@@ -60,12 +71,7 @@ namespace mogate
 			AddLayer (new PlayerLayer (Game, "player", this, 2));
 			AddLayer (new MonstersLayer (Game, "monsters", this, 3));
 			AddLayer (new EffectsLayer (Game, "effects", this, 4));
-
-			// TODO: redesign fog by hiding AI
-			#if !__IOS__
-			//AddLayer (new FogLayer (Game, "fog", this, 5));
-			#endif
-			AddLayer (new HUDLayer (Game, "hud", this, 6));
+			AddLayer (new HUDLayer (Game, "hud", this, 5));
 		}
 
 		protected override void OnActivated()
