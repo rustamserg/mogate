@@ -63,7 +63,8 @@ namespace mogate
 				gameState.Playtime.Hours, gameState.Playtime.Minutes, gameState.Playtime.Seconds);
 		}
 
-		protected override void OnPostDraw (SpriteBatch spriteBatch, GameTime gameTime)
+		// TODO: restore hud
+		/*protected override void OnPostDraw (SpriteBatch spriteBatch, GameTime gameTime)
 		{
 			var player = Scene.GetLayer("player").GetEntityByTag("player");
 
@@ -79,7 +80,7 @@ namespace mogate
 				var drawPos = new Vector2 (Globals.WORLD_WIDTH * Globals.CELL_WIDTH, 450 + i  * Globals.CELL_HEIGHT);
 				spriteBatch.Draw (m_trap.Texture, drawPos, m_trap.GetFrameRect (0), Color.White);
 			}
-		}
+		}*/
 	}
 }
 
