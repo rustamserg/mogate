@@ -26,6 +26,7 @@ namespace mogate
 		private int m_spent;
 		private float m_duration;
 		private Matrix m_worldToScreenMtx;
+
 		private RenderTarget2D m_mainTarget;
 
 		public string Name { get; private set; }
@@ -56,6 +57,8 @@ namespace mogate
 			m_worldToScreenMtx = Matrix.CreateScale (screenScalingFactor);
 
 			m_mainTarget = new RenderTarget2D (Game.GraphicsDevice, backBufWidth, backBufHeight);
+
+			OnInitialized ();
 		}
 
 		public override void Update (GameTime gameTime)
@@ -98,14 +101,18 @@ namespace mogate
 				}
 				m_spriteBatch.End ();
 
-				Game.GraphicsDevice.SetRenderTarget (null);  
-				Game.GraphicsDevice.Clear (Color.Black);  
-				m_spriteBatch.Begin (SpriteSortMode.Immediate, BlendState.AlphaBlend);  
-				m_spriteBatch.Draw (m_mainTarget, Vector2.Zero, Color.White);  
-				m_spriteBatch.End ();  
-
+				OnPostDraw (m_spriteBatch, m_mainTarget, m_worldToScreenMtx, gameTime);
 			}
 			base.Draw (gameTime);
+		}
+
+		protected virtual void OnPostDraw(SpriteBatch spriteBatch, RenderTarget2D mainTarget, Matrix worldToScreen, GameTime gameTime)
+		{
+			Game.GraphicsDevice.SetRenderTarget (null);  
+			Game.GraphicsDevice.Clear (Color.Black);  
+			spriteBatch.Begin (SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, worldToScreen);  
+			spriteBatch.Draw (mainTarget, Vector2.Zero, Color.White);  
+			spriteBatch.End ();  
 		}
 
 		public void AddLayer(Layer layer)
@@ -164,6 +171,10 @@ namespace mogate
 		}
 
 		protected virtual void OnDeactivated()
+		{
+		}
+
+		protected virtual void OnInitialized ()
 		{
 		}
 	}
