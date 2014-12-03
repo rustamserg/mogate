@@ -24,7 +24,7 @@ namespace mogate
 			m_lightTarget = new RenderTarget2D (Game.GraphicsDevice, backBufWidth, backBufHeight);
 			m_lightTexture = Game.Content.Load<Texture2D> ("Sprites/lightmask");
 
-			using (var reader = new BinaryReader(File.Open("Content/Shaders/lighting.xnb", FileMode.Open))) {
+			using (var reader = new BinaryReader(File.Open("Content/Shaders/lighting.xnb", FileMode.Open, FileAccess.Read))) {
 				m_lightEffect = new Effect(Game.GraphicsDevice, reader.ReadBytes((int)reader.BaseStream.Length));
 			}
 		}
@@ -52,6 +52,7 @@ namespace mogate
 
 			Game.GraphicsDevice.SetRenderTarget (null);  
 			Game.GraphicsDevice.Clear (Color.Black);  
+			Game.GraphicsDevice.SamplerStates[1] = SamplerState.PointClamp;
 			spriteBatch.Begin (SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, worldToScreen);  
 			m_lightEffect.Parameters["lightMask"].SetValue(m_lightTarget);  
 			m_lightEffect.CurrentTechnique.Passes[0].Apply();  
