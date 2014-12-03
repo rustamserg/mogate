@@ -59,17 +59,29 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="MonoMac" />
-    <Reference Include="Lidgren.Network">
-      <HintPath>..\packages\MonoGame.Binaries.3.2.0\build\MonoMac\Lidgren.Network.dll</HintPath>
-    </Reference>
-    <Reference Include="MonoGame.Framework">
-      <HintPath>..\packages\MonoGame.Binaries.3.2.0\build\MonoMac\MonoGame.Framework.dll</HintPath>
-    </Reference>
-    <Reference Include="Tao.Sdl">
-      <HintPath>..\packages\MonoGame.Binaries.3.2.0\build\MonoMac\Tao.Sdl.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System" />
+    <Reference Include="ChipmunkSharp">
+      <HintPath>..\packages\CocosSharp.MacOS.1.2.1.0\lib\net40\ChipmunkSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="CocosSharp">
+      <HintPath>..\packages\CocosSharp.MacOS.1.2.1.0\lib\net40\CocosSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\packages\CocosSharp.MacOS.1.2.1.0\lib\net40\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Lidgren.Network">
+      <HintPath>..\packages\CocosSharp.MacOS.1.2.1.0\lib\net40\Lidgren.Network.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoGame.Framework.Net">
+      <HintPath>..\packages\CocosSharp.MacOS.1.2.1.0\lib\net40\MonoGame.Framework.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoGame.Framework">
+      <HintPath>..\packages\CocosSharp.MacOS.1.2.1.0\lib\net40\MonoGame.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Tao.Sdl">
+      <HintPath>..\packages\CocosSharp.MacOS.1.2.1.0\lib\net40\Tao.Sdl.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
@@ -81,7 +93,6 @@
   </ItemGroup>
   <Import Project="..\mogate.Shared\mogate.Shared.projitems" Label="Shared" Condition="Exists('..\mogate.Shared\mogate.Shared.projitems')" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\MonoGame.Binaries.3.2.0\build\net40\MonoGame.Binaries.targets" Condition="Exists('..\packages\MonoGame.Binaries.3.2.0\build\net40\MonoGame.Binaries.targets')" />
   <ItemGroup>
     <Compile Include="Program.cs" />
   </ItemGroup>
@@ -89,8 +100,9 @@
     <BundleResource Include="Resources\Icon.png" />
     <BundleResource Include="Resources\Content\Fonts\SpriteFont1.xnb" />
     <BundleResource Include="Resources\Content\Shaders\fade.xnb" />
-    <BundleResource Include="Resources\Content\Shaders\grayscale.xnb" />
     <BundleResource Include="Resources\Content\Sprites\sprites.plist" />
     <BundleResource Include="Resources\Content\Sprites\sprites.png" />
+    <BundleResource Include="Resources\Content\Shaders\lighting.xnb" />
+    <BundleResource Include="Resources\Content\Sprites\lightmask.png" />
   </ItemGroup>
 </Project>
