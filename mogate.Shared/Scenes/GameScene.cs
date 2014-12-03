@@ -23,20 +23,14 @@ namespace mogate
 
 			m_lightTarget = new RenderTarget2D (Game.GraphicsDevice, backBufWidth, backBufHeight);
 			m_lightTexture = Game.Content.Load<Texture2D> ("Sprites/lightmask");
-			#if !__IOS__
+
 			using (var reader = new BinaryReader(File.Open("Content/Shaders/lighting.xnb", FileMode.Open))) {
 				m_lightEffect = new Effect(Game.GraphicsDevice, reader.ReadBytes((int)reader.BaseStream.Length));
 			}
-			#endif
 		}
 
 		protected override void OnPostDraw(SpriteBatch spriteBatch, RenderTarget2D mainTarget, Matrix worldToScreen, GameTime gameTime)
 		{
-			#if !__IOS__
-			Game.GraphicsDevice.SetRenderTarget (m_lightTarget);
-			Game.GraphicsDevice.Clear (Color.Black);
-			spriteBatch.Begin (SpriteSortMode.Immediate, BlendState.Additive, null, null, null, null, worldToScreen);
-
 			var player = GetLayer ("player");
 			var items = GetLayer ("items");
 			var maps = GetLayer ("map");
@@ -45,21 +39,22 @@ namespace mogate
 			toLight.AddRange (items.GetAllEntities ().Where (e => e.Has<PointLight> () && e.Has<Drawable> ()));
 			toLight.AddRange (maps.GetAllEntities ().Where (e => e.Has<PointLight> () && e.Has<Drawable> ()));
 
+			Game.GraphicsDevice.SetRenderTarget (m_lightTarget);
+			Game.GraphicsDevice.Clear (Color.Black);
+			spriteBatch.Begin (SpriteSortMode.Immediate, BlendState.Additive, null, null, null, null, worldToScreen);
+
 			foreach (var pe in toLight) {
 				var lightPos = pe.Get<Drawable>().DrawPos;
 				lightPos.X -= 100; lightPos.Y -= 100;
 				spriteBatch.Draw(m_lightTexture, lightPos, Color.White);
 			}
 			spriteBatch.End ();
-			#endif
 
 			Game.GraphicsDevice.SetRenderTarget (null);  
 			Game.GraphicsDevice.Clear (Color.Black);  
 			spriteBatch.Begin (SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, worldToScreen);  
-			#if !__IOS__
 			m_lightEffect.Parameters["lightMask"].SetValue(m_lightTarget);  
 			m_lightEffect.CurrentTechnique.Passes[0].Apply();  
-			#endif
 			spriteBatch.Draw (mainTarget, Vector2.Zero, Color.White);  
 			spriteBatch.End ();
 
