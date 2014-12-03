@@ -1,6 +1,6 @@
 sampler s0;  
 texture lightMask;  
-sampler lightSampler = sampler_state{Texture = lightMask;};  
+sampler lightSampler = sampler_state{Texture = (lightMask);};  
   
 float4 main(float2 coords: TEXCOORD0) : COLOR0  
 {  
