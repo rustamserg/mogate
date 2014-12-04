@@ -61,26 +61,14 @@
     <Reference Include="MonoMac" />
     <Reference Include="System.Xml" />
     <Reference Include="System" />
-    <Reference Include="ChipmunkSharp">
-      <HintPath>..\packages\CocosSharp.MacOS.1.2.1.0\lib\net40\ChipmunkSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="CocosSharp">
-      <HintPath>..\packages\CocosSharp.MacOS.1.2.1.0\lib\net40\CocosSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="ICSharpCode.SharpZipLib">
-      <HintPath>..\packages\CocosSharp.MacOS.1.2.1.0\lib\net40\ICSharpCode.SharpZipLib.dll</HintPath>
-    </Reference>
     <Reference Include="Lidgren.Network">
-      <HintPath>..\packages\CocosSharp.MacOS.1.2.1.0\lib\net40\Lidgren.Network.dll</HintPath>
-    </Reference>
-    <Reference Include="MonoGame.Framework.Net">
-      <HintPath>..\packages\CocosSharp.MacOS.1.2.1.0\lib\net40\MonoGame.Framework.Net.dll</HintPath>
+      <HintPath>..\packages\MonoGame.Binaries.3.2.0\build\MonoMac\Lidgren.Network.dll</HintPath>
     </Reference>
     <Reference Include="MonoGame.Framework">
-      <HintPath>..\packages\CocosSharp.MacOS.1.2.1.0\lib\net40\MonoGame.Framework.dll</HintPath>
+      <HintPath>..\packages\MonoGame.Binaries.3.2.0\build\MonoMac\MonoGame.Framework.dll</HintPath>
     </Reference>
     <Reference Include="Tao.Sdl">
-      <HintPath>..\packages\CocosSharp.MacOS.1.2.1.0\lib\net40\Tao.Sdl.dll</HintPath>
+      <HintPath>..\packages\MonoGame.Binaries.3.2.0\build\MonoMac\Tao.Sdl.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -93,6 +81,7 @@
   </ItemGroup>
   <Import Project="..\mogate.Shared\mogate.Shared.projitems" Label="Shared" Condition="Exists('..\mogate.Shared\mogate.Shared.projitems')" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\MonoGame.Binaries.3.2.0\build\net40\MonoGame.Binaries.targets" Condition="Exists('..\packages\MonoGame.Binaries.3.2.0\build\net40\MonoGame.Binaries.targets')" />
   <ItemGroup>
     <Compile Include="Program.cs" />
   </ItemGroup>
