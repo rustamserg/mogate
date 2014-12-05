@@ -50,8 +50,9 @@ namespace mogate
 
 			player.Get<Consumable<ConsumableItems>> ().Refill (ConsumableItems.Trap, gameState.PlayerTraps);
 			player.Get<Clickable> ().LeftButtonPressed += OnMoveToPosition;
-			player.Get<Clickable> ().TouchPressed += OnMoveToPosition;
+			player.Get<Clickable> ().OnTouch += OnMoveToPosition;
 			player.Get<Clickable> ().RightButtonPressed += OnAction;
+			player.Get<Clickable> ().OnDoubleTap += OnAction;
 
 			player.Get<Execute> ().Add (new Loop (new ActionEntity (player, (_) => {
 				UpdatePlayer (player);

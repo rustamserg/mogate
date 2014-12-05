@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
+using System.Linq;
 
 namespace mogate
 {
@@ -18,8 +19,10 @@ namespace mogate
 		public Action<Point> RightButtonPressed;
 		public Action<Point> RightButtonReleased;
 
-		public Action<Point> TouchPressed;
-		public Action<Point> TouchReleased;
+		public Action<Point> OnTouch;
+		public Action<Point> OnTap;
+		public Action<Point> OnDoubleTap;
+		public Action<Point> OnHold;
 
 
 		public Clickable (Rectangle clickArea)
@@ -53,21 +56,43 @@ namespace mogate
 			}
 		}
 
-		public void HandleTouchInput(TouchCollection state, Vector2 screenToWorldScale)
+		public void HandleTouchInput(TouchCollection touches, Vector2 screenToWorldScale)
 		{
-			foreach (var touch in state) {
+			foreach (var touch in touches) {
 				var worldPos = Vector2.Multiply (new Vector2 (touch.Position.X, touch.Position.Y), screenToWorldScale);
-
 				if (!ClickArea.Contains (worldPos))
 					continue;
 
 				var touchPos = new Point ((int)worldPos.X, (int)worldPos.Y);
-				if (touch.State == TouchLocationState.Pressed || touch.State == TouchLocationState.Moved) {
-					if (TouchPressed != null)
-						TouchPressed (touchPos);
-				} else if (touch.State == TouchLocationState.Released) {
-					if (TouchReleased != null)
-						TouchReleased (touchPos);
+				if (touch.State == TouchLocationState.Moved) {
+					if (OnTouch != null)
+						OnTouch (touchPos);
+				}
+			}
+
+			while (TouchPanel.IsGestureAvailable)
+			{
+				GestureSample gesture = TouchPanel.ReadGesture();
+
+				var worldPos = Vector2.Multiply (new Vector2 (gesture.Position.X, gesture.Position.Y), screenToWorldScale);
+				if (!ClickArea.Contains (worldPos))
+					continue;
+
+				var touchPos = new Point ((int)worldPos.X, (int)worldPos.Y);
+
+				switch (gesture.GestureType) {
+				case GestureType.DoubleTap:
+					if (OnDoubleTap != null)
+						OnDoubleTap (touchPos);
+					break;
+				case GestureType.Hold:
+					if (OnHold != null)
+						OnHold (touchPos);
+					break;
+				case GestureType.Tap:
+					if (OnTap != null)
+						OnTap (touchPos);
+					break;
 				}
 			}
 		}

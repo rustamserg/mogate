@@ -82,7 +82,6 @@ namespace mogate
 			if (State != SceneState.Deactivated) {
 
 				Game.GraphicsDevice.SetRenderTarget (m_mainTarget);
-				Game.GraphicsDevice.Clear (Color.Black);
 				m_spriteBatch.Begin (SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, m_worldToScreenMtx); 
 				if (State == SceneState.Activating) {
 					m_effect.Parameters ["ColorAmount"].SetValue (m_fade);

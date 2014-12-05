@@ -34,7 +34,7 @@ namespace mogate
 					newGameBtn.Register (new Drawable (new Vector2 (420, 270)));
 					newGameBtn.Register (new Clickable (new Rectangle (420, 270, 200, 22)));
 					newGameBtn.Get<Clickable> ().LeftButtonPressed += StartNewGame;
-					newGameBtn.Get<Clickable> ().TouchPressed += StartNewGame;
+					newGameBtn.Get<Clickable> ().OnTouch += StartNewGame;
 
 					if (gameState.Level > 0) {
 						var cntGameBtn = CreateEntity ();
@@ -42,7 +42,7 @@ namespace mogate
 						cntGameBtn.Register (new Drawable (new Vector2 (420, 320)));
 						cntGameBtn.Register (new Clickable (new Rectangle (420, 320, 200, 22)));
 						cntGameBtn.Get<Clickable> ().LeftButtonPressed += ContinueGame;
-						cntGameBtn.Get<Clickable> ().TouchPressed += ContinueGame;
+						cntGameBtn.Get<Clickable> ().OnTouch += ContinueGame;
 					}
 				}
 			}
