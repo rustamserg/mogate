@@ -52,6 +52,7 @@ namespace mogate
 			ent.Register (new Execute ());
 			ent.Register (new IFFSystem (Globals.IFF_PLAYER_ID, 1));
 			ent.Register (new PointLight (4));
+			ent.Register (new Triggerable (1, (from) => OnTrapTriggered (ent, from)));
 		}
 
 		void OnTrapAttacked (Entity item, Entity attacker)
