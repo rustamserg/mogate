@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.IO;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Input.Touch;
 
 namespace mogate
 {
@@ -68,9 +70,12 @@ namespace mogate
 						State = SceneState.Activated;
 					}
 				} else {
+					var mouse = Mouse.GetState ();
+					var touch = TouchPanel.GetState ();
+
 					foreach (var la in m_orderedLayers) {
 						if (State == SceneState.Activated)
-							la.Update (gameTime);
+							la.Update (gameTime, mouse, touch);
 					}
 				}
 			}

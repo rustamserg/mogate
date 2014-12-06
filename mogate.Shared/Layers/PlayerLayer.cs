@@ -49,10 +49,10 @@ namespace mogate
 			player.Register (new Clickable (new Rectangle (0, 0, Globals.CELL_WIDTH * Globals.WORLD_WIDTH, Globals.CELL_HEIGHT * Globals.WORLD_HEIGHT)));
 
 			player.Get<Consumable<ConsumableItems>> ().Refill (ConsumableItems.Trap, gameState.PlayerTraps);
-			player.Get<Clickable> ().LeftButtonPressed += OnMoveToPosition;
-			player.Get<Clickable> ().OnTouch += OnMoveToPosition;
-			player.Get<Clickable> ().RightButtonPressed += OnAction;
-			player.Get<Clickable> ().OnDoubleTap += OnAction;
+			player.Get<Clickable> ().OnLeftButtonPressed += OnMoveToPosition;
+			player.Get<Clickable> ().OnMoved += OnMoveToPosition;
+			player.Get<Clickable> ().OnRightButtonPressed += OnAction;
+			player.Get<Clickable> ().OnTouched += OnAction;
 
 			player.Get<Execute> ().Add (new Loop (new ActionEntity (player, (_) => {
 				UpdatePlayer (player);

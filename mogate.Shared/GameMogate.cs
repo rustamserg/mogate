@@ -5,7 +5,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Input.Touch;
 
 #endregion
 
@@ -46,8 +45,6 @@ namespace mogate
 			m_director.RegisterScene (new GameScene (this, "game"));
 			m_director.RegisterScene (new MainScene (this, "main"));
 			m_director.RegisterScene (new InterScene (this, "inter"));
-
-			TouchPanel.EnabledGestures = GestureType.Hold | GestureType.Tap | GestureType.DoubleTap;
 
 			base.Initialize ();
 		}

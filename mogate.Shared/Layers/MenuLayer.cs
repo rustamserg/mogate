@@ -32,17 +32,17 @@ namespace mogate
 					var newGameBtn = CreateEntity ("new_game_btn");
 					newGameBtn.Register (new Text (sprites.GetFont ("SpriteFont1"), "Start new game"));
 					newGameBtn.Register (new Drawable (new Vector2 (420, 270)));
-					newGameBtn.Register (new Clickable (new Rectangle (420, 270, 200, 22)));
-					newGameBtn.Get<Clickable> ().LeftButtonPressed += StartNewGame;
-					newGameBtn.Get<Clickable> ().OnTouch += StartNewGame;
+					newGameBtn.Register (new Clickable (new Rectangle (420, 270, 400, 40)));
+					newGameBtn.Get<Clickable> ().OnLeftButtonPressed += StartNewGame;
+					newGameBtn.Get<Clickable> ().OnTouched += StartNewGame;
 
 					if (gameState.Level > 0) {
 						var cntGameBtn = CreateEntity ();
 						cntGameBtn.Register (new Text (sprites.GetFont ("SpriteFont1"), "Continue game"));
 						cntGameBtn.Register (new Drawable (new Vector2 (420, 320)));
-						cntGameBtn.Register (new Clickable (new Rectangle (420, 320, 200, 22)));
-						cntGameBtn.Get<Clickable> ().LeftButtonPressed += ContinueGame;
-						cntGameBtn.Get<Clickable> ().OnTouch += ContinueGame;
+						cntGameBtn.Register (new Clickable (new Rectangle (420, 320, 400, 40)));
+						cntGameBtn.Get<Clickable> ().OnLeftButtonPressed += ContinueGame;
+						cntGameBtn.Get<Clickable> ().OnTouched += ContinueGame;
 					}
 				}
 			}

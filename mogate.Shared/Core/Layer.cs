@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace mogate
 {
-	public class Layer : GameComponent
+	public class Layer
 	{
 		private Dictionary<string, Entity> m_entitiesByTag = new Dictionary<string, Entity>();
 		private List<Entity> m_orderedEntity = new List<Entity> ();
@@ -19,13 +19,15 @@ namespace mogate
 
 		public string Name { get; private set; }
 		public int ZOrder { get; set; }
-		public Scene Scene { get; private set; } 
+		public Scene Scene { get; private set; }
+		protected Game Game { get; private set; }
 
-		public Layer(Game game, string name, Scene scene, int z) : base(game)
+		public Layer(Game game, string name, Scene scene, int z)
 		{
 			Name = name;
 			ZOrder = z;
 			Scene = scene;
+			Game = game;
 
 			float horScaling = (float)Globals.VIEWPORT_WIDTH / Game.GraphicsDevice.PresentationParameters.BackBufferWidth;
 			float verScaling = (float)Globals.VIEWPORT_HEIGHT / Game.GraphicsDevice.PresentationParameters.BackBufferHeight;
@@ -57,11 +59,9 @@ namespace mogate
 			m_orderedEntity.RemoveAll (ent => ent.Tag == tag);
 		}
 
-		public override void Update(GameTime gameTime)
+		public void Update(GameTime gameTime, MouseState mouse, TouchCollection touches)
 		{
 			var iter = new List<Entity> (m_entitiesByTag.Values);
-			var mouse = Mouse.GetState ();
-			var touch = TouchPanel.GetState ();
 
 			foreach (var ent in iter) {
 				if (!m_isActivated)
@@ -72,11 +72,9 @@ namespace mogate
 				}
 				if (ent.Has<Clickable> ()) {
 					ent.Get<Clickable> ().HandleMouseInput (mouse, m_screenToWorld);
-					ent.Get<Clickable> ().HandleTouchInput (touch, m_screenToWorld);
+					ent.Get<Clickable> ().HandleTouchInput (touches, m_screenToWorld);
 				}
 			}
-
-			base.Update (gameTime);
 		}
 
 		public void Draw (SpriteBatch spriteBatch, GameTime gameTime)
