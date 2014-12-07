@@ -85,7 +85,6 @@ namespace mogate
 		public override void Draw (GameTime gameTime)
 		{
 			if (State != SceneState.Deactivated) {
-
 				Game.GraphicsDevice.SetRenderTarget (m_mainTarget);
 				m_spriteBatch.Begin (SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, m_worldToScreenMtx); 
 				if (State == SceneState.Activating) {

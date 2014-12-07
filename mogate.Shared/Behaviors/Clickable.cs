@@ -38,11 +38,11 @@ namespace mogate
 
 			var clickPos = new Point ((int)worldPos.X, (int)worldPos.Y);
 
-			if (state.LeftButton == ButtonState.Released) {
+			if (state.LeftButton == ButtonState.Pressed) {
 				if (OnLeftButtonPressed != null)
 					OnLeftButtonPressed (clickPos);
 			}
-			if (state.RightButton == ButtonState.Released) {
+			if (state.RightButton == ButtonState.Pressed) {
 				if (OnRightButtonPressed != null)
 					OnRightButtonPressed (clickPos);
 			}
