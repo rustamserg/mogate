@@ -1,7 +1,7 @@
 mogate
 ======
 
-Mogate is basic maze game prototype developed for testing different approaches for entity system framework. The game part itself is based on MonoGame framework and currently works under Windows OS. The project files are tested and developed in Xamarin Studio.
+Mogate is basic maze game prototype developed for testing different approaches for entity system framework. The game part itself is based on MonoGame and CocosSharp frameworks and currently works under Windows, MacOS and IOS systems. The project files are tested and developed in Xamarin Studio. CocosSharp framework is used only for IOS version because of it already contains fix for device rotation and binary plist format support.
 
 Entity framework
 ----------------
