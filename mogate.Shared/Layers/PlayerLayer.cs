@@ -108,6 +108,7 @@ namespace mogate
 						player.Get<Position> ().MapPos = mapPos;
 					}));
 					seq.Add (new ActionEntity (player, OnEndMove));
+					seq.Add (new ActionEntity (player, OnCostAction));
 
 					player.Get<Execute> ().AddNew (seq, "movement");
 					player.Get<State<PlayerState>> ().EState = PlayerState.Moving;
@@ -174,6 +175,11 @@ namespace mogate
 				player.Get<Execute> ().Add (new TriggerEntity (player, item));
 			}
 			StartIdle ();
+		}
+
+		private void OnCostAction(Entity player)
+		{
+			player.Get<Health> ().HP = Math.Max (0, player.Get<Health> ().HP - Globals.PLAYER_ACTION_COST);
 		}
 
 		private void OnAttacked(Entity attacker, int damage)
