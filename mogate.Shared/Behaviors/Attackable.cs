@@ -16,15 +16,8 @@ namespace mogate
 		public void Attack(Entity attacker, Entity defender)
 		{
 			if (attacker.Has<Attack> ()) {
-
-				int armor = 0;
-				if (defender.Has<Armor> () && defender.Get<Armor> ().Value > 0) {
-					armor = defender.Get<Armor> ().Value;
-				}
-
 				if (defender.Has<Health> ()) {
 					int damage = Utils.ThrowDice (attacker.Get<Attack> ().Damage);
-					damage = Math.Max (0, damage - armor);
 
 					if (m_onAttack != null)
 						m_onAttack (attacker, damage);

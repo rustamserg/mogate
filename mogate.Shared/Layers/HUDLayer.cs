@@ -7,7 +7,6 @@ namespace mogate
 	public class HUDLayer : Layer
 	{
 		Sprite2D m_life;
-		Sprite2D m_armor;
 		Sprite2D m_trap;
 
 		public HUDLayer (Game game, string name, Scene scene, int z) : base(game, name, scene, z)
@@ -19,7 +18,6 @@ namespace mogate
 			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
 
 			m_life = sprites.GetSprite ("items_life");
-			m_armor = sprites.GetSprite ("items_shield");
 			m_trap = sprites.GetSprite ("effects_fire");
 
 			var infoEnt = CreateEntity ();
@@ -58,8 +56,8 @@ namespace mogate
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 			var player = Scene.GetLayer("player").GetEntityByTag("player");
 
-			infoEnt.Get<Text>().Message = string.Format ("Stage: {0} HP: {1} Armor: {2} Time: {3:D2}:{4:D2}:{5:D2}",
-				gameState.Level + 1, player.Get<Health>().HP, player.Get<Armor>().Value,
+			infoEnt.Get<Text>().Message = string.Format ("Stage: {0} HP: {1} Time: {2:D2}:{3:D2}:{4:D2}",
+				gameState.Level + 1, player.Get<Health>().HP,
 				gameState.Playtime.Hours, gameState.Playtime.Minutes, gameState.Playtime.Seconds);
 		}
 
@@ -70,10 +68,6 @@ namespace mogate
 			for (int i = 0; i < Math.Ceiling((float)player.Get<Health> ().HP/Globals.HEALTH_PACK); i++) {
 				var drawPos = new Vector2 (Globals.WORLD_WIDTH * Globals.CELL_WIDTH, i  * Globals.CELL_HEIGHT);
 				spriteBatch.Draw (m_life.Texture, drawPos, m_life.GetFrameRect (0), Color.White);
-			}
-			for (int i = 0; i < Math.Ceiling((float)player.Get<Armor> ().Value/Globals.ARMOR_PACK); i++) {
-				var drawPos = new Vector2 (Globals.WORLD_WIDTH * Globals.CELL_WIDTH, 300 + i  * Globals.CELL_HEIGHT);
-				spriteBatch.Draw (m_armor.Texture, drawPos, m_armor.GetFrameRect (0), Color.White);
 			}
 			for (int i = 0; i < player.Get<Consumable<ConsumableItems>> ().Amount(ConsumableItems.Trap); i++) {
 				var drawPos = new Vector2 (Globals.WORLD_WIDTH * Globals.CELL_WIDTH, 450 + i  * Globals.CELL_HEIGHT);

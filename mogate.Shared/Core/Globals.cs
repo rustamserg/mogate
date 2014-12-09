@@ -19,15 +19,15 @@ namespace mogate
 		public static readonly int IFF_MONSTER_ID = 1;
 
 		public static readonly int HEALTH_PACK = 20;
-		public static readonly int ARMOR_PACK = 5;
 
 		public static readonly int PLAYER_HEALTH = 2;
 		public static readonly int PLAYER_HEALTH_MAX = 6;
 		public static readonly int PLAYER_ATTACK = 10;
-		public static readonly int PLAYER_ARMOR = 1;
-		public static readonly int PLAYER_ARMOR_MAX = 3;
-		public static readonly int PLAYER_TRAPS = 5;
+		public static readonly int PLAYER_TORCH_MAX = 2;
 		public static readonly int PLAYER_MOVE_SPEED = 300;
+
+		public static readonly int TORCH_ATTACK = 10;
+		public static readonly int TORCH_HEALTH = 50;
 
 		public static readonly int[] MONSTER_HEALTH = {10, 10, 20, 20, 40};
 		public static readonly int[] MONSTER_ATTACK = {20, 20, 30, 40, 50};
@@ -42,7 +42,6 @@ namespace mogate
 		public static readonly int BOSS_PERCEPTION = 10;
 
 		public static readonly int[] DROP_HEALTH_PROB = {30, 30, 30, 30, 30};
-		public static readonly int[] DROP_ARMOR_PROB = {60, 60, 60, 60, 60};
 
 		public static readonly int[] MONSTER_PROB = {3, 4, 5, 5, 7};
 		public static readonly int[] ROOM_MIN_SIZE = {3, 3, 5, 5, 9};

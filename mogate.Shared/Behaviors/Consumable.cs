@@ -49,7 +49,7 @@ namespace mogate
 
 		public int Amount(T type)
 		{
-			return m_amounts [type];
+			return m_amounts.ContainsKey(type) ? m_amounts [type] : 0;
 		}
 	}
 }

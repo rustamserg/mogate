@@ -36,7 +36,6 @@ namespace mogate
 			player.Register (new Health (gameState.PlayerHealth, gameState.MaxPlayerHealth,
 											() => OnHealthChanged(player)));
 			player.Register (new Attack (gameState.PlayerAttack));
-			player.Register (new Armor (gameState.PlayerArmor, gameState.MaxPlayerArmor));
 			player.Register (new PointLight (6));
 			player.Register (new MoveSpeed (Globals.PLAYER_MOVE_SPEED));
 			player.Register (new IFFSystem (Globals.IFF_PLAYER_ID, 2));
@@ -67,7 +66,6 @@ namespace mogate
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 			var player = GetEntityByTag("player");
 			gameState.PlayerHealth = player.Get<Health> ().HP;
-			gameState.PlayerArmor = player.Get<Armor> ().Value;
 			gameState.PlayerTraps = player.Get<Consumable<ConsumableItems>> ().Amount (ConsumableItems.Trap);
 		}
 			
@@ -159,7 +157,7 @@ namespace mogate
 				}
 			} else if (item == default(Entity)) {
 				if (player.Get<Consumable<ConsumableItems>>().TryConsume(ConsumableItems.Trap, 1))
-					items.AddTrap (actionPos);
+					items.AddTorch (actionPos);
 			}
 		}
 

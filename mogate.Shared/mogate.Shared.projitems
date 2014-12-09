@@ -20,7 +20,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Actions\Spawn.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\Timeline.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\AllowedMapArea.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Armor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Attack.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Attackable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\AttackSpeed.cs" />

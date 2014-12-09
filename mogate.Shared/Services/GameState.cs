@@ -16,9 +16,6 @@ namespace mogate
 		int PlayerHealth { get; set; }
 		int MaxPlayerHealth { get; }
 
-		int PlayerArmor { get; set; }
-		int MaxPlayerArmor { get; }
-
 		int PlayerTraps { get; set; }
 		int PlayerAttack { get; set; }
 
@@ -36,7 +33,6 @@ namespace mogate
 		public int Level;
 		public long PlaytimeTicks;
 		public int PlayerHealth;
-		public int PlayerArmor;
 		public int PlayerTraps;
 		public int PlayerAttack;
 	}
@@ -52,9 +48,6 @@ namespace mogate
 
 		public int PlayerHealth { get; set; }
 		public int MaxPlayerHealth { get; private set; }
-
-		public int PlayerArmor { get; set; }
-		public int MaxPlayerArmor { get; private set; }
 
 		public int PlayerTraps { get; set; }
 		public int PlayerAttack { get; set; }
@@ -108,9 +101,7 @@ namespace mogate
 
 			PlayerHealth = Globals.PLAYER_HEALTH * Globals.HEALTH_PACK;
 			MaxPlayerHealth = Globals.PLAYER_HEALTH_MAX * Globals.HEALTH_PACK;
-			PlayerArmor = Globals.PLAYER_ARMOR * Globals.ARMOR_PACK;
-			MaxPlayerArmor = Globals.PLAYER_ARMOR_MAX * Globals.ARMOR_PACK;
-			PlayerTraps = Globals.PLAYER_TRAPS;
+			PlayerTraps = 0;
 			PlayerAttack = Globals.PLAYER_ATTACK;
 		}
 
@@ -151,7 +142,6 @@ namespace mogate
 					Level = this.Level,
 					PlaytimeTicks = this.Playtime.Ticks,
 					PlayerHealth = this.PlayerHealth,
-					PlayerArmor = this.PlayerArmor,
 					PlayerTraps = this.PlayerTraps,
 					PlayerAttack = this.PlayerAttack
 				};
@@ -187,7 +177,6 @@ namespace mogate
 					Level = save.Level;
 					Playtime = TimeSpan.FromTicks(save.PlaytimeTicks);
 					PlayerHealth = save.PlayerHealth;
-					PlayerArmor = save.PlayerArmor;
 					PlayerTraps = save.PlayerTraps;
 					PlayerAttack = save.PlayerAttack;
 				}
