@@ -36,7 +36,7 @@ namespace mogate
 						ent.Register (new Drawable (new Vector2 (x * Globals.CELL_WIDTH, y * Globals.CELL_HEIGHT)));
 					} else if (id == MapGridTypes.ID.StairUp) {
 						if (gameState.Level < Globals.MAX_LEVELS - 1) {
-							AddExitPoint (false);
+							AddExitPoint (true);
 						}
 					}
 				}
