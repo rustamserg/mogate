@@ -25,7 +25,7 @@ namespace mogate
 		{
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 
-			if (gameState.IsLoaded) {
+			if (gameState.DataState == SaveDataState.Ready) {
 				if (!GetAllEntities().Any(ent => ent.Tag == "new_game_btn")) {
 					var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
 
