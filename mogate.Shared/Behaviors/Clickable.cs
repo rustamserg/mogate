@@ -29,18 +29,22 @@ namespace mogate
 			ClickArea = clickArea;
 		}
 
-		public void HandleMouseInput(MouseState state)
+		public void HandleMouseInput(MouseState state, Vector2 screenToWorldScale)
 		{
-			if (!ClickArea.Contains (state.Position))
+			var worldPos = Vector2.Multiply (new Vector2 (state.Position.X, state.Position.Y), screenToWorldScale);
+
+			if (!ClickArea.Contains (worldPos))
 				return;
+
+			var clickPos = new Point ((int)worldPos.X, (int)worldPos.Y);
 
 			if (state.LeftButton == ButtonState.Pressed) {
 				if (OnLeftButtonPressed != null)
-					OnLeftButtonPressed (state.Position);
+					OnLeftButtonPressed (clickPos);
 			}
 			if (state.RightButton == ButtonState.Pressed) {
 				if (OnRightButtonPressed != null)
-					OnRightButtonPressed (state.Position);
+					OnRightButtonPressed (clickPos);
 			}
 		}
 

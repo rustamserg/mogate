@@ -137,7 +137,7 @@ namespace mogate
 			MaxPlayerHealth = Globals.PLAYER_HEALTH_MAX * Globals.HEALTH_PACK;
 			PlayerTraps = 0;
 			PlayerAttack = Globals.PLAYER_ATTACK;
-			PlayerName = Globals.PLAYER_NAMES[Utils.ThrowDice(Globals.PLAYER_NAMES.Count())];
+			PlayerName = NameGenerator.Generate ();
 		}
 
 		void LoadGame()

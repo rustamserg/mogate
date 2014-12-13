@@ -17,7 +17,8 @@ namespace mogate
 		{
 			if (attacker.Has<Attack> ()) {
 				if (defender.Has<Health> ()) {
-					int damage = Utils.ThrowDice (attacker.Get<Attack> ().Damage);
+					int basedmg = attacker.Get<Attack> ().Damage;
+					int damage = basedmg + Utils.ThrowDice (basedmg);
 
 					if (m_onAttack != null)
 						m_onAttack (attacker, damage);

@@ -21,7 +21,6 @@ namespace mogate
 		public static readonly int HEALTH_PACK = 40;
 
 		public static readonly int HALL_OF_FAME_SIZE = 5;
-		public static readonly string[] PLAYER_NAMES = {"Kolya", "Arsen", "Sergey", "Liza", "Anna"};
 
 		public static readonly int PLAYER_HEALTH = 3;
 		public static readonly int PLAYER_ACTION_COST = 1;
