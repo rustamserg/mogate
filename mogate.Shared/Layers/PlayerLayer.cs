@@ -47,7 +47,7 @@ namespace mogate
 			player.Register (new Drawable (new Vector2(mapGrid.StairDown.X * Globals.CELL_WIDTH, mapGrid.StairDown.Y * Globals.CELL_HEIGHT)));
 			player.Register (new Clickable (new Rectangle (0, 0, Globals.CELL_WIDTH * Globals.WORLD_WIDTH, Globals.CELL_HEIGHT * Globals.WORLD_HEIGHT)));
 
-			player.Get<Consumable<ConsumableItems>> ().Refill (ConsumableItems.Trap, gameState.PlayerTraps);
+			player.Get<Consumable<ConsumableItems>> ().Refill (ConsumableItems.Trap, gameState.PlayerTorches);
 			player.Get<Clickable> ().OnLeftButtonPressed += OnMoveToPosition;
 			player.Get<Clickable> ().OnMoved += OnMoveToPosition;
 			player.Get<Clickable> ().OnRightButtonPressed += OnAction;
@@ -66,7 +66,7 @@ namespace mogate
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 			var player = GetEntityByTag("player");
 			gameState.PlayerHealth = player.Get<Health> ().HP;
-			gameState.PlayerTraps = player.Get<Consumable<ConsumableItems>> ().Amount (ConsumableItems.Trap);
+			gameState.PlayerTorches = player.Get<Consumable<ConsumableItems>> ().Amount (ConsumableItems.Trap);
 		}
 			
 		private void UpdatePlayer (Entity player)
@@ -108,7 +108,6 @@ namespace mogate
 						player.Get<Position> ().MapPos = mapPos;
 					}));
 					seq.Add (new ActionEntity (player, OnEndMove));
-					seq.Add (new ActionEntity (player, OnCostAction));
 
 					player.Get<Execute> ().AddNew (seq, "movement");
 					player.Get<State<PlayerState>> ().EState = PlayerState.Moving;
@@ -175,11 +174,6 @@ namespace mogate
 				player.Get<Execute> ().Add (new TriggerEntity (player, item));
 			}
 			StartIdle ();
-		}
-
-		private void OnCostAction(Entity player)
-		{
-			player.Get<Health> ().HP = Math.Max (0, player.Get<Health> ().HP - Globals.PLAYER_ACTION_COST);
 		}
 
 		private void OnAttacked(Entity attacker, int damage)

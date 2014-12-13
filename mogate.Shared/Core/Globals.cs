@@ -23,14 +23,11 @@ namespace mogate
 		public static readonly int HALL_OF_FAME_SIZE = 5;
 
 		public static readonly int PLAYER_HEALTH = 3;
-		public static readonly int PLAYER_ACTION_COST = 1;
 		public static readonly int PLAYER_HEALTH_MAX = 6;
 		public static readonly int PLAYER_ATTACK = 10;
-		public static readonly int PLAYER_TORCH_MAX = 2;
+		public static readonly int PLAYER_TORCH = 2;
+		public static readonly int PLAYER_TORCH_MAX = 6;
 		public static readonly int PLAYER_MOVE_SPEED = 300;
-
-		public static readonly int TORCH_ATTACK = 10;
-		public static readonly int TORCH_HEALTH = 50;
 
 		public static readonly int[] MONSTER_HEALTH = {10, 10, 20, 20, 40};
 		public static readonly int[] MONSTER_ATTACK = {20, 20, 30, 40, 50};
@@ -44,7 +41,7 @@ namespace mogate
 		public static readonly int BOSS_ATTACK_SPEED = 300;
 		public static readonly int BOSS_PERCEPTION = 10;
 
-		public static readonly int[] DROP_HEALTH_PROB = {70, 60, 30, 30, 30};
+		public static readonly int[] DROP_HEALTH_PROB = {60, 60, 30, 30, 30};
 
 		public static readonly int[] MONSTER_PROB = {3, 4, 5, 5, 7};
 		public static readonly int[] ROOM_MIN_SIZE = {3, 3, 5, 5, 9};

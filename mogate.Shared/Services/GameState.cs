@@ -28,7 +28,7 @@ namespace mogate
 		int PlayerHealth { get; set; }
 		int MaxPlayerHealth { get; }
 
-		int PlayerTraps { get; set; }
+		int PlayerTorches { get; set; }
 		int PlayerAttack { get; set; }
 
 		bool IsGameEnd { get; }
@@ -47,7 +47,7 @@ namespace mogate
 		public int Level;
 		public long PlaytimeTicks;
 		public int PlayerHealth;
-		public int PlayerTraps;
+		public int PlayerTorches;
 		public int PlayerAttack;
 		public string PlayerName;
 		public List<HallOfFameEntry> HallOfFame;
@@ -65,7 +65,7 @@ namespace mogate
 		public int PlayerHealth { get; set; }
 		public int MaxPlayerHealth { get; private set; }
 
-		public int PlayerTraps { get; set; }
+		public int PlayerTorches { get; set; }
 		public int PlayerAttack { get; set; }
 		public string PlayerName { get; private set; }
 
@@ -135,7 +135,7 @@ namespace mogate
 
 			PlayerHealth = Globals.PLAYER_HEALTH * Globals.HEALTH_PACK;
 			MaxPlayerHealth = Globals.PLAYER_HEALTH_MAX * Globals.HEALTH_PACK;
-			PlayerTraps = 0;
+			PlayerTorches = Globals.PLAYER_TORCH;
 			PlayerAttack = Globals.PLAYER_ATTACK;
 			PlayerName = NameGenerator.Generate ();
 		}
@@ -184,7 +184,7 @@ namespace mogate
 					PlayerName = this.PlayerName,
 					PlaytimeTicks = this.Playtime.Ticks,
 					PlayerHealth = this.PlayerHealth,
-					PlayerTraps = this.PlayerTraps,
+					PlayerTorches = this.PlayerTorches,
 					PlayerAttack = this.PlayerAttack,
 					HallOfFame = this.HallOfFame
 				};
@@ -223,7 +223,7 @@ namespace mogate
 					PlayerName = save.PlayerName;
 					Playtime = TimeSpan.FromTicks(save.PlaytimeTicks);
 					PlayerHealth = save.PlayerHealth;
-					PlayerTraps = save.PlayerTraps;
+					PlayerTorches = save.PlayerTorches;
 					PlayerAttack = save.PlayerAttack;
 					HallOfFame = save.HallOfFame;
 				}

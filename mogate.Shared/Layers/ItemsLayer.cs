@@ -12,8 +12,6 @@ namespace mogate
 
 	public class ItemsLayer : Layer
 	{
-		private int m_lastPickupTorchHealth = Globals.TORCH_HEALTH;
-
 		public ItemsLayer(Game game, string name, Scene scene, int z) : base(game, name, scene, z)
 		{
 		}
@@ -42,39 +40,19 @@ namespace mogate
 
 		public void AddTorch(Point spawnPoint)
 		{
+			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
+			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
+
+			var mapGrid = world.GetLevel(gameState.Level);
 
 			var ent = CreateEntity ();
 			ent.Register (new Sprite (sprites.GetSprite ("effects_fire")));
 			ent.Register (new Drawable (new Vector2(spawnPoint.X * Globals.CELL_WIDTH, spawnPoint.Y * Globals.CELL_HEIGHT)));
 			ent.Register (new Position (spawnPoint.X, spawnPoint.Y));
-			ent.Register (new Health (m_lastPickupTorchHealth, () => OnTorchHealthChanged(ent)));
-			ent.Register (new Attack (Globals.TORCH_ATTACK));
-			ent.Register (new Attackable ((attacker, _) => OnTorchAttacked(ent, attacker)));
-			ent.Register (new Execute ());
-			ent.Register (new IFFSystem (Globals.IFF_PLAYER_ID, 1));
 			ent.Register (new PointLight (4));
-			ent.Register (new Triggerable (1, (from) => OnTorchTriggered (ent, from)));
-		}
 
-		void OnTorchAttacked (Entity item, Entity attacker)
-		{
-			var effects = (EffectsLayer)Scene.GetLayer ("effects");
-			effects.AttachEffect (item, "effects_damage", 200);
-
-			if (attacker.Has<Attackable> ()) {
-				var seq = new Sequence ();
-				seq.Add (new AttackEntity (item, attacker));
-				item.Get<Execute> ().Add (seq);
-			}
-		}
-
-		void OnTorchHealthChanged(Entity trap)
-		{
-			if (trap.Get<Health> ().HP == 0) {
-				RemoveEntityByTag (trap.Tag);
-				m_lastPickupTorchHealth = Globals.TORCH_HEALTH;
-			}
+			mapGrid.SetID (spawnPoint.X, spawnPoint.Y, MapGridTypes.ID.Obstacle);
 		}
 
 		void OnBarrelAttacked (Entity item, Entity attacker)
@@ -126,8 +104,6 @@ namespace mogate
 			if (from.Has<Consumable<ConsumableItems>> ()) {
 				if (from.Get<Consumable<ConsumableItems>> ().Amount(ConsumableItems.Trap) < Globals.PLAYER_TORCH_MAX) {
 					from.Get<Consumable<ConsumableItems>> ().Refill (ConsumableItems.Trap, 1);
-					if (item.Has<Health>())
-						m_lastPickupTorchHealth = item.Get<Health> ().HP;
 					RemoveEntityByTag (item.Tag);
 				}
 			}
