@@ -29,30 +29,25 @@ namespace mogate
 			ClickArea = clickArea;
 		}
 
-		public void HandleMouseInput(MouseState state, Vector2 screenToWorldScale)
+		public void HandleMouseInput(MouseState state)
 		{
-			var worldPos = Vector2.Multiply (new Vector2 (state.Position.X, state.Position.Y), screenToWorldScale);
-
-			if (!ClickArea.Contains (worldPos))
+			if (!ClickArea.Contains (state.Position))
 				return;
-
-			var clickPos = new Point ((int)worldPos.X, (int)worldPos.Y);
 
 			if (state.LeftButton == ButtonState.Pressed) {
 				if (OnLeftButtonPressed != null)
-					OnLeftButtonPressed (clickPos);
+					OnLeftButtonPressed (state.Position);
 			}
 			if (state.RightButton == ButtonState.Pressed) {
 				if (OnRightButtonPressed != null)
-					OnRightButtonPressed (clickPos);
+					OnRightButtonPressed (state.Position);
 			}
 		}
 
-		public void HandleTouchInput(TouchCollection touches, Vector2 screenToWorldScale)
+		public void HandleTouchInput(TouchCollection touches)
 		{
 			foreach (var touch in touches) {
-				var worldPos = Vector2.Multiply (new Vector2 (touch.Position.X, touch.Position.Y), screenToWorldScale);
-				var touchPos = new Point ((int)worldPos.X, (int)worldPos.Y);
+				var touchPos = new Point ((int)touch.Position.X, (int)touch.Position.Y);
 
 				switch (touch.State) {
 				case TouchLocationState.Pressed:
@@ -62,7 +57,7 @@ namespace mogate
 					break;
 				case TouchLocationState.Released:
 					if (touch.Id == m_lastTouchID) {
-						if (!m_isTouchMoved && ClickArea.Contains (worldPos)) {
+						if (!m_isTouchMoved && ClickArea.Contains (touchPos)) {
 							if (OnTouched != null) {
 								OnTouched (touchPos);
 							}
@@ -76,7 +71,7 @@ namespace mogate
 					if (touch.Id == m_lastTouchID && touch.Position != m_lastTouchPos) {
 						m_lastTouchPos = touch.Position;
 						m_isTouchMoved = true;
-						if (ClickArea.Contains (worldPos)) {
+						if (ClickArea.Contains (touchPos)) {
 							if (OnMoved != null) {
 								OnMoved (touchPos);
 							}

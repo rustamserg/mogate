@@ -15,7 +15,6 @@ namespace mogate
 
 		private int m_id;
 		private bool m_isActivated;
-		private Vector2 m_screenToWorld;
 
 		public string Name { get; private set; }
 		public int ZOrder { get; set; }
@@ -28,10 +27,6 @@ namespace mogate
 			ZOrder = z;
 			Scene = scene;
 			Game = game;
-
-			float horScaling = (float)Globals.VIEWPORT_WIDTH / Game.GraphicsDevice.PresentationParameters.BackBufferWidth;
-			float verScaling = (float)Globals.VIEWPORT_HEIGHT / Game.GraphicsDevice.PresentationParameters.BackBufferHeight;
-			m_screenToWorld = new Vector2 (horScaling, verScaling);
 		}
 
 		public Entity CreateEntity(string tag = "")
@@ -71,8 +66,8 @@ namespace mogate
 					ent.Get<Execute> ().Update (gameTime);
 				}
 				if (ent.Has<Clickable> ()) {
-					ent.Get<Clickable> ().HandleMouseInput (mouse, m_screenToWorld);
-					ent.Get<Clickable> ().HandleTouchInput (touches, m_screenToWorld);
+					ent.Get<Clickable> ().HandleMouseInput (mouse);
+					ent.Get<Clickable> ().HandleTouchInput (touches);
 				}
 			}
 		}

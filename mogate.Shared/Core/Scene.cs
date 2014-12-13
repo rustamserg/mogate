@@ -106,7 +106,7 @@ namespace mogate
 		{
 			Game.GraphicsDevice.SetRenderTarget (null);  
 			Game.GraphicsDevice.Clear (Color.Black);  
-			spriteBatch.Begin (SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, worldToScreen);  
+			spriteBatch.Begin (SpriteSortMode.Immediate, BlendState.AlphaBlend);  
 			spriteBatch.Draw (mainTarget, Vector2.Zero, Color.White);  
 			spriteBatch.End ();  
 		}
