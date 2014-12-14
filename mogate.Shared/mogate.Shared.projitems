@@ -68,5 +68,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Clickable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\NameGenerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Statistics.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Poison.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Poisonable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\Gameplay\TryPoisonEntity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\Gameplay\DoPoisonEntity.cs" />
   </ItemGroup>
 </Project>
