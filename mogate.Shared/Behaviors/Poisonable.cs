@@ -6,9 +6,9 @@ namespace mogate
 	{
 		public Type Behavior { get { return typeof(Poisonable); } }
 
-		private Action<Entity> m_onPoisoned;
+		private Action<Entity, int> m_onPoisoned;
 
-		public Poisonable(Action<Entity> onPoisoned = null)
+		public Poisonable(Action<Entity, int> onPoisoned = null)
 		{
 			m_onPoisoned = onPoisoned;
 		}
@@ -18,12 +18,9 @@ namespace mogate
 			if (attacker.Has<Poison> ()) {
 				if (defender.Has<Health> ()) {
 					if (Utils.DropChance (attacker.Get<Poison> ().Chance)) {
-						if (m_onPoisoned != null)
-							m_onPoisoned (attacker);
-
 						if (defender.Has<Execute> ()) {
-							var poisonLoop = new Loop (new DoPoisonEntity (defender, attacker.Get<Poison> ().Damage),
-								                 attacker.Get<Poison> ().Speed);
+							var poisonLoop = new Loop (new DoPoisonEntity (defender, attacker.Get<Poison> ().Damage, m_onPoisoned),
+								attacker.Get<Poison> ().Speed);
 							defender.Get<Execute> ().AddNew (poisonLoop, "poison_effect");
 						}
 					}
