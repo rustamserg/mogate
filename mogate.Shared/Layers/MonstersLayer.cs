@@ -29,6 +29,7 @@ namespace mogate
 							me.Register (new Position (x, y));
 							me.Register (new Health (Globals.MONSTER_HEALTH[gameState.Level], () => OnHealthChanged(me)));
 							me.Register (new Attack (Globals.MONSTER_ATTACK[gameState.Level]));
+							me.Register (new Poison (Globals.MONSTER_POISON_DAMAGE [gameState.Level], Globals.MONSTER_POISON_CHANCE [gameState.Level], Globals.MONSTER_POISON_SPEED [gameState.Level]));
 							me.Register (new MoveSpeed (Globals.MONSTER_MOVE_SPEED[gameState.Level]));
 							me.Register (new AttackSpeed (Globals.MONSTER_ATTACK_SPEED[gameState.Level]));
 							me.Register (new Attackable ((attacker, _) => OnAttacked(me, attacker)));
@@ -57,6 +58,7 @@ namespace mogate
 				boss.Register (new Position (pos.X, pos.Y));
 				boss.Register (new Health (Globals.BOSS_HEALTH, () => OnHealthChanged(boss)));
 				boss.Register (new Attack (Globals.BOSS_ATTACK));
+				boss.Register (new Poison (Globals.MONSTER_POISON_DAMAGE [gameState.Level], Globals.MONSTER_POISON_CHANCE [gameState.Level], Globals.MONSTER_POISON_SPEED [gameState.Level]));
 				boss.Register (new MoveSpeed (Globals.BOSS_MOVE_SPEED));
 				boss.Register (new AttackSpeed (Globals.BOSS_ATTACK_SPEED));
 				boss.Register (new Attackable ((attacker, _) => OnAttacked(boss, attacker)));
@@ -181,6 +183,7 @@ namespace mogate
 					var seq = new Sequence ();
 					seq.Add (new MoveSpriteTo (monster, new Vector2(newPos.X * Globals.CELL_WIDTH, newPos.Y * Globals.CELL_HEIGHT), monster.Get<AttackSpeed>().Speed));
 					seq.Add (new AttackEntity (monster, foe));
+					seq.Add (new TryPoisonEntity (monster, foe));
 					seq.Add (new MoveSpriteTo (monster, new Vector2(stepBackPos.X * Globals.CELL_WIDTH, stepBackPos.Y * Globals.CELL_HEIGHT), monster.Get<AttackSpeed>().Speed));
 					seq.Add (new ActionEntity (monster, (_) => {
 						StartPatrol (monster);

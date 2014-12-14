@@ -31,6 +31,10 @@ namespace mogate
 
 		public static readonly int TORCH_HEALTH = 100;
 
+		public static readonly int[] MONSTER_POISON_DAMAGE = {10, 10, 20, 20, 40};
+		public static readonly int[] MONSTER_POISON_CHANCE = {100, 20, 30, 40, 50};
+		public static readonly int[] MONSTER_POISON_SPEED = {3000, 2000, 1000, 500, 400};
+
 		public static readonly int[] MONSTER_HEALTH = {10, 10, 20, 20, 40};
 		public static readonly int[] MONSTER_ATTACK = {20, 20, 30, 40, 50};
 		public static readonly int[] MONSTER_MOVE_SPEED = {800, 700, 600, 500, 500};

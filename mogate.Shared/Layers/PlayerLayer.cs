@@ -42,6 +42,7 @@ namespace mogate
 			player.Register (new Attackable (OnAttacked));
 			player.Register (new Position (mapGrid.StairDown.X, mapGrid.StairDown.Y));
 			player.Register (new Execute ());
+			player.Register (new Poisonable (OnPoisoned));
 			player.Register (new Consumable<ConsumableItems> ());
 			player.Register (new Sprite (sprites.GetSprite ("hero_idle")));
 			player.Register (new Drawable (new Vector2(mapGrid.StairDown.X * Globals.CELL_WIDTH, mapGrid.StairDown.Y * Globals.CELL_HEIGHT)));
@@ -197,6 +198,17 @@ namespace mogate
 				state.NewGame ();
 				director.ActivateScene ("main");
 			}
+		}
+
+		private void OnPoisoned(Entity player, int damage)
+		{
+			var effects = (EffectsLayer)Scene.GetLayer ("effects");
+			var hud = (HUDLayer)Scene.GetLayer ("hud");
+
+			effects.AttachEffect (player, "effects_damage", 400);
+
+			string feedbackMsg = string.Format ("Poisoned: {0}", damage);
+			hud.FeedbackMessage (feedbackMsg);
 		}
 
 		private void StartIdle()

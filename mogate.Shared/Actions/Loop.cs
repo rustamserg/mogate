@@ -7,13 +7,13 @@ namespace mogate
 	{
 		IAction m_looped;
 		int m_delay;
-		int m_lastTime;
+		int m_spent;
 
 		public Loop (IAction action, int delay = 0)
 		{
 			m_looped = action;
 			m_delay = delay;
-			m_lastTime = 0;
+			m_spent = 0;
 		}
 
 		public bool Execute(GameTime gameTime)
@@ -21,12 +21,9 @@ namespace mogate
 			bool canExecute = true;
 
 			if (m_delay > 0) {
-				if (m_lastTime == 0) {
-					m_lastTime = gameTime.ElapsedGameTime.Milliseconds;
-				}
-				var currTime = gameTime.ElapsedGameTime.Milliseconds;
-				if (currTime - m_lastTime >= m_delay) {
-					m_lastTime = currTime;
+				m_spent += gameTime.ElapsedGameTime.Milliseconds;
+				if (m_spent >= m_delay) {
+					m_spent = m_spent - m_delay;
 				} else {
 					canExecute = false;
 				}
