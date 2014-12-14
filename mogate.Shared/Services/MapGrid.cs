@@ -18,7 +18,7 @@ namespace mogate
 			Tunnel,
 			StairUp,
 			StairDown,
-			Obstacle
+			Torch
 		}
 
 		public class Cell

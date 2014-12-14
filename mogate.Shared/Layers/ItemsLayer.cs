@@ -52,7 +52,27 @@ namespace mogate
 			ent.Register (new Position (spawnPoint.X, spawnPoint.Y));
 			ent.Register (new PointLight (4));
 
-			mapGrid.SetID (spawnPoint.X, spawnPoint.Y, MapGridTypes.ID.Obstacle);
+			var id = mapGrid.GetID (spawnPoint.X, spawnPoint.Y);
+			if (id == MapGridTypes.ID.Room) {
+				ent.Register (new Health (Globals.TORCH_HEALTH, () => OnTorchHealthChanged(ent)));
+				ent.Register (new Attackable ((attacker, _) => OnTorchAttacked(ent, attacker)));
+				ent.Register (new IFFSystem (Globals.IFF_PLAYER_ID, 1));
+			} else if (id == MapGridTypes.ID.Tunnel) {
+				mapGrid.SetID (spawnPoint.X, spawnPoint.Y, MapGridTypes.ID.Torch);
+			}
+		}
+
+		void OnTorchHealthChanged(Entity torch)
+		{
+			if (torch.Get<Health> ().HP == 0) {
+				RemoveEntityByTag (torch.Tag);
+			}
+		}
+
+		void OnTorchAttacked(Entity torch, Entity attacker)
+		{
+			var effects = (EffectsLayer)Scene.GetLayer ("effects");
+			effects.AttachEffect (attacker, "effects_damage", 300);
 		}
 
 		void OnBarrelAttacked (Entity item, Entity attacker)

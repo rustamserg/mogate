@@ -29,6 +29,8 @@ namespace mogate
 		public static readonly int PLAYER_TORCH_MAX = 6;
 		public static readonly int PLAYER_MOVE_SPEED = 300;
 
+		public static readonly int TORCH_HEALTH = 100;
+
 		public static readonly int[] MONSTER_HEALTH = {10, 10, 20, 20, 40};
 		public static readonly int[] MONSTER_ATTACK = {20, 20, 30, 40, 50};
 		public static readonly int[] MONSTER_MOVE_SPEED = {800, 700, 600, 500, 500};
