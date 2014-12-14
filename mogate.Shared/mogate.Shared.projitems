@@ -67,5 +67,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)GameMogate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Clickable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\NameGenerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\Statistics.cs" />
   </ItemGroup>
 </Project>

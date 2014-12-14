@@ -34,6 +34,7 @@ namespace mogate
 			Services.AddService (typeof(IWorld), new World());
 			Services.AddService (typeof(IGameState), gameState);
 			Services.AddService (typeof(ISpriteSheets), sprites);
+			Services.AddService (typeof(IStatistics), new Statistics ());
 
 			Components.Add (sprites);
 			Components.Add (gameState);

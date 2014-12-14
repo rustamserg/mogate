@@ -36,7 +36,13 @@ namespace mogate
 
 		public Entity CreateEntity(string tag = "")
 		{
-			var ent = new Entity(string.IsNullOrEmpty(tag) ? (++m_id).ToString() : tag);
+			var gameStats = (IStatistics)Game.Services.GetService (typeof(IStatistics));
+
+			if (string.IsNullOrEmpty (tag)) {
+				tag = string.Format ("{0}:{1}", Name, (++m_id).ToString ());
+			}
+			var ent = new Entity(tag, gameStats);
+
 			m_entitiesByTag.Add (ent.Tag, ent);
 			m_orderedEntity = new List<Entity> (m_entitiesByTag.Values);
 			m_orderedEntity.OrderBy (la => la.Has<Drawable>() ? la.Get<Drawable>().ZOrder : int.MaxValue);
@@ -55,6 +61,8 @@ namespace mogate
 
 		public void RemoveEntityByTag(string tag)
 		{
+			m_entitiesByTag [tag].OnRemoved ();
+
 			m_entitiesByTag.Remove (tag);
 			m_orderedEntity.RemoveAll (ent => ent.Tag == tag);
 		}
