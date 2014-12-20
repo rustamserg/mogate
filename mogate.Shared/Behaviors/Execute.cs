@@ -36,7 +36,10 @@ namespace mogate
 			var tags = new List<string>(m_actions.Keys);
 
 			foreach (var tag in tags) {
-				var q = m_actions [tag];
+				Queue<IAction> q;
+				if (!m_actions.TryGetValue (tag, out q))
+					continue;
+
 				if (q.Count == 0)
 					continue;
 
