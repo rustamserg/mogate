@@ -22,28 +22,28 @@ namespace mogate
 			for (int x = 0; x < mapGrid.Width; x++) {
 				for (int y = 0; y < mapGrid.Height; y++) {
 					var tileEnt = CreateEntity ();
-					tileEnt.Register (new Sprite (sprites.GetSprite ("grid_tile")));
+					tileEnt.Register (new Sprite (sprites.GetSprite ("floor_01_01")));
 					tileEnt.Register (new Drawable(new Vector2 (x * Globals.CELL_WIDTH, y * Globals.CELL_HEIGHT), 0));
 					var id = mapGrid.GetID (x, y);
 
 					if (id == MapGridTypes.ID.Blocked) {
 						var ent = CreateEntity ();
-						ent.Register (new Sprite (sprites.GetSprite ("grid_wall")));
+						ent.Register (new Sprite (sprites.GetSprite ("wall_01_01")));
 						ent.Register (new Drawable (new Vector2 (x * Globals.CELL_WIDTH, y * Globals.CELL_HEIGHT)));
 					} else if (id == MapGridTypes.ID.StairDown) {
 						var ent = CreateEntity ();
-						ent.Register (new Sprite (sprites.GetSprite ("grid_ladder")));
+						ent.Register (new Sprite (sprites.GetSprite ("entry_01")));
 						ent.Register (new Drawable (new Vector2 (x * Globals.CELL_WIDTH, y * Globals.CELL_HEIGHT)));
 					} else if (id == MapGridTypes.ID.StairUp) {
 						if (gameState.Level < Globals.MAX_LEVELS - 1) {
-							AddExitPoint (true);
+							AddExitPoint (false);
 						}
 					}
 				}
 			}
 		}
 
-		public void AddExitPoint(bool lightExit)
+		public void AddExitPoint(bool isFinal)
 		{
 			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
 			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
@@ -52,11 +52,9 @@ namespace mogate
 			var mapGrid = world.GetLevel (gameState.Level);
 
 			var ent = CreateEntity ();
-			ent.Register (new Sprite (sprites.GetSprite ("grid_ladder")));
+			ent.Register (new Sprite (sprites.GetSprite (isFinal ? "final_exit_01" : "exit_01")));
 			ent.Register (new Drawable (new Vector2 (mapGrid.StairUp.X * Globals.CELL_WIDTH, mapGrid.StairUp.Y * Globals.CELL_HEIGHT)));
-			if (lightExit) {
-				ent.Register (new PointLight (5));
-			}
+			ent.Register (new PointLight (5));
 			ent.Register (new Position (mapGrid.StairUp.X, mapGrid.StairUp.Y));
 			ent.Register (new Triggerable(1, (from) => OnExitTriggered(ent, from)));
 		}

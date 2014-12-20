@@ -8,8 +8,6 @@ using System.Linq;
 
 namespace mogate
 {
-	public enum ConsumableItems { Trap };
-
 	public class ItemsLayer : Layer
 	{
 		public ItemsLayer(Game game, string name, Scene scene, int z) : base(game, name, scene, z)
@@ -28,7 +26,7 @@ namespace mogate
 				var pos = new Point (room.Pos.X + Utils.Rand.Next (room.Width), room.Pos.Y + Utils.Rand.Next (room.Height));
 
 				var ent = CreateEntity ();
-				ent.Register (new Sprite (sprites.GetSprite ("items_barrel")));
+				ent.Register (new Sprite (sprites.GetSprite ("skeleton_01")));
 				ent.Register (new Drawable (new Vector2(pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
 				ent.Register (new Position (pos.X, pos.Y));
 				ent.Register (new Health (1, () => OnBarrelDestroyed(ent)));
@@ -38,47 +36,10 @@ namespace mogate
 			}
 		}
 
-		public void AddTorch(Point spawnPoint)
-		{
-			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
-			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
-			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
-
-			var mapGrid = world.GetLevel(gameState.Level);
-
-			var ent = CreateEntity ();
-			ent.Register (new Sprite (sprites.GetSprite ("effects_fire")));
-			ent.Register (new Drawable (new Vector2(spawnPoint.X * Globals.CELL_WIDTH, spawnPoint.Y * Globals.CELL_HEIGHT)));
-			ent.Register (new Position (spawnPoint.X, spawnPoint.Y));
-			ent.Register (new PointLight (4));
-
-			var id = mapGrid.GetID (spawnPoint.X, spawnPoint.Y);
-			if (id == MapGridTypes.ID.Room) {
-				ent.Register (new Health (Globals.TORCH_HEALTH, () => OnTorchHealthChanged(ent)));
-				ent.Register (new Attackable ((attacker, _) => OnTorchAttacked(ent, attacker)));
-				ent.Register (new IFFSystem (Globals.IFF_PLAYER_ID, 1));
-			} else if (id == MapGridTypes.ID.Tunnel) {
-				mapGrid.SetID (spawnPoint.X, spawnPoint.Y, MapGridTypes.ID.Torch);
-			}
-		}
-
-		void OnTorchHealthChanged(Entity torch)
-		{
-			if (torch.Get<Health> ().HP == 0) {
-				RemoveEntityByTag (torch.Tag);
-			}
-		}
-
-		void OnTorchAttacked(Entity torch, Entity attacker)
-		{
-			var effects = (EffectsLayer)Scene.GetLayer ("effects");
-			effects.AttachEffect (attacker, "effects_damage", 300);
-		}
-
 		void OnBarrelAttacked (Entity item, Entity attacker)
 		{
 			var effects = (EffectsLayer)Scene.GetLayer ("effects");
-			effects.AttachEffect (item, "effects_damage", 400);
+			effects.AttachEffect (item, "damage_01", 400);
 		}
 
 		void OnBarrelDestroyed(Entity barrel)
@@ -96,15 +57,15 @@ namespace mogate
 			ent.Register (new PointLight (5));
 
 			if (gameState.Level == Globals.MAX_LEVELS - 1) {
-				ent.Register (new Sprite (sprites.GetSprite ("items_artefact")));
+				ent.Register (new Sprite (sprites.GetSprite ("artefact_01")));
 				ent.Register (new Triggerable (1, (from) => OnArtefactTriggered(ent, from)));
 			} else {
 				if (Utils.DropChance(Globals.DROP_HEALTH_PROB[gameState.Level])) {
-					ent.Register (new Sprite (sprites.GetSprite ("items_life")));
+					ent.Register (new Sprite (sprites.GetSprite ("health_potion_01")));
 					ent.Register (new Triggerable (1, (from) => OnHealthTriggered (ent, from)));
 				} else {
-					ent.Register (new Sprite (sprites.GetSprite ("effects_fire")));
-					ent.Register (new Triggerable (1, (from) => OnTorchTriggered (ent, from)));
+					ent.Register (new Sprite (sprites.GetSprite ("antitod_potion_01")));
+					ent.Register (new Triggerable (1, (from) => OnAntitodTriggered (ent, from)));
 				}
 			}
 		}
@@ -119,11 +80,11 @@ namespace mogate
 			}
 		}
 
-		void OnTorchTriggered (Entity item, Entity from)
+		void OnAntitodTriggered (Entity item, Entity from)
 		{
-			if (from.Has<Consumable<ConsumableItems>> ()) {
-				if (from.Get<Consumable<ConsumableItems>> ().Amount(ConsumableItems.Trap) < Globals.PLAYER_TORCH_MAX) {
-					from.Get<Consumable<ConsumableItems>> ().Refill (ConsumableItems.Trap, 1);
+			if (from.Has<Poisonable> ()) {
+				if (from.Get<Poisonable> ().IsPoisoned) {
+					from.Get<Poisonable> ().CancelPoison (from);
 					RemoveEntityByTag (item.Tag);
 				}
 			}

@@ -31,11 +31,11 @@ namespace mogate
 			for (int i = 0; i < Globals.HALL_OF_FAME_SIZE; ++i) {
 				var hofname = CreateEntity(string.Format("hof_name_{0}", i));
 				hofname.Register (new Text (m_font));
-				hofname.Register (new Drawable (new Vector2 (420, 320 + i * 20)));
+				hofname.Register (new Drawable (new Vector2 (420, 320 + i * 25)));
 
 				var hoftime = CreateEntity(string.Format("hof_time_{0}", i));
 				hoftime.Register (new Text (m_font));
-				hoftime.Register (new Drawable (new Vector2 (420 + 100, 320 + i * 20)));
+				hoftime.Register (new Drawable (new Vector2 (420 + 100, 320 + i * 25)));
 			}
 
 			if (gameState.IsGameEnd) {

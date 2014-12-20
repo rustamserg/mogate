@@ -25,8 +25,6 @@ namespace mogate
 		public static readonly int PLAYER_HEALTH = 3;
 		public static readonly int PLAYER_HEALTH_MAX = 6;
 		public static readonly int PLAYER_ATTACK = 10;
-		public static readonly int PLAYER_TORCH = 2;
-		public static readonly int PLAYER_TORCH_MAX = 6;
 		public static readonly int PLAYER_MOVE_SPEED = 300;
 
 		public static readonly int TORCH_HEALTH = 100;

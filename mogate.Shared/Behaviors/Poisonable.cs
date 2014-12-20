@@ -7,10 +7,12 @@ namespace mogate
 		public Type Behavior { get { return typeof(Poisonable); } }
 
 		private Action<Entity, int> m_onPoisoned;
+		public bool IsPoisoned { get; private set; }
 
 		public Poisonable(Action<Entity, int> onPoisoned = null)
 		{
 			m_onPoisoned = onPoisoned;
+			IsPoisoned = false;
 		}
 
 		public void TryPoison(Entity attacker, Entity defender)
@@ -22,6 +24,7 @@ namespace mogate
 							var poisonLoop = new Loop (new DoPoisonEntity (defender, attacker.Get<Poison> ().Damage, m_onPoisoned),
 								attacker.Get<Poison> ().Speed);
 							defender.Get<Execute> ().AddNew (poisonLoop, "poison_effect");
+							IsPoisoned = true;
 						}
 					}
 				}

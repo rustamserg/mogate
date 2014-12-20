@@ -39,7 +39,7 @@ namespace mogate
 							me.Register (new LookDirection (Utils.Direction.Down));
 							me.Register (new Perception (Globals.MONSTER_PERCEPTION[gameState.Level]));
 							me.Register (new AllowedMapArea(MapGridTypes.ID.Tunnel));
-							me.Register (new Sprite (sprites.GetSprite ("monsters_mob")));
+							me.Register (new Sprite (sprites.GetSprite ("monster_01")));
 							me.Register (new Drawable (new Vector2 (x * Globals.CELL_WIDTH, y * Globals.CELL_HEIGHT)));
 
 							me.Get<Execute> ().Add (new ActionEntity (me, (_) => {
@@ -68,7 +68,7 @@ namespace mogate
 				boss.Register (new LookDirection (Utils.Direction.Down));
 				boss.Register (new Perception (Globals.BOSS_PERCEPTION));
 				boss.Register (new AllowedMapArea(MapGridTypes.ID.Room));
-				boss.Register (new Sprite (sprites.GetSprite ("monsters_boss")));
+				boss.Register (new Sprite (sprites.GetSprite ("boss_01")));
 				boss.Register (new Drawable (new Vector2 (pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
 
 				boss.Get<Execute> ().Add (new ActionEntity (boss, (_) => {
@@ -209,8 +209,7 @@ namespace mogate
 		void OnAttacked (Entity monster, Entity attacker)
 		{
 			var effects = (EffectsLayer)Scene.GetLayer ("effects");
-			effects.AttachEffect (monster, "effects_damage", 400);
-
+			effects.AttachEffect (monster, "damage_01", 400);
 		}
 
 		void OnHealthChanged(Entity monster)

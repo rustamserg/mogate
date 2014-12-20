@@ -43,12 +43,10 @@ namespace mogate
 			player.Register (new Position (mapGrid.StairDown.X, mapGrid.StairDown.Y));
 			player.Register (new Execute ());
 			player.Register (new Poisonable (OnPoisoned));
-			player.Register (new Consumable<ConsumableItems> ());
-			player.Register (new Sprite (sprites.GetSprite ("hero_idle")));
+			player.Register (new Sprite (sprites.GetSprite ("player_01")));
 			player.Register (new Drawable (new Vector2(mapGrid.StairDown.X * Globals.CELL_WIDTH, mapGrid.StairDown.Y * Globals.CELL_HEIGHT)));
 			player.Register (new Clickable (new Rectangle (0, 0, Globals.CELL_WIDTH * Globals.WORLD_WIDTH, Globals.CELL_HEIGHT * Globals.WORLD_HEIGHT)));
 
-			player.Get<Consumable<ConsumableItems>> ().Refill (ConsumableItems.Trap, gameState.PlayerTorches);
 			player.Get<Clickable> ().OnLeftButtonPressed += OnMoveToPosition;
 			player.Get<Clickable> ().OnMoved += OnMoveToPosition;
 			player.Get<Clickable> ().OnRightButtonPressed += OnAction;
@@ -67,7 +65,6 @@ namespace mogate
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 			var player = GetEntityByTag("player");
 			gameState.PlayerHealth = player.Get<Health> ().HP;
-			gameState.PlayerTorches = player.Get<Consumable<ConsumableItems>> ().Amount (ConsumableItems.Trap);
 		}
 			
 		private void UpdatePlayer (Entity player)
@@ -103,7 +100,7 @@ namespace mogate
 					var seq = new Sequence ();
 					var spawn = new Spawn ();
 					spawn.Add (new MoveSpriteTo (player, new Vector2 (mapPos.X * Globals.CELL_WIDTH, mapPos.Y * Globals.CELL_HEIGHT), 300));
-					spawn.Add (new AnimSprite (player, sprites.GetSprite("hero_move"), player.Get<MoveSpeed>().Speed));
+					//spawn.Add (new AnimSprite (player, sprites.GetSprite("hero_move"), player.Get<MoveSpeed>().Speed));
 					seq.Add (spawn);
 					seq.Add (new ActionEntity (player, (_) => {
 						player.Get<Position> ().MapPos = mapPos;
@@ -129,7 +126,7 @@ namespace mogate
 			if (mapGrid.GetID (actionPos.X, actionPos.Y) != MapGridTypes.ID.Blocked
 				&& m_toMove != actionPos) {
 				m_toMove = actionPos;
-				effects.SpawnEffect (m_toMove, "effects_marker", 200);
+				//effects.SpawnEffect (m_toMove, "effects_marker", 200);
 			}
 		}
 
@@ -145,20 +142,23 @@ namespace mogate
 				
 			var effects = (EffectsLayer)Scene.GetLayer ("effects");
 			var items = (ItemsLayer)Scene.GetLayer ("items");
+			var monsters = (MonstersLayer)Scene.GetLayer ("monsters");
 			var player = GetEntityByTag("player");
 			var mapPos = player.Get<Position>().MapPos;
 
-			var item = items.GetAllEntities ().FirstOrDefault (m => m.Get<Position> ().MapPos == actionPos);
-			if (item != default(Entity) && Utils.Dist(mapPos, actionPos) < 2) {
-				if (item.Has<IFFSystem> ()) {
-					if (player.Get<IFFSystem> ().IsFoe (item)) {
-						effects.SpawnEffect (actionPos, "items_sword", 100);
-						player.Get<Execute> ().Add (new AttackEntity (player, item));
+			if (Utils.Dist(mapPos, actionPos) < 2) {
+				effects.SpawnEffect (actionPos, "weapon_01", 200);
+
+				var actionTargets = items.GetAllEntities ().ToList();
+				actionTargets.AddRange (monsters.GetAllEntities ());
+				var target = actionTargets.FirstOrDefault (m => m.Get<Position> ().MapPos == actionPos);
+				if (target != default(Entity)) {
+					if (target.Has<IFFSystem> ()) {
+						if (player.Get<IFFSystem> ().IsFoe (target)) {
+							player.Get<Execute> ().Add (new AttackEntity (player, target));
+						}
 					}
 				}
-			} else if (item == default(Entity)) {
-				if (player.Get<Consumable<ConsumableItems>>().TryConsume(ConsumableItems.Trap, 1))
-					items.AddTorch (actionPos);
 			}
 		}
 
@@ -183,7 +183,7 @@ namespace mogate
 			var hud = (HUDLayer)Scene.GetLayer ("hud");
 
 			var player = GetEntityByTag("player");
-			effects.AttachEffect (player, "effects_damage", 400);
+			effects.AttachEffect (player, "damage_01", 400);
 
 			string feedbackMsg = string.Format ("Damaged: {0}", damage);
 			hud.FeedbackMessage (feedbackMsg);
@@ -205,7 +205,7 @@ namespace mogate
 			var effects = (EffectsLayer)Scene.GetLayer ("effects");
 			var hud = (HUDLayer)Scene.GetLayer ("hud");
 
-			effects.AttachEffect (player, "effects_damage", 400);
+			effects.AttachEffect (player, "damage_01", 400);
 
 			string feedbackMsg = string.Format ("Poisoned: {0}", damage);
 			hud.FeedbackMessage (feedbackMsg);
@@ -215,9 +215,9 @@ namespace mogate
 		{
 			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
 			var player = GetEntityByTag("player");
-			var loop = new Loop (new AnimSprite (player, sprites.GetSprite("hero_idle"), 600));
+			//var loop = new Loop (new AnimSprite (player, sprites.GetSprite("hero_idle"), 600));
 
-			player.Get<Execute> ().AddNew (loop, "movement");
+			//player.Get<Execute> ().AddNew (loop, "movement");
 			player.Get<State<PlayerState>>().EState = PlayerState.Idle;
 		}
 	}

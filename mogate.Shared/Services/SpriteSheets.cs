@@ -59,10 +59,10 @@ namespace mogate
 			PlistDictionary frames = pinfo.Root.AsDictionary["frames"].AsDictionary;
 
 			foreach (var frame in frames) {
-				string frmName = frame.Key;
-				string texRect = frame.Value.AsDictionary["textureRect"].AsString;
-				var sp = new Sprite2D (frmName, texture, Utils.RectangleFromString (texRect));
-				m_sprites.Add (frmName, sp);
+				string spriteName = frame.Key.Split('.')[0];
+				string texRect = frame.Value.AsDictionary["frame"].AsString;
+				var sp = new Sprite2D (spriteName, texture, Utils.RectangleFromString (texRect));
+				m_sprites.Add (spriteName, sp);
 			}
 			#else
 			PList pinfo = new PList (stream);
@@ -70,9 +70,10 @@ namespace mogate
 
 			foreach (var frmName in frames.Keys) {
 				PList frame = frames [frmName] as PList;
-				string texRect = frame ["textureRect"] as string;
-				var sp = new Sprite2D (frmName, texture, Utils.RectangleFromString (texRect));
-				m_sprites.Add (frmName, sp);
+				string texRect = frame ["frame"] as string;
+				string spriteName = frmName.Split('.')[0];
+				var sp = new Sprite2D (spriteName, texture, Utils.RectangleFromString (texRect));
+				m_sprites.Add (spriteName, sp);
 			}
 			#endif
 
