@@ -17,8 +17,7 @@ namespace mogate
 			TunnelEnd,
 			Tunnel,
 			StairUp,
-			StairDown,
-			Torch
+			StairDown
 		}
 
 		public class Cell
@@ -60,13 +59,14 @@ namespace mogate
 		void Init();
 		MapGridTypes.ID GetID(int x, int y);
 		void SetID(int x, int y, MapGridTypes.ID id);
-		IEnumerable<MapGridTypes.Cell> GetBBox (int x, int y);
-		IEnumerable<MapGridTypes.Cell> GetBCross (int x, int y);
-		IEnumerable<MapGridTypes.Cell> GetLine (Point from, Point to);
+		List<MapGridTypes.Cell> GetBBox (int x, int y);
+		List<MapGridTypes.Cell> GetBCross (int x, int y);
+		List<MapGridTypes.Cell> GetLine (Point from, Point to);
 		Point ScreenToWorld (int x, int y);
 
 		void AddRoom(MapGridTypes.Room room);
-		IEnumerable<MapGridTypes.Room> GetRooms();
+		List<MapGridTypes.Room> GetRooms();
+		List<Point> GetTunnels();
 	}
 
 	public class MapGrid : IMapGrid
@@ -84,7 +84,6 @@ namespace mogate
 			Width = width;
 			Height = heigth;
 			Init ();
-
 		}
 
 		public void Init ()
@@ -116,12 +115,12 @@ namespace mogate
 			m_rooms.Add(room);
 		}
 
-		public IEnumerable<MapGridTypes.Room> GetRooms ()
+		public List<MapGridTypes.Room> GetRooms ()
 		{
 			return new List<MapGridTypes.Room>(m_rooms);
 		}
 
-		public IEnumerable<MapGridTypes.Cell> GetBBox (int x, int y)
+		public List<MapGridTypes.Cell> GetBBox (int x, int y)
 		{
 			List<MapGridTypes.Cell> box = new List<MapGridTypes.Cell>();
 			box.Add (new MapGridTypes.Cell(new Point(x - 1, y - 1), GetID (x - 1, y - 1)));
@@ -136,7 +135,7 @@ namespace mogate
 			return box;
 		}
 
-		public IEnumerable<MapGridTypes.Cell> GetBCross (int x, int y)
+		public List<MapGridTypes.Cell> GetBCross (int x, int y)
 		{
 			List<MapGridTypes.Cell> box = new List<MapGridTypes.Cell>();
 			box.Add (new MapGridTypes.Cell(new Point(x, y - 1), GetID (x, y - 1)));
@@ -147,7 +146,7 @@ namespace mogate
 			return box;
 		}
 
-		public IEnumerable<MapGridTypes.Cell> GetLine(Point from, Point to)
+		public List<MapGridTypes.Cell> GetLine(Point from, Point to)
 		{
 			var ids = new List<MapGridTypes.Cell> ();
 
@@ -174,6 +173,20 @@ namespace mogate
 		public Point ScreenToWorld (int x, int y)
 		{
 			return new Point(x / Globals.CELL_WIDTH,  y / Globals.CELL_HEIGHT);
+		}
+
+		public List<Point> GetTunnels()
+		{
+			var tunnels = new List<Point> ();
+
+			for (int x = 0; x < Width; x++) {
+				for (int y = 0; y < Height; y++) {
+					if (m_map [x, y].Type == MapGridTypes.ID.Tunnel) {
+						tunnels.Add (m_map [x, y].Pos);
+					}
+				}
+			}
+			return tunnels;
 		}
 	}
 }
