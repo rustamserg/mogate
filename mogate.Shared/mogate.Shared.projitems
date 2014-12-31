@@ -49,7 +49,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\Scene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Utils.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Layers\EffectsLayer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Layers\FogLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Layers\HUDLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Layers\InterLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Layers\ItemsLayer.cs" />
