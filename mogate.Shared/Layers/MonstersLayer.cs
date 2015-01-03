@@ -9,81 +9,24 @@ namespace mogate
 {
 	public class MonstersLayer : Layer
 	{
+		enum MonsterType { Monster, Boss };
+
 		public MonstersLayer (Game game, string name, Scene scene, int z) : base(game, name, scene, z)
 		{
 		}
 
 		public override void OnActivated ()
 		{
-			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
+			int spawnDelay = Globals.MONSTER_SPAWN_DELAY_MSEC [gameState.Level];
 
-			var map = world.GetLevel(gameState.Level);
-			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
+			var spawner = CreateEntity ();
+			spawner.Register (new Execute ());
 
-			var tunnels = map.GetTunnels ();
-			int maxWeight = Globals.MONSTER_SPAWN_WEIGHT [gameState.Level];
-
-			for (int i = 0; i < Globals.MONSTER_POPULATION [gameState.Level]; i++) {
-				var pos = tunnels [Utils.ThrowDice (tunnels.Count)];
-
-				foreach (var arch in Archetypes.Monsters) {
-					var w = Utils.Rand.Next (maxWeight);
-					var spriteName = string.Format ("monster_{0:D2}", arch ["sprite_index"]);
-					if (arch ["spawn_weight"] >= w) {
-						var me = CreateEntity ();
-						me.Register (new Position (pos.X, pos.Y));
-						me.Register (new Health (arch["health"], () => OnHealthChanged(me)));
-						me.Register (new Attack (arch["attack"]));
-						me.Register (new Poison (arch["poison_damage"], arch["poison_chance"], arch["poison_effect_delay_msec"]));
-						me.Register (new MoveSpeed (arch["move_duration_msec"]));
-						me.Register (new AttackSpeed (arch["attack_duration_msec"]));
-						me.Register (new Attackable ((attacker, _) => OnAttacked(me, attacker)));
-						me.Register (new Execute ());
-						me.Register (new Patrol (arch["patrol_min_steps"], arch["patrol_max_steps"]));
-						me.Register (new IFFSystem (Globals.IFF_MONSTER_ID, 0));
-						me.Register (new LookDirection (Utils.Direction.Down));
-						me.Register (new Perception (arch["perception"]));
-						me.Register (new AllowedMapArea(MapGridTypes.ID.Tunnel));
-						me.Register (new Sprite (sprites.GetSprite (spriteName)));
-						me.Register (new Drawable (new Vector2 (pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
-
-						me.Get<Execute> ().Add (new ActionEntity (me, (_) => {
-							StartPatrol (me);
-						}), "patrol_loop");
-
-						break;
-					}
-				}
-			}
-
-			if (gameState.Level == Globals.MAX_LEVELS - 1) {
-				var bossArch = Archetypes.Bosses [0];
-				var spriteName = string.Format ("boss_{0:D2}", bossArch ["sprite_index"]);
-				var boss = CreateEntity ();
-				var bossRoom = map.GetRooms ().First ();
-				var pos = new Point (bossRoom.Pos.X + Utils.Rand.Next (bossRoom.Width), bossRoom.Pos.Y + Utils.Rand.Next (bossRoom.Height));
-
-				boss.Register (new Position (pos.X, pos.Y));
-				boss.Register (new Health (bossArch["health"], () => OnHealthChanged(boss)));
-				boss.Register (new Attack (bossArch["attack"]));
-				boss.Register (new Poison (bossArch["poison_damage"], bossArch["poison_chance"], bossArch["poison_effect_delay_msec"]));
-				boss.Register (new MoveSpeed (bossArch["move_duration_msec"]));
-				boss.Register (new AttackSpeed (bossArch["attack_duration_msec"]));
-				boss.Register (new Attackable ((attacker, _) => OnAttacked(boss, attacker)));
-				boss.Register (new Execute ());
-				boss.Register (new Patrol (bossArch["patrol_min_steps"], bossArch["patrol_max_steps"]));
-				boss.Register (new IFFSystem (Globals.IFF_MONSTER_ID));
-				boss.Register (new LookDirection (Utils.Direction.Down));
-				boss.Register (new Perception (bossArch["perception"]));
-				boss.Register (new AllowedMapArea(MapGridTypes.ID.Room));
-				boss.Register (new Sprite (sprites.GetSprite (spriteName)));
-				boss.Register (new Drawable (new Vector2 (pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
-
-				boss.Get<Execute> ().Add (new ActionEntity (boss, (_) => {
-					StartPatrol (boss);
-				}), "patrol_loop");
-			}
+			var seq = new Sequence ();
+			seq.Add (new ActionEntity (spawner, SpawnBosses));
+			seq.Add (new Loop (new ActionEntity (spawner, SpawnMonsters), spawnDelay));
+			spawner.Get<Execute> ().Add (seq);
 		}
 
 		void StartPatrol(Entity monster)
@@ -188,12 +131,11 @@ namespace mogate
 			} else {
 				var foe = foes.FirstOrDefault (e => e.Get<Position> ().MapPos == newPos);
 				if (foe != null) {
-					var stepBackPos = monster.Get<Position> ().MapPos;
 					var seq = new Sequence ();
-					seq.Add (new MoveSpriteTo (monster, new Vector2(newPos.X * Globals.CELL_WIDTH, newPos.Y * Globals.CELL_HEIGHT), monster.Get<AttackSpeed>().Speed));
+					seq.Add (new Delay (Utils.ThrowDice(monster.Get<AttackSpeed>().Speed)));
 					seq.Add (new AttackEntity (monster, foe));
 					seq.Add (new TryPoisonEntity (monster, foe));
-					seq.Add (new MoveSpriteTo (monster, new Vector2(stepBackPos.X * Globals.CELL_WIDTH, stepBackPos.Y * Globals.CELL_HEIGHT), monster.Get<AttackSpeed>().Speed));
+					seq.Add (new Delay (monster.Get<AttackSpeed>().Speed));
 					seq.Add (new ActionEntity (monster, (_) => {
 						StartPatrol (monster);
 					}));
@@ -225,6 +167,97 @@ namespace mogate
 		{
 			if (monster.Get<Health> ().HP == 0)
 				RemoveEntityByTag (monster.Tag);
+		}
+
+		void SpawnMonsters(Entity spawner)
+		{
+			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
+			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
+			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
+
+			var map = world.GetLevel(gameState.Level);
+
+			int maxWeight = Globals.MONSTER_SPAWN_WEIGHT [gameState.Level];
+			int monsters = GetAllEntities ().Where (e => e.Has<State<MonsterType>> () && e.Get<State<MonsterType>> ().EState == MonsterType.Monster).Count();
+
+			if (monsters < Globals.MONSTER_POPULATION [gameState.Level]) {
+				var tunnels = map.GetTunnels ();
+				var pos = tunnels [Utils.ThrowDice (tunnels.Count)];
+
+				foreach (var arch in Archetypes.Monsters) {
+					var w = Utils.ThrowDice (maxWeight);
+					var spriteName = string.Format ("monster_{0:D2}", arch ["sprite_index"]);
+					if (arch ["spawn_weight"] >= w) {
+						var me = CreateEntity ();
+						me.Register (new State<MonsterType> (MonsterType.Monster));
+						me.Register (new Position (pos.X, pos.Y));
+						me.Register (new Health (arch["health"], () => OnHealthChanged(me)));
+						me.Register (new Attack (arch["attack"]));
+						me.Register (new Poison (arch["poison_damage"], arch["poison_chance"], arch["poison_effect_delay_msec"]));
+						me.Register (new MoveSpeed (arch["move_duration_msec"]));
+						me.Register (new AttackSpeed (arch["attack_duration_msec"]));
+						me.Register (new Attackable ((attacker, _) => OnAttacked(me, attacker)));
+						me.Register (new Execute ());
+						me.Register (new Patrol (arch["patrol_min_steps"], arch["patrol_max_steps"]));
+						me.Register (new IFFSystem (Globals.IFF_MONSTER_ID, 0));
+						me.Register (new LookDirection (Utils.Direction.Down));
+						me.Register (new Perception (arch["perception"]));
+						me.Register (new AllowedMapArea(MapGridTypes.ID.Tunnel));
+						me.Register (new Sprite (sprites.GetSprite (spriteName)));
+						me.Register (new Drawable (new Vector2 (pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
+
+						me.Get<Execute> ().Add (new ActionEntity (me, (_) => {
+							StartPatrol (me);
+						}), "patrol_loop");
+
+						break;
+					}
+				}
+			}
+		}
+
+		void SpawnBosses(Entity spawner)
+		{
+			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
+			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
+			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
+
+			var map = world.GetLevel(gameState.Level);
+			int maxWeight = Globals.MONSTER_SPAWN_WEIGHT [gameState.Level];
+
+			foreach (var room in map.GetRooms()) {
+				foreach (var arch in Archetypes.Bosses) {
+					var w = Utils.ThrowDice (maxWeight);
+					var spriteName = string.Format ("boss_{0:D2}", arch ["sprite_index"]);
+					var pos = new Point (room.Pos.X + Utils.Rand.Next (room.Width), room.Pos.Y + Utils.Rand.Next (room.Height));
+
+					if (arch ["spawn_weight"] >= w) {
+						var boss = CreateEntity ();
+						boss.Register (new State<MonsterType> (MonsterType.Boss));
+						boss.Register (new Position (pos.X, pos.Y));
+						boss.Register (new Health (arch["health"], () => OnHealthChanged(boss)));
+						boss.Register (new Attack (arch["attack"]));
+						boss.Register (new Poison (arch["poison_damage"], arch["poison_chance"], arch["poison_effect_delay_msec"]));
+						boss.Register (new MoveSpeed (arch["move_duration_msec"]));
+						boss.Register (new AttackSpeed (arch["attack_duration_msec"]));
+						boss.Register (new Attackable ((attacker, _) => OnAttacked(boss, attacker)));
+						boss.Register (new Execute ());
+						boss.Register (new Patrol (arch["patrol_min_steps"], arch["patrol_max_steps"]));
+						boss.Register (new IFFSystem (Globals.IFF_MONSTER_ID));
+						boss.Register (new LookDirection (Utils.Direction.Down));
+						boss.Register (new Perception (arch["perception"]));
+						boss.Register (new AllowedMapArea(MapGridTypes.ID.Room));
+						boss.Register (new Sprite (sprites.GetSprite (spriteName)));
+						boss.Register (new Drawable (new Vector2 (pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
+
+						boss.Get<Execute> ().Add (new ActionEntity (boss, (_) => {
+							StartPatrol (boss);
+						}), "patrol_loop");
+
+						break;
+					}
+				}
+			}
 		}
 	}
 }

@@ -72,5 +72,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Actions\Gameplay\TryPoisonEntity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\Gameplay\DoPoisonEntity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Archetypes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\Delay.cs" />
   </ItemGroup>
 </Project>

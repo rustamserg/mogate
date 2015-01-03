@@ -150,7 +150,7 @@ namespace mogate
 				effects.SpawnEffect (actionPos, "weapon_01", 200);
 
 				var actionTargets = items.GetAllEntities ().ToList();
-				actionTargets.AddRange (monsters.GetAllEntities ());
+				actionTargets.AddRange (monsters.GetAllEntities ().Where (e => e.Has<Position> ()));
 				var target = actionTargets.FirstOrDefault (m => m.Get<Position> ().MapPos == actionPos);
 				if (target != default(Entity)) {
 					if (target.Has<IFFSystem> ()) {

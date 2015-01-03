@@ -38,7 +38,7 @@ namespace mogate
 
 		public static readonly Dictionary<string, int>[] Bosses = {
 			new Dictionary<string, int> {
-				{"spawn_weight", 1},
+				{"spawn_weight", 20},
 				{"sprite_index", 1},
 				{"health", 100},
 				{"attack", 10},

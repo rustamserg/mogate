@@ -6,9 +6,9 @@ namespace mogate
 	{
 		public Type Behavior { get { return typeof(MoveSpeed); } }
 
-		public float Speed { get; set; }
+		public int Speed { get; set; }
 
-		public MoveSpeed (float speed)
+		public MoveSpeed (int speed)
 		{
 			Speed = speed;
 		}

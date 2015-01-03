@@ -30,6 +30,7 @@ namespace mogate
 		public static readonly int[] DROP_HEALTH_PROB = {60, 60, 30, 30, 30};
 
 		public static readonly int[] MONSTER_POPULATION = {10, 20, 30, 30, 30};
+		public static readonly int[] MONSTER_SPAWN_DELAY_MSEC = {400, 300, 200, 100, 50};
 		public static readonly int[] MONSTER_SPAWN_WEIGHT = {10, 20, 20, 20, 20};
 
 		public static readonly int[] ROOM_MIN_SIZE = {3, 3, 5, 5, 9};
