@@ -73,9 +73,6 @@ namespace mogate
 				{"loot_type", (int)LootTypes.Money},
 				{"money", 100},
 			},
-		};
-
-		public static readonly Dictionary<string, int>[] ChestLoot = {
 			new Dictionary<string, int> {
 				{"spawn_weight", 10},
 				{"loot_type", (int)LootTypes.Health},
@@ -85,6 +82,9 @@ namespace mogate
 				{"spawn_weight", 10},
 				{"loot_type", (int)LootTypes.Antitod},
 			},
+		};
+
+		public static readonly Dictionary<string, int>[] ChestLoot = {
 			new Dictionary<string, int> {
 				{"spawn_weight", 10},
 				{"loot_type", (int)LootTypes.Armor},
