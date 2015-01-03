@@ -9,7 +9,7 @@ using System.Linq;
 namespace mogate
 {
 	public enum ConsumableTypes { Money };
-	public enum LootTypes { Money, Health, Antitod };
+	public enum LootTypes { Money, Health, Antitod, Armor };
 
 	public class ItemsLayer : Layer
 	{
@@ -61,16 +61,50 @@ namespace mogate
 					if (lootType == LootTypes.Money) {
 						ent.Register (new Sprite (sprites.GetSprite ("money_01")));
 						ent.Register (new Triggerable (1, (from) => OnMoneyTriggered (ent, from)));
-						ent.Register (new Loot (Utils.ThrowDice(arch ["money"])));
+						ent.Register (new Loot (Utils.ThrowDice (arch ["money"])));
 					} else if (lootType == LootTypes.Health) {
 						ent.Register (new Sprite (sprites.GetSprite ("health_potion_01")));
 						ent.Register (new Triggerable (1, (from) => OnHealthTriggered (ent, from)));
-						ent.Register (new Loot (Utils.ThrowDice(arch ["health"])));
+						ent.Register (new Loot (Utils.ThrowDice (arch ["health"])));
+					} else if (lootType == LootTypes.Armor) {
+						var armorSprite = string.Format ("armor_{0:D2}", Archetypes.Armors [arch ["armor_index"]] ["sprite_index"]);
+						ent.Register (new Sprite (sprites.GetSprite (armorSprite)));
+						ent.Register (new Triggerable (1, (from) => OnArmorTriggered (ent, from)));
+						ent.Register (new Loot (arch ["armor_index"]));
+						ent.Register (new Price (arch ["price"]));
 					} else {
 						ent.Register (new Sprite (sprites.GetSprite ("antitod_potion_01")));
 						ent.Register (new Triggerable (1, (from) => OnAntitodTriggered (ent, from)));
 					}
 					break;
+				}
+			}
+		}
+
+		void OnArmorTriggered(Entity item, Entity attacker)
+		{
+			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
+			var hud = (HUDLayer)Scene.GetLayer ("hud");
+
+			if (attacker.Has<Consumable<ConsumableTypes>> ()) {
+				int cost = item.Get<Price> ().Cost;
+				int armorId = item.Get<Loot> ().Drop;
+
+				if (attacker.Get<Consumable<ConsumableTypes>> ().TryConsume (ConsumableTypes.Money, cost)) {
+					if (attacker.Has<Armor> ()) {
+						if (attacker.Get<Armor> ().ArchetypeID < armorId) {
+							attacker.Get<Armor> ().ArchetypeID = armorId;
+							attacker.Get<Armor> ().Defence = Archetypes.Armors [armorId] ["defence"];
+							gameState.PlayerArmorID = armorId;
+						} else {
+							hud.FeedbackMessage ("Broken");
+						}
+					} else {
+						attacker.Register(new Armor(Archetypes.Armors[armorId]["defence"], armorId));
+					}
+				} else {
+					string feedbackMsg = string.Format ("Cost: {0}", cost);
+					hud.FeedbackMessage (feedbackMsg);
 				}
 			}
 		}

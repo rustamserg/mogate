@@ -69,16 +69,18 @@ namespace mogate
 				spriteBatch.Draw (m_life.Texture, drawPos, m_life.GetFrameRect (0), Color.White);
 			}
 
-			var armorDrawPos = new Vector2 (Globals.WORLD_WIDTH * Globals.CELL_WIDTH, 10 * Globals.CELL_HEIGHT);
-			int armorId = player.Get<Armor> ().ArchetypeID;
-			string spriteName = string.Format ("armor_{0:D2}", Archetypes.Armors [armorId] ["sprite_index"]);
-			var armorSprite = sprites.GetSprite (spriteName);
-			spriteBatch.Draw(armorSprite.Texture, armorDrawPos, armorSprite.GetFrameRect (0), Color.White);
+			if (player.Has<Armor> ()) {
+				var armorDrawPos = new Vector2 (Globals.WORLD_WIDTH * Globals.CELL_WIDTH, 10 * Globals.CELL_HEIGHT);
+				int armorId = player.Get<Armor> ().ArchetypeID;
+				var armorSpriteName = string.Format ("armor_{0:D2}", Archetypes.Armors [armorId] ["sprite_index"]);
+				var armorSprite = sprites.GetSprite (armorSpriteName);
+				spriteBatch.Draw (armorSprite.Texture, armorDrawPos, armorSprite.GetFrameRect (0), Color.White);
+			}
 
 			var weaponDrawPos = new Vector2 (Globals.WORLD_WIDTH * Globals.CELL_WIDTH, 11 * Globals.CELL_HEIGHT);
 			int weaponId = player.Get<Attack> ().ArchetypeID;
-			spriteName = string.Format ("weapon_{0:D2}", Archetypes.Weapons [weaponId] ["sprite_index"]);
-			var weaponSprite = sprites.GetSprite (spriteName);
+			string weaponSpriteName = string.Format ("weapon_{0:D2}", Archetypes.Weapons [weaponId] ["sprite_index"]);
+			var weaponSprite = sprites.GetSprite (weaponSpriteName);
 			spriteBatch.Draw(weaponSprite.Texture, weaponDrawPos, weaponSprite.GetFrameRect (0), Color.White);
 		}
 	}

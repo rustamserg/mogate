@@ -75,5 +75,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Actions\Delay.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Armor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Loot.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Price.cs" />
   </ItemGroup>
 </Project>

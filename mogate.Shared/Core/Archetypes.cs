@@ -85,6 +85,12 @@ namespace mogate
 				{"spawn_weight", 10},
 				{"loot_type", (int)LootTypes.Antitod},
 			},
+			new Dictionary<string, int> {
+				{"spawn_weight", 10},
+				{"loot_type", (int)LootTypes.Armor},
+				{"armor_index", 0},
+				{"price", 200},
+			},
 		};
 	}
 }
