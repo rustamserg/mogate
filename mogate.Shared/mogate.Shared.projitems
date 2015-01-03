@@ -73,5 +73,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Actions\Gameplay\DoPoisonEntity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Archetypes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\Delay.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Armor.cs" />
   </ItemGroup>
 </Project>

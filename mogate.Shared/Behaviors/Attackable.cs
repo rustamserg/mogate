@@ -18,7 +18,8 @@ namespace mogate
 			if (attacker.Has<Attack> ()) {
 				if (defender.Has<Health> ()) {
 					int basedmg = attacker.Get<Attack> ().Damage;
-					int damage = basedmg + Utils.ThrowDice (basedmg);
+					int defence = defender.Has<Armor> () ? defender.Get<Armor> ().Defence : 0;
+					int damage = Math.Max(0, basedmg + Utils.ThrowDice (basedmg) - defence);
 
 					if (m_onAttack != null)
 						m_onAttack (attacker, damage);
