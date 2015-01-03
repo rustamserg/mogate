@@ -169,8 +169,7 @@ namespace mogate
 				RemoveEntityByTag (monster.Tag);
 			
 				var items = (ItemsLayer)Scene.GetLayer ("items");
-				int money = monster.Get<Consumable<ConsumableTypes>> ().Amount (ConsumableTypes.Money);
-				items.DropMoney (monster.Get<Position> ().MapPos, money);
+				items.DropLoot (monster.Get<Position> ().MapPos, Archetypes.MonsterLoot);
 			}
 		}
 
@@ -188,6 +187,8 @@ namespace mogate
 			if (monsters < Globals.MONSTER_POPULATION [gameState.Level]) {
 				var tunnels = map.GetTunnels ();
 				var pos = tunnels [Utils.ThrowDice (tunnels.Count)];
+
+				Archetypes.Monsters.Shuffle();
 
 				foreach (var arch in Archetypes.Monsters) {
 					var w = Utils.ThrowDice (maxWeight);
@@ -210,10 +211,6 @@ namespace mogate
 						me.Register (new AllowedMapArea(MapGridTypes.ID.Tunnel));
 						me.Register (new Sprite (sprites.GetSprite (spriteName)));
 						me.Register (new Drawable (new Vector2 (pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
-						me.Register (new Consumable<ConsumableTypes> ());
-
-						int droppedMoney = Utils.ThrowDice (arch ["money_drop"]);
-						me.Get<Consumable<ConsumableTypes>> ().Refill (ConsumableTypes.Money, droppedMoney);
 		
 						me.Get<Execute> ().Add (new ActionEntity (me, (_) => {
 							StartPatrol (me);
@@ -233,6 +230,8 @@ namespace mogate
 
 			var map = world.GetLevel(gameState.Level);
 			int maxWeight = Globals.MONSTER_SPAWN_WEIGHT [gameState.Level];
+		
+			Archetypes.Bosses.Shuffle ();
 
 			foreach (var room in map.GetRooms()) {
 				foreach (var arch in Archetypes.Bosses) {
@@ -258,10 +257,6 @@ namespace mogate
 						boss.Register (new AllowedMapArea(MapGridTypes.ID.Room));
 						boss.Register (new Sprite (sprites.GetSprite (spriteName)));
 						boss.Register (new Drawable (new Vector2 (pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
-						boss.Register (new Consumable<ConsumableTypes> ());
-
-						int droppedMoney = Utils.ThrowDice (arch ["money_drop"]);
-						boss.Get<Consumable<ConsumableTypes>> ().Refill (ConsumableTypes.Money, droppedMoney);
 
 						boss.Get<Execute> ().Add (new ActionEntity (boss, (_) => {
 							StartPatrol (boss);

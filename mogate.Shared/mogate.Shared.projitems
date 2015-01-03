@@ -74,5 +74,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\Archetypes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\Delay.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Armor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Loot.cs" />
   </ItemGroup>
 </Project>

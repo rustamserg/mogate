@@ -19,7 +19,6 @@ namespace mogate
 				{ "poison_damage", 0 },
 				{ "poison_chance", 0 },
 				{ "poison_effect_delay_msec", 0 },
-				{ "money_drop", 100 },
 			},
 			new Dictionary<string, int> {
 				{ "spawn_weight", 20 },
@@ -34,7 +33,6 @@ namespace mogate
 				{ "poison_damage", 10 },
 				{ "poison_chance", 50 },
 				{ "poison_effect_delay_msec", 1000 },
-				{ "money_drop", 200 },
 			},
 		};
 
@@ -52,13 +50,11 @@ namespace mogate
 				{ "poison_damage", 10 },
 				{ "poison_chance", 50 },
 				{ "poison_effect_delay_msec", 1000 },
-				{ "money_drop", 300 },
 			},
 		};
 
 		public static readonly Dictionary<string, int>[] Armors = {
 			new Dictionary<string, int> {
-				{ "spawn_weight", 10 },
 				{ "sprite_index", 1 },
 				{ "defence", 10 },
 			},
@@ -66,9 +62,28 @@ namespace mogate
 
 		public static readonly Dictionary<string, int>[] Weapons = {
 			new Dictionary<string, int> {
-				{ "spawn_weight", 10 },
 				{ "sprite_index", 1 },
 				{ "attack", 10 },
+			},
+		};
+
+		public static readonly Dictionary<string, int>[] MonsterLoot = {
+			new Dictionary<string, int> {
+				{"spawn_weight", 10},
+				{"loot_type", (int)LootTypes.Money},
+				{"money", 100},
+			},
+		};
+
+		public static readonly Dictionary<string, int>[] ChestLoot = {
+			new Dictionary<string, int> {
+				{"spawn_weight", 10},
+				{"loot_type", (int)LootTypes.Health},
+				{"health", 100},
+			},
+			new Dictionary<string, int> {
+				{"spawn_weight", 10},
+				{"loot_type", (int)LootTypes.Antitod},
 			},
 		};
 	}

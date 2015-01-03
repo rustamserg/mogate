@@ -73,7 +73,6 @@ namespace mogate
 		{
 			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
-			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
 
 			if (KeyboardUtils.IsKeyPressed(Keys.Q))
 				m_isLevelCompleted = true;
@@ -120,7 +119,7 @@ namespace mogate
 			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 
-			var effects = (EffectsLayer)Scene.GetLayer ("effects");
+			//var effects = (EffectsLayer)Scene.GetLayer ("effects");
 
 			var mapGrid = world.GetLevel(gameState.Level);
 			var actionPos = mapGrid.ScreenToWorld (clickPos.X, clickPos.Y);
@@ -219,11 +218,7 @@ namespace mogate
 
 		private void StartIdle()
 		{
-			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
 			var player = GetEntityByTag("player");
-			//var loop = new Loop (new AnimSprite (player, sprites.GetSprite("hero_idle"), 600));
-
-			//player.Get<Execute> ().AddNew (loop, "movement");
 			player.Get<State<PlayerState>>().EState = PlayerState.Idle;
 		}
 	}

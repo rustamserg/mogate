@@ -26,7 +26,7 @@ namespace mogate
 		public static readonly int PLAYER_HEALTH_MAX = 6;
 		public static readonly int PLAYER_MOVE_SPEED = 300;
 
-		public static readonly int[] DROP_HEALTH_PROB = {60, 60, 30, 30, 30};
+		public static readonly int[] DROP_LOOT_WEIGHT = {10, 10, 10, 10, 10};
 
 		public static readonly int[] MONSTER_POPULATION = {10, 20, 30, 30, 30};
 		public static readonly int[] MONSTER_SPAWN_DELAY_MSEC = {400, 300, 200, 100, 50};

@@ -9,6 +9,7 @@ using System.Linq;
 namespace mogate
 {
 	public enum ConsumableTypes { Money };
+	public enum LootTypes { Money, Health, Antitod };
 
 	public class ItemsLayer : Layer
 	{
@@ -31,68 +32,83 @@ namespace mogate
 				ent.Register (new Sprite (sprites.GetSprite ("skeleton_01")));
 				ent.Register (new Drawable (new Vector2(pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
 				ent.Register (new Position (pos.X, pos.Y));
-				ent.Register (new Health (1, () => OnBarrelDestroyed(ent)));
-				ent.Register (new Attackable ((attacker, _) => OnBarrelAttacked(ent, attacker)));
+				ent.Register (new Health (1, () => OnChestDestroyed(ent)));
+				ent.Register (new Attackable ((attacker, _) => OnChestAttacked(ent, attacker)));
 				ent.Register (new IFFSystem (Globals.IFF_MONSTER_ID));
 				ent.Register (new PointLight (4));
 			}
 		}
 
-		public void DropMoney(Point pos, int amount)
+		public void DropLoot(Point pos, Dictionary<string, int>[] loots)
 		{
+			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
 
-			var ent = CreateEntity ();
-			ent.Register (new Drawable (new Vector2 (pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
-			ent.Register (new Position (pos.X, pos.Y));
-			ent.Register (new PointLight (5));
-			ent.Register (new Sprite (sprites.GetSprite ("money_01")));
-			ent.Register (new Triggerable (1, (from) => OnMoneyTriggered (ent, from)));
-			ent.Register (new Consumable<ConsumableTypes> ());
-			ent.Get<Consumable<ConsumableTypes>> ().Refill (ConsumableTypes.Money, amount);
+			loots.Shuffle ();
+			int maxWeight = Globals.DROP_LOOT_WEIGHT [gameState.Level];
+
+			foreach (var arch in loots) {
+				var w = Utils.ThrowDice (maxWeight);
+				var lootType = (LootTypes)arch ["loot_type"];
+
+				if (arch ["spawn_weight"] >= w) {
+					var ent = CreateEntity ();
+					ent.Register (new Drawable (new Vector2 (pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
+					ent.Register (new Position (pos.X, pos.Y));
+					ent.Register (new PointLight (5));
+					ent.Register (new State<LootTypes> (lootType));
+
+					if (lootType == LootTypes.Money) {
+						ent.Register (new Sprite (sprites.GetSprite ("money_01")));
+						ent.Register (new Triggerable (1, (from) => OnMoneyTriggered (ent, from)));
+						ent.Register (new Loot (Utils.ThrowDice(arch ["money"])));
+					} else if (lootType == LootTypes.Health) {
+						ent.Register (new Sprite (sprites.GetSprite ("health_potion_01")));
+						ent.Register (new Triggerable (1, (from) => OnHealthTriggered (ent, from)));
+						ent.Register (new Loot (Utils.ThrowDice(arch ["health"])));
+					} else {
+						ent.Register (new Sprite (sprites.GetSprite ("antitod_potion_01")));
+						ent.Register (new Triggerable (1, (from) => OnAntitodTriggered (ent, from)));
+					}
+					break;
+				}
+			}
 		}
 
 		void OnMoneyTriggered(Entity item, Entity attacker)
 		{
 			if (attacker.Has<Consumable<ConsumableTypes>> ()) {
-				int droppedMoney = item.Get<Consumable<ConsumableTypes>> ().Amount (ConsumableTypes.Money);
+				int droppedMoney = item.Get<Loot>().Drop;
 				attacker.Get<Consumable<ConsumableTypes>> ().Refill (ConsumableTypes.Money, droppedMoney);
 
 				RemoveEntityByTag (item.Tag);
 			}
 		}
 
-		void OnBarrelAttacked (Entity item, Entity attacker)
+		void OnChestAttacked (Entity item, Entity attacker)
 		{
 			var effects = (EffectsLayer)Scene.GetLayer ("effects");
 			effects.AttachEffect (item, "damage_01", 400);
 		}
 
-		void OnBarrelDestroyed(Entity barrel)
+		void OnChestDestroyed(Entity chest)
 		{
 			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 
-			RemoveEntityByTag (barrel.Tag);
-
-			var mp = barrel.Get<Position> ().MapPos;
-			var ent = CreateEntity ();
-
-			ent.Register (new Drawable (new Vector2 (mp.X * Globals.CELL_WIDTH, mp.Y * Globals.CELL_HEIGHT)));
-			ent.Register (new Position (mp.X, mp.Y));
-			ent.Register (new PointLight (5));
+			RemoveEntityByTag (chest.Tag);
+			var mp = chest.Get<Position> ().MapPos;
 
 			if (gameState.Level == Globals.MAX_LEVELS - 1) {
+				var ent = CreateEntity ();
+
+				ent.Register (new Drawable (new Vector2 (mp.X * Globals.CELL_WIDTH, mp.Y * Globals.CELL_HEIGHT)));
+				ent.Register (new Position (mp.X, mp.Y));
+				ent.Register (new PointLight (5));
 				ent.Register (new Sprite (sprites.GetSprite ("artefact_01")));
 				ent.Register (new Triggerable (1, (from) => OnArtefactTriggered(ent, from)));
 			} else {
-				if (Utils.DropChance(Globals.DROP_HEALTH_PROB[gameState.Level])) {
-					ent.Register (new Sprite (sprites.GetSprite ("health_potion_01")));
-					ent.Register (new Triggerable (1, (from) => OnHealthTriggered (ent, from)));
-				} else {
-					ent.Register (new Sprite (sprites.GetSprite ("antitod_potion_01")));
-					ent.Register (new Triggerable (1, (from) => OnAntitodTriggered (ent, from)));
-				}
+				DropLoot (mp, Archetypes.ChestLoot);
 			}
 		}
 			
@@ -100,7 +116,7 @@ namespace mogate
 		{
 			if (from.Has<Health> ()) {
 				if (from.Get<Health> ().HP < from.Get<Health> ().MaxHP) {
-					from.Get<Health> ().HP = from.Get<Health> ().HP + Globals.HEALTH_PACK;
+					from.Get<Health> ().HP = from.Get<Health> ().HP + item.Get<Loot>().Drop;
 					RemoveEntityByTag (item.Tag);
 				}
 			}
