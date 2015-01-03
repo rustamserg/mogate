@@ -61,12 +61,25 @@ namespace mogate
 
 		protected override void OnPostDraw (SpriteBatch spriteBatch, GameTime gameTime)
 		{
+			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
 			var player = Scene.GetLayer("player").GetEntityByTag("player");
 
 			for (int i = 0; i < Math.Ceiling((float)player.Get<Health> ().HP/Globals.HEALTH_PACK); i++) {
 				var drawPos = new Vector2 (Globals.WORLD_WIDTH * Globals.CELL_WIDTH, i  * Globals.CELL_HEIGHT);
 				spriteBatch.Draw (m_life.Texture, drawPos, m_life.GetFrameRect (0), Color.White);
 			}
+
+			var armorDrawPos = new Vector2 (Globals.WORLD_WIDTH * Globals.CELL_WIDTH, 10 * Globals.CELL_HEIGHT);
+			int armorId = player.Get<Armor> ().ArchetypeID;
+			string spriteName = string.Format ("armor_{0:D2}", Archetypes.Armors [armorId] ["sprite_index"]);
+			var armorSprite = sprites.GetSprite (spriteName);
+			spriteBatch.Draw(armorSprite.Texture, armorDrawPos, armorSprite.GetFrameRect (0), Color.White);
+
+			var weaponDrawPos = new Vector2 (Globals.WORLD_WIDTH * Globals.CELL_WIDTH, 11 * Globals.CELL_HEIGHT);
+			int weaponId = player.Get<Attack> ().ArchetypeID;
+			spriteName = string.Format ("weapon_{0:D2}", Archetypes.Weapons [weaponId] ["sprite_index"]);
+			var weaponSprite = sprites.GetSprite (spriteName);
+			spriteBatch.Draw(weaponSprite.Texture, weaponDrawPos, weaponSprite.GetFrameRect (0), Color.White);
 		}
 	}
 }
