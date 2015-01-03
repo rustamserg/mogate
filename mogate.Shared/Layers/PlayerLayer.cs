@@ -46,6 +46,7 @@ namespace mogate
 			player.Register (new Sprite (sprites.GetSprite ("player_01")));
 			player.Register (new Drawable (new Vector2(mapGrid.StairDown.X * Globals.CELL_WIDTH, mapGrid.StairDown.Y * Globals.CELL_HEIGHT)));
 			player.Register (new Clickable (new Rectangle (0, 0, Globals.CELL_WIDTH * Globals.WORLD_WIDTH, Globals.CELL_HEIGHT * Globals.WORLD_HEIGHT)));
+			player.Register (new Consumable<ConsumableTypes> ());
 
 			player.Get<Clickable> ().OnLeftButtonPressed += OnMoveToPosition;
 			player.Get<Clickable> ().OnMoved += OnMoveToPosition;
@@ -137,14 +138,18 @@ namespace mogate
 			var mapGrid = world.GetLevel(gameState.Level);
 
 			var actionPos = mapGrid.ScreenToWorld (clickPos.X, clickPos.Y);
-			if (mapGrid.GetID (actionPos.X, actionPos.Y) == MapGridTypes.ID.Blocked)
+			var player = GetEntityByTag("player");
+			var mapPos = player.Get<Position>().MapPos;
+
+			var actionPosID = mapGrid.GetID (actionPos.X, actionPos.Y);
+			var playerPosID = mapGrid.GetID (mapPos.X, mapPos.Y);
+
+			if (actionPosID == MapGridTypes.ID.Blocked || actionPosID != playerPosID)
 				return;
-				
+
 			var effects = (EffectsLayer)Scene.GetLayer ("effects");
 			var items = (ItemsLayer)Scene.GetLayer ("items");
 			var monsters = (MonstersLayer)Scene.GetLayer ("monsters");
-			var player = GetEntityByTag("player");
-			var mapPos = player.Get<Position>().MapPos;
 
 			if (Utils.Dist(mapPos, actionPos) < 2) {
 				effects.SpawnEffect (actionPos, "weapon_01", 200);

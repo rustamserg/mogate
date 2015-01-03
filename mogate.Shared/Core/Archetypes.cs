@@ -19,6 +19,7 @@ namespace mogate
 				{"poison_damage", 0},
 				{"poison_chance", 0},
 				{"poison_effect_delay_msec", 0},
+				{"money_drop", 100},
 			},
 			new Dictionary<string, int> {
 				{"spawn_weight", 20},
@@ -33,6 +34,7 @@ namespace mogate
 				{"poison_damage", 10},
 				{"poison_chance", 50},
 				{"poison_effect_delay_msec", 1000},
+				{"money_drop", 200},
 			},
 		};
 
@@ -50,6 +52,7 @@ namespace mogate
 				{"poison_damage", 10},
 				{"poison_chance", 50},
 				{"poison_effect_delay_msec", 1000},
+				{"money_drop", 300},
 			},
 		};
 	}

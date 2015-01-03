@@ -32,7 +32,7 @@ namespace mogate
 			var feedbackEnt = CreateEntity ("hud_feedback");
 			feedbackEnt.Register (new Execute ());
 			feedbackEnt.Register (new Text (sprites.GetFont ("SpriteFont1")));
-			feedbackEnt.Register (new Drawable (new Vector2 (20 * Globals.CELL_WIDTH,
+			feedbackEnt.Register (new Drawable (new Vector2 (25 * Globals.CELL_WIDTH,
 				Globals.CELL_HEIGHT * Globals.WORLD_HEIGHT), Color.Red));
 		}
 
@@ -54,8 +54,8 @@ namespace mogate
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 			var player = Scene.GetLayer("player").GetEntityByTag("player");
 
-			infoEnt.Get<Text>().Message = string.Format ("Player: {0} Stage: {1} HP: {2} Time: {3:D2}:{4:D2}:{5:D2}",
-				gameState.PlayerName, gameState.Level + 1, player.Get<Health>().HP,
+			infoEnt.Get<Text>().Message = string.Format ("Player: {0} Stage: {1} HP: {2} Money: {3} Time: {4:D2}:{5:D2}:{6:D2}",
+				gameState.PlayerName, gameState.Level + 1, player.Get<Health>().HP, player.Get<Consumable<ConsumableTypes>>().Amount(ConsumableTypes.Money),
 				gameState.Playtime.Hours, gameState.Playtime.Minutes, gameState.Playtime.Seconds);
 		}
 

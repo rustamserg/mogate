@@ -8,6 +8,8 @@ using System.Linq;
 
 namespace mogate
 {
+	public enum ConsumableTypes { Money };
+
 	public class ItemsLayer : Layer
 	{
 		public ItemsLayer(Game game, string name, Scene scene, int z) : base(game, name, scene, z)
@@ -33,6 +35,30 @@ namespace mogate
 				ent.Register (new Attackable ((attacker, _) => OnBarrelAttacked(ent, attacker)));
 				ent.Register (new IFFSystem (Globals.IFF_MONSTER_ID));
 				ent.Register (new PointLight (4));
+			}
+		}
+
+		public void DropMoney(Point pos, int amount)
+		{
+			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
+
+			var ent = CreateEntity ();
+			ent.Register (new Drawable (new Vector2 (pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
+			ent.Register (new Position (pos.X, pos.Y));
+			ent.Register (new PointLight (5));
+			ent.Register (new Sprite (sprites.GetSprite ("money_01")));
+			ent.Register (new Triggerable (1, (from) => OnMoneyTriggered (ent, from)));
+			ent.Register (new Consumable<ConsumableTypes> ());
+			ent.Get<Consumable<ConsumableTypes>> ().Refill (ConsumableTypes.Money, amount);
+		}
+
+		void OnMoneyTriggered(Entity item, Entity attacker)
+		{
+			if (attacker.Has<Consumable<ConsumableTypes>> ()) {
+				int droppedMoney = item.Get<Consumable<ConsumableTypes>> ().Amount (ConsumableTypes.Money);
+				attacker.Get<Consumable<ConsumableTypes>> ().Refill (ConsumableTypes.Money, droppedMoney);
+
+				RemoveEntityByTag (item.Tag);
 			}
 		}
 
