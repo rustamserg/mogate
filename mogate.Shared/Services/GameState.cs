@@ -14,6 +14,7 @@ namespace mogate
 	public class HallOfFameEntry
 	{
 		public string PlayerName;
+		public int PlayerSpriteID;
 		public long TotalPlaytime;
 	}
 
@@ -25,6 +26,7 @@ namespace mogate
 		TimeSpan Playtime { get; }
 
 		string PlayerName { get; }
+		int PlayerSpriteID { get; }
 		int PlayerHealth { get; set; }
 		int MaxPlayerHealth { get; }
 
@@ -47,6 +49,7 @@ namespace mogate
 		public int Level;
 		public long PlaytimeTicks;
 		public int PlayerHealth;
+		public int PlayerSpriteID;
 		public int PlayerWeaponID;
 		public int PlayerArmorID;
 		public string PlayerName;
@@ -62,6 +65,7 @@ namespace mogate
 
 		public bool IsGameEnd { get; private set; }
 
+		public int PlayerSpriteID { get; private set; }
 		public int PlayerHealth { get; set; }
 		public int MaxPlayerHealth { get; private set; }
 
@@ -115,6 +119,7 @@ namespace mogate
 		{
 			HallOfFame.Add (new HallOfFameEntry {
 				PlayerName = this.PlayerName,
+				PlayerSpriteID = this.PlayerSpriteID,
 				TotalPlaytime = this.Playtime.Ticks
 			});
 			HallOfFame = HallOfFame.OrderBy(o => o.TotalPlaytime).ToList();
@@ -137,6 +142,7 @@ namespace mogate
 			MaxPlayerHealth = Globals.PLAYER_HEALTH_MAX * Globals.HEALTH_PACK;
 			PlayerWeaponID = 0;
 			PlayerArmorID = 0;
+			PlayerSpriteID = Utils.ThrowDice (Globals.PLAYER_SPRITES_MAX) + 1;
 			PlayerName = NameGenerator.Generate ();
 		}
 
@@ -184,6 +190,7 @@ namespace mogate
 					PlayerName = this.PlayerName,
 					PlaytimeTicks = this.Playtime.Ticks,
 					PlayerHealth = this.PlayerHealth,
+					PlayerSpriteID = this.PlayerSpriteID,
 					PlayerArmorID= this.PlayerArmorID,
 					PlayerWeaponID = this.PlayerWeaponID,
 					HallOfFame = this.HallOfFame
@@ -223,6 +230,7 @@ namespace mogate
 					PlayerName = save.PlayerName;
 					Playtime = TimeSpan.FromTicks(save.PlaytimeTicks);
 					PlayerHealth = save.PlayerHealth;
+					PlayerSpriteID = save.PlayerSpriteID;
 					PlayerArmorID = save.PlayerArmorID;
 					PlayerWeaponID = save.PlayerWeaponID;
 					HallOfFame = save.HallOfFame;

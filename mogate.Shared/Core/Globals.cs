@@ -25,6 +25,7 @@ namespace mogate
 		public static readonly int PLAYER_HEALTH = 3;
 		public static readonly int PLAYER_HEALTH_MAX = 6;
 		public static readonly int PLAYER_MOVE_SPEED = 300;
+		public static readonly int PLAYER_SPRITES_MAX = 4;
 
 		public static readonly int[] DROP_LOOT_WEIGHT = {10, 10, 10, 10, 10};
 

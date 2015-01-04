@@ -43,7 +43,7 @@ namespace mogate
 			player.Register (new Position (mapGrid.StairDown.X, mapGrid.StairDown.Y));
 			player.Register (new Execute ());
 			player.Register (new Poisonable (OnPoisoned));
-			player.Register (new Sprite (sprites.GetSprite ("player_01")));
+			player.Register (new Sprite (sprites.GetSprite (string.Format("player_{0:D2}", gameState.PlayerSpriteID))));
 			player.Register (new Drawable (new Vector2(mapGrid.StairDown.X * Globals.CELL_WIDTH, mapGrid.StairDown.Y * Globals.CELL_HEIGHT)));
 			player.Register (new Clickable (new Rectangle (0, 0, Globals.CELL_WIDTH * Globals.WORLD_WIDTH, Globals.CELL_HEIGHT * Globals.WORLD_HEIGHT)));
 			player.Register (new Consumable<ConsumableTypes> ());
