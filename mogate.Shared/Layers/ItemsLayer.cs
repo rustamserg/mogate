@@ -9,7 +9,7 @@ using System.Linq;
 namespace mogate
 {
 	public enum ConsumableTypes { Money };
-	public enum LootTypes { Money, Health, Antitod, Armor };
+	public enum LootTypes { Money, Health, Antitod, Armor, Weapon };
 
 	public class ItemsLayer : Layer
 	{
@@ -72,6 +72,12 @@ namespace mogate
 						ent.Register (new Triggerable (1, (from) => OnArmorTriggered (ent, from)));
 						ent.Register (new Loot (arch ["armor_index"]));
 						ent.Register (new Price (arch ["price"]));
+					} else if (lootType == LootTypes.Weapon) {
+						var weaponSprite = string.Format ("weapon_{0:D2}", Archetypes.Weapons [arch ["weapon_index"]] ["sprite_index"]);
+						ent.Register (new Sprite (sprites.GetSprite (weaponSprite)));
+						ent.Register (new Triggerable (1, (from) => OnWeaponTriggered (ent, from)));
+						ent.Register (new Loot (arch ["weapon_index"]));
+						ent.Register (new Price (arch ["price"]));
 					} else {
 						ent.Register (new Sprite (sprites.GetSprite ("antitod_potion_01")));
 						ent.Register (new Triggerable (1, (from) => OnAntitodTriggered (ent, from)));
@@ -101,6 +107,30 @@ namespace mogate
 						}
 					} else {
 						attacker.Register(new Armor(Archetypes.Armors[armorId]["defence"], armorId));
+					}
+				} else {
+					string feedbackMsg = string.Format ("Cost: {0}", cost);
+					hud.FeedbackMessage (feedbackMsg);
+				}
+			}
+		}
+
+		void OnWeaponTriggered(Entity item, Entity attacker)
+		{
+			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
+			var hud = (HUDLayer)Scene.GetLayer ("hud");
+
+			if (attacker.Has<Consumable<ConsumableTypes>> ()) {
+				int cost = item.Get<Price> ().Cost;
+				int weaponId = item.Get<Loot> ().Drop;
+
+				if (attacker.Get<Consumable<ConsumableTypes>> ().TryConsume (ConsumableTypes.Money, cost)) {
+					if (attacker.Get<Attack> ().ArchetypeID < weaponId) {
+						attacker.Get<Attack> ().ArchetypeID = weaponId;
+						attacker.Get<Attack> ().Damage = Archetypes.Armors [weaponId] ["attack"];
+						gameState.PlayerWeaponID = weaponId;
+					} else {
+						hud.FeedbackMessage ("Broken");
 					}
 				} else {
 					string feedbackMsg = string.Format ("Cost: {0}", cost);

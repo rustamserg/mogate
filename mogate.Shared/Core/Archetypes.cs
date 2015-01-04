@@ -79,6 +79,48 @@ namespace mogate
 				{ "poison_chance", 50 },
 				{ "poison_effect_delay_msec", 1000 },
 			},
+			new Dictionary<string, int> {
+				{ "spawn_weight", 20 },
+				{ "sprite_index", 2 },
+				{ "health", 100 },
+				{ "attack", 10 },
+				{ "perception", 3 },
+				{ "patrol_min_steps", 3 },
+				{ "patrol_max_steps", 5 },
+				{ "move_duration_msec", 800 },
+				{ "attack_duration_msec", 700 },
+				{ "poison_damage", 10 },
+				{ "poison_chance", 50 },
+				{ "poison_effect_delay_msec", 1000 },
+			},
+			new Dictionary<string, int> {
+				{ "spawn_weight", 20 },
+				{ "sprite_index", 3 },
+				{ "health", 100 },
+				{ "attack", 10 },
+				{ "perception", 3 },
+				{ "patrol_min_steps", 3 },
+				{ "patrol_max_steps", 5 },
+				{ "move_duration_msec", 800 },
+				{ "attack_duration_msec", 700 },
+				{ "poison_damage", 10 },
+				{ "poison_chance", 50 },
+				{ "poison_effect_delay_msec", 1000 },
+			},
+			new Dictionary<string, int> {
+				{ "spawn_weight", 20 },
+				{ "sprite_index", 4 },
+				{ "health", 100 },
+				{ "attack", 10 },
+				{ "perception", 3 },
+				{ "patrol_min_steps", 3 },
+				{ "patrol_max_steps", 5 },
+				{ "move_duration_msec", 800 },
+				{ "attack_duration_msec", 700 },
+				{ "poison_damage", 10 },
+				{ "poison_chance", 50 },
+				{ "poison_effect_delay_msec", 1000 },
+			},
 		};
 
 		public static readonly Dictionary<string, int>[] Armors = {
@@ -86,11 +128,35 @@ namespace mogate
 				{ "sprite_index", 1 },
 				{ "defence", 10 },
 			},
+			new Dictionary<string, int> {
+				{ "sprite_index", 2 },
+				{ "defence", 10 },
+			},
+			new Dictionary<string, int> {
+				{ "sprite_index", 3 },
+				{ "defence", 10 },
+			},
+			new Dictionary<string, int> {
+				{ "sprite_index", 4 },
+				{ "defence", 10 },
+			},
 		};
 
 		public static readonly Dictionary<string, int>[] Weapons = {
 			new Dictionary<string, int> {
 				{ "sprite_index", 1 },
+				{ "attack", 10 },
+			},
+			new Dictionary<string, int> {
+				{ "sprite_index", 2 },
+				{ "attack", 10 },
+			},
+			new Dictionary<string, int> {
+				{ "sprite_index", 3 },
+				{ "attack", 10 },
+			},
+			new Dictionary<string, int> {
+				{ "sprite_index", 4 },
 				{ "attack", 10 },
 			},
 		};
@@ -117,6 +183,48 @@ namespace mogate
 				{"spawn_weight", 10},
 				{"loot_type", (int)LootTypes.Armor},
 				{"armor_index", 0},
+				{"price", 200},
+			},
+			new Dictionary<string, int> {
+				{"spawn_weight", 10},
+				{"loot_type", (int)LootTypes.Armor},
+				{"armor_index", 1},
+				{"price", 200},
+			},
+			new Dictionary<string, int> {
+				{"spawn_weight", 10},
+				{"loot_type", (int)LootTypes.Armor},
+				{"armor_index", 2},
+				{"price", 200},
+			},
+			new Dictionary<string, int> {
+				{"spawn_weight", 10},
+				{"loot_type", (int)LootTypes.Armor},
+				{"armor_index", 3},
+				{"price", 200},
+			},
+			new Dictionary<string, int> {
+				{"spawn_weight", 10},
+				{"loot_type", (int)LootTypes.Weapon},
+				{"weapon_index", 0},
+				{"price", 200},
+			},
+			new Dictionary<string, int> {
+				{"spawn_weight", 10},
+				{"loot_type", (int)LootTypes.Weapon},
+				{"weapon_index", 1},
+				{"price", 200},
+			},
+			new Dictionary<string, int> {
+				{"spawn_weight", 10},
+				{"loot_type", (int)LootTypes.Weapon},
+				{"weapon_index", 2},
+				{"price", 200},
+			},
+			new Dictionary<string, int> {
+				{"spawn_weight", 10},
+				{"loot_type", (int)LootTypes.Weapon},
+				{"weapon_index", 3},
 				{"price", 200},
 			},
 		};
