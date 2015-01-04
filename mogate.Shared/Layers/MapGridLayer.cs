@@ -17,6 +17,7 @@ namespace mogate
 			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 
+			int tileSetId = 1;
 			var mapGrid = world.GetLevel (gameState.Level);
 
 			for (int x = 0; x < mapGrid.Width; x++) {
@@ -28,7 +29,8 @@ namespace mogate
 
 					if (id == MapGridTypes.ID.Blocked) {
 						var ent = CreateEntity ();
-						ent.Register (new Sprite (sprites.GetSprite ("wall_01_01")));
+						int wallId = Utils.ThrowDice (Globals.MAP_WALLS_MAX) + 1;
+						ent.Register (new Sprite (sprites.GetSprite (string.Format("wall_{0:D2}_{1:D2}", tileSetId, wallId))));
 						ent.Register (new Drawable (new Vector2 (x * Globals.CELL_WIDTH, y * Globals.CELL_HEIGHT)));
 					} else if (id == MapGridTypes.ID.StairDown) {
 						var ent = CreateEntity ();
