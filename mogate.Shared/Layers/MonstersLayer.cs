@@ -193,7 +193,7 @@ namespace mogate
 				foreach (var arch in Archetypes.Monsters) {
 					var w = Utils.ThrowDice (maxWeight);
 					var spriteName = string.Format ("monster_{0:D2}", arch ["sprite_index"]);
-					if (arch ["spawn_weight"] >= w) {
+					if (arch ["spawn_weight"] >= w && arch["spawn_weight"] <= maxWeight) {
 						var me = CreateEntity ();
 						me.Register (new State<MonsterType> (MonsterType.Monster));
 						me.Register (new Position (pos.X, pos.Y));
@@ -239,7 +239,7 @@ namespace mogate
 					var spriteName = string.Format ("boss_{0:D2}", arch ["sprite_index"]);
 					var pos = new Point (room.Pos.X + Utils.Rand.Next (room.Width), room.Pos.Y + Utils.Rand.Next (room.Height));
 
-					if (arch ["spawn_weight"] >= w) {
+					if (arch ["spawn_weight"] >= w && arch["spawn_weight"] <= maxWeight) {
 						var boss = CreateEntity ();
 						boss.Register (new State<MonsterType> (MonsterType.Boss));
 						boss.Register (new Position (pos.X, pos.Y));

@@ -51,7 +51,7 @@ namespace mogate
 				var w = Utils.ThrowDice (maxWeight);
 				var lootType = (LootTypes)arch ["loot_type"];
 
-				if (arch ["spawn_weight"] >= w) {
+				if (arch ["spawn_weight"] >= w && arch["spawn_weight"] <= maxWeight) {
 					var ent = CreateEntity ();
 					ent.Register (new Drawable (new Vector2 (pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
 					ent.Register (new Position (pos.X, pos.Y));

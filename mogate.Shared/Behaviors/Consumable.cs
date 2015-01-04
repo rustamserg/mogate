@@ -36,7 +36,7 @@ namespace mogate
 
 		public bool TryConsume(T type, int amount)
 		{
-			if ((m_amounts[type] - amount) < 0)
+			if (!m_amounts.ContainsKey(type) || (m_amounts[type] - amount) < 0)
 				return false;
 
 			m_amounts[type] -= amount;
