@@ -28,28 +28,28 @@ namespace mogate
 			ent.Get<Clickable> ().OnLeftButtonPressed += OnAction;
 			ent.Get<Clickable> ().OnTouched += OnAction;
 
-			for (int i = 0; i < Globals.HALL_OF_FAME_SIZE; ++i) {
-				var hofname = CreateEntity(string.Format("hof_name_{0}", i));
-				hofname.Register (new Text (m_font));
-				hofname.Register (new Drawable (new Vector2 (420, 320 + i * 25)));
-
-				var hoftime = CreateEntity(string.Format("hof_time_{0}", i));
-				hoftime.Register (new Text (m_font));
-				hoftime.Register (new Drawable (new Vector2 (420 + 100, 320 + i * 25)));
-			}
-
 			if (gameState.IsGameEnd) {
 				ent.Get<Text> ().Message = "New game";
 
 				int idx = 0;
-				foreach (var hof in gameState.HallOfFame) {
-					var hofname = GetEntityByTag(string.Format("hof_name_{0}", idx));
-					hofname.Get<Text> ().Message = hof.PlayerName;
 
-					var hoftime = GetEntityByTag(string.Format("hof_time_{0}", idx++));
+				foreach (var hof in gameState.HallOfFame) {
+					var hofsprite = CreateEntity ();
+					hofsprite.Register (new Sprite (sprites.GetSprite (string.Format("player_{0:D2}", hof.PlayerSpriteID))));
+					hofsprite.Register (new Drawable (new Vector2 (420, 320 + idx * 36)));
+
+					var hofname = CreateEntity();
+					hofname.Register (new Text (m_font, hof.PlayerName));
+					hofname.Register (new Drawable (new Vector2 (420 + 40, 320 + idx * 36)));
+
 					var ts = TimeSpan.FromTicks (hof.TotalPlaytime);
-					hoftime.Get<Text> ().Message = string.Format ("{0:D2}:{1:D2}:{2:D2}",
-						ts.Hours, ts.Minutes, ts.Seconds);
+					var time = string.Format ("{0:D2}:{1:D2}:{2:D2}", ts.Hours, ts.Minutes, ts.Seconds);
+
+					var hoftime = CreateEntity();
+					hoftime.Register (new Text (m_font, time));
+					hoftime.Register (new Drawable (new Vector2 (420 + 140, 320 + idx * 36)));
+
+					++idx;
 				}
 			} else {
 				ent.Get<Text> ().Message = "Next level";
