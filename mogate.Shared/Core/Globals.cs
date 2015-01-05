@@ -35,6 +35,7 @@ namespace mogate
 
 		public static readonly int MAP_TILES_MAX = 2;
 		public static readonly int MAP_WALLS_MAX = 3;
+		public static readonly int[] MAP_TILES_ID = {1, 1, 2, 1, 2, 1};
 		public static readonly int[] ROOM_MIN_SIZE = {3, 3, 5, 5, 9};
 		public static readonly int[] ROOM_MAX_SIZE = {3, 5, 5, 6, 9};
 		public static readonly int[] TUNNELS_CURVE = {5, 3, 4, 6, 5};

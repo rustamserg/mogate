@@ -17,13 +17,13 @@ namespace mogate
 			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 
-			int tileSetId = 1;
+			int tileSetId = Globals.MAP_TILES_ID[gameState.Level];
 			var mapGrid = world.GetLevel (gameState.Level);
 
 			for (int x = 0; x < mapGrid.Width; x++) {
 				for (int y = 0; y < mapGrid.Height; y++) {
 					var tileEnt = CreateEntity ();
-					tileEnt.Register (new Sprite (sprites.GetSprite ("floor_01_01")));
+					tileEnt.Register (new Sprite (sprites.GetSprite (string.Format("floor_{0:D2}_01", tileSetId))));
 					tileEnt.Register (new Drawable(new Vector2 (x * Globals.CELL_WIDTH, y * Globals.CELL_HEIGHT), 0));
 					var id = mapGrid.GetID (x, y);
 

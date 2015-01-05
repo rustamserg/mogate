@@ -143,7 +143,7 @@ namespace mogate
 			var actionPosID = mapGrid.GetID (actionPos.X, actionPos.Y);
 			var playerPosID = mapGrid.GetID (mapPos.X, mapPos.Y);
 
-			if (actionPosID == MapGridTypes.ID.Blocked || actionPosID != playerPosID)
+			if (actionPosID == MapGridTypes.ID.Blocked || actionPosID != playerPosID || actionPos == mapPos)
 				return;
 
 			var effects = (EffectsLayer)Scene.GetLayer ("effects");
