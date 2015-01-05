@@ -73,8 +73,11 @@ namespace mogate
 			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 
-			if (KeyboardUtils.IsKeyPressed(Keys.Q))
+			if (KeyboardUtils.IsKeyPressed (Keys.Q))
 				m_isLevelCompleted = true;
+			else if (KeyboardUtils.IsKeyPressed (Keys.M)) {
+				player.Get<Consumable<ConsumableTypes>> ().Refill (ConsumableTypes.Money, 100);
+			}
 
 			var director = (IDirector)Game.Services.GetService (typeof(IDirector));
 			if (m_isLevelCompleted) {

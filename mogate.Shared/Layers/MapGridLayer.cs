@@ -29,7 +29,7 @@ namespace mogate
 
 					if (id == MapGridTypes.ID.Blocked) {
 						var ent = CreateEntity ();
-						int wallId = Utils.ThrowDice (Globals.MAP_WALLS_MAX) + 1;
+						int wallId = Utils.ThrowDice (Globals.MAP_WALLS_MAX[gameState.Level]) + 1;
 						ent.Register (new Sprite (sprites.GetSprite (string.Format("wall_{0:D2}_{1:D2}", tileSetId, wallId))));
 						ent.Register (new Drawable (new Vector2 (x * Globals.CELL_WIDTH, y * Globals.CELL_HEIGHT)));
 					} else if (id == MapGridTypes.ID.StairDown) {

@@ -33,8 +33,7 @@ namespace mogate
 		public static readonly int[] MONSTER_SPAWN_DELAY_MSEC = {400, 300, 200, 100, 50};
 		public static readonly int[] MONSTER_SPAWN_WEIGHT = {10, 20, 30, 30, 40};
 
-		public static readonly int MAP_TILES_MAX = 2;
-		public static readonly int MAP_WALLS_MAX = 3;
+		public static readonly int[] MAP_WALLS_MAX = {3, 3, 1, 3, 1, 3};
 		public static readonly int[] MAP_TILES_ID = {1, 1, 2, 1, 2, 1};
 		public static readonly int[] ROOM_MIN_SIZE = {3, 3, 5, 5, 9};
 		public static readonly int[] ROOM_MAX_SIZE = {3, 5, 5, 6, 9};

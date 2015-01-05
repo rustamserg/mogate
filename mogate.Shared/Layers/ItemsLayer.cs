@@ -102,6 +102,7 @@ namespace mogate
 							attacker.Get<Armor> ().ArchetypeID = armorId;
 							attacker.Get<Armor> ().Defence = Archetypes.Armors [armorId] ["defence"];
 							gameState.PlayerArmorID = armorId;
+							RemoveEntityByTag (item.Tag);
 						} else {
 							hud.FeedbackMessage ("Broken");
 						}
@@ -127,8 +128,9 @@ namespace mogate
 				if (attacker.Get<Consumable<ConsumableTypes>> ().TryConsume (ConsumableTypes.Money, cost)) {
 					if (attacker.Get<Attack> ().ArchetypeID < weaponId) {
 						attacker.Get<Attack> ().ArchetypeID = weaponId;
-						attacker.Get<Attack> ().Damage = Archetypes.Armors [weaponId] ["attack"];
+						attacker.Get<Attack> ().Damage = Archetypes.Weapons [weaponId] ["attack"];
 						gameState.PlayerWeaponID = weaponId;
+						RemoveEntityByTag (item.Tag);
 					} else {
 						hud.FeedbackMessage ("Broken");
 					}
