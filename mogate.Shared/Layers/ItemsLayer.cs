@@ -35,7 +35,7 @@ namespace mogate
 				ent.Register (new Health (1, () => OnChestDestroyed(ent)));
 				ent.Register (new Attackable ((attacker, _) => OnChestAttacked(ent, attacker)));
 				ent.Register (new IFFSystem (Globals.IFF_MONSTER_ID));
-				ent.Register (new PointLight (4));
+				ent.Register (new PointLight (PointLight.DistanceType.Normal, Color.Gold));
 			}
 		}
 
@@ -55,7 +55,7 @@ namespace mogate
 					var ent = CreateEntity ();
 					ent.Register (new Drawable (new Vector2 (pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
 					ent.Register (new Position (pos.X, pos.Y));
-					ent.Register (new PointLight (5));
+					ent.Register (new PointLight (PointLight.DistanceType.Small, Color.Gold));
 					ent.Register (new State<LootTypes> (lootType));
 
 					if (lootType == LootTypes.Money) {
@@ -170,7 +170,7 @@ namespace mogate
 
 				ent.Register (new Drawable (new Vector2 (mp.X * Globals.CELL_WIDTH, mp.Y * Globals.CELL_HEIGHT)));
 				ent.Register (new Position (mp.X, mp.Y));
-				ent.Register (new PointLight (5));
+				ent.Register (new PointLight (PointLight.DistanceType.Normal, Color.Green));
 				ent.Register (new Sprite (sprites.GetSprite ("artefact_01")));
 				ent.Register (new Triggerable (1, (from) => OnArtefactTriggered(ent, from)));
 			} else {

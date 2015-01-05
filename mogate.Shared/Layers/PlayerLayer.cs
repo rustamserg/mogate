@@ -36,7 +36,7 @@ namespace mogate
 			player.Register (new Health (gameState.PlayerHealth, gameState.MaxPlayerHealth,
 											() => OnHealthChanged(player)));
 			player.Register (new Attack (Archetypes.Weapons[gameState.PlayerWeaponID]["attack"], gameState.PlayerWeaponID));
-			player.Register (new PointLight (6));
+			player.Register (new PointLight (PointLight.DistanceType.Normal, Color.White));
 			player.Register (new MoveSpeed (Globals.PLAYER_MOVE_SPEED));
 			player.Register (new IFFSystem (Globals.IFF_PLAYER_ID, 2));
 			player.Register (new Attackable (OnAttacked));

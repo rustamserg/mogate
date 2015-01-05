@@ -3,12 +3,19 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.IO;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace mogate
 {
 	public class GameScene : Scene
 	{
-		private Texture2D m_lightTexture;
+		private Sprite2D m_lightSpritePointSmall;
+		private Sprite2D m_lightSpritePointNormal;
+		private Sprite2D m_lightSpriteDirectUp;
+		private Sprite2D m_lightSpriteDirectDown;
+		private Sprite2D m_lightSpriteDirectLeft;
+		private Sprite2D m_lightSpriteDirectRight;
+
 		private RenderTarget2D m_lightTarget;
 		private Effect m_lightEffect;
 
@@ -18,11 +25,18 @@ namespace mogate
 
 		protected override void OnInitialized()
 		{
+			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
+
 			int backBufWidth = Game.GraphicsDevice.PresentationParameters.BackBufferWidth;
 			int backBufHeight = Game.GraphicsDevice.PresentationParameters.BackBufferHeight;
 
 			m_lightTarget = new RenderTarget2D (Game.GraphicsDevice, backBufWidth, backBufHeight);
-			m_lightTexture = Game.Content.Load<Texture2D> ("Sprites/lightmask");
+			m_lightSpritePointSmall = sprites.GetSprite("lightmask_small");
+			m_lightSpritePointNormal = sprites.GetSprite ("lightmask_normal");
+			m_lightSpriteDirectUp = sprites.GetSprite ("lightmask_up");
+			m_lightSpriteDirectDown = sprites.GetSprite ("lightmask_down");
+			m_lightSpriteDirectLeft = sprites.GetSprite ("lightmask_left");
+			m_lightSpriteDirectRight = sprites.GetSprite ("lightmask_right");
 
 			using (var reader = new BinaryReader(File.Open("Content/Shaders/lighting.xnb", FileMode.Open, FileAccess.Read))) {
 				m_lightEffect = new Effect(Game.GraphicsDevice, reader.ReadBytes((int)reader.BaseStream.Length));
@@ -34,20 +48,32 @@ namespace mogate
 			var player = GetLayer ("player");
 			var items = GetLayer ("items");
 			var maps = GetLayer ("map");
+			var monsters = GetLayer ("monsters");
 
-			var toLight = player.GetAllEntities ().Where (e => e.Has<PointLight> () && e.Has<Drawable> ()).ToList();
-			toLight.AddRange (items.GetAllEntities ().Where (e => e.Has<PointLight> () && e.Has<Drawable> ()));
-			toLight.AddRange (maps.GetAllEntities ().Where (e => e.Has<PointLight> () && e.Has<Drawable> ()));
+			var toLightPoint = player.GetAllEntities ().Where (e => e.Has<PointLight> () && e.Has<Drawable> ()).ToList();
+			toLightPoint.AddRange (items.GetAllEntities ().Where (e => e.Has<PointLight> () && e.Has<Drawable> ()));
+			toLightPoint.AddRange (maps.GetAllEntities ().Where (e => e.Has<PointLight> () && e.Has<Drawable> ()));
+
+			var toLightPointSmall = toLightPoint.Where (e => e.Get<PointLight> ().Distance == PointLight.DistanceType.Small);
+			var toLightPointNormal = toLightPoint.Where (e => e.Get<PointLight> ().Distance == PointLight.DistanceType.Normal);
+
+			var toLightDirect = monsters.GetAllEntities().Where(e => e.Has<DirectLight> () && e.Has<Drawable> () && e.Has<LookDirection>());
+			var toLightDirectUp = toLightDirect.Where (e => e.Get<LookDirection> ().Direction == Utils.Direction.Up);
+			var toLightDirectDown = toLightDirect.Where (e => e.Get<LookDirection> ().Direction == Utils.Direction.Down);
+			var toLightDirectLeft = toLightDirect.Where (e => e.Get<LookDirection> ().Direction == Utils.Direction.Left);
+			var toLightDirectRight = toLightDirect.Where (e => e.Get<LookDirection> ().Direction == Utils.Direction.Right);
 
 			Game.GraphicsDevice.SetRenderTarget (m_lightTarget);
 			Game.GraphicsDevice.Clear (Color.Black);
 			spriteBatch.Begin (SpriteSortMode.Immediate, BlendState.Additive, null, null, null, null, worldToScreen);
 
-			foreach (var pe in toLight) {
-				var lightPos = pe.Get<Drawable>().DrawPos;
-				lightPos.X -= 100; lightPos.Y -= 100;
-				spriteBatch.Draw(m_lightTexture, lightPos, Color.White);
-			}
+			DrawPointLightMasks (toLightPointSmall, m_lightSpritePointSmall, spriteBatch);
+			DrawPointLightMasks (toLightPointNormal, m_lightSpritePointNormal, spriteBatch);
+			DrawDirectLightMasks (toLightDirectUp, m_lightSpriteDirectUp, spriteBatch);
+			DrawDirectLightMasks (toLightDirectDown, m_lightSpriteDirectDown, spriteBatch);
+			DrawDirectLightMasks (toLightDirectLeft, m_lightSpriteDirectLeft, spriteBatch);
+			DrawDirectLightMasks (toLightDirectRight, m_lightSpriteDirectRight, spriteBatch);
+
 			spriteBatch.End ();
 
 			Game.GraphicsDevice.SetRenderTarget (null);  
@@ -62,6 +88,28 @@ namespace mogate
 			spriteBatch.Begin (SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, worldToScreen);  
 			GetLayer ("hud").Draw (spriteBatch, gameTime);
 			spriteBatch.End ();
+		}
+
+		private void DrawDirectLightMasks(IEnumerable<Entity> toLight, Sprite2D lightSprite, SpriteBatch spriteBatch)
+		{
+			foreach (var pe in toLight) {
+				var lightPos = pe.Get<Drawable>().DrawPos;
+				var lightColor = pe.Get<DirectLight> ().LightColor;
+				lightPos.X -= (lightSprite.Rect.Width - Globals.CELL_WIDTH)/2;
+				lightPos.Y -= (lightSprite.Rect.Height - Globals.CELL_HEIGHT)/2;
+				spriteBatch.Draw(lightSprite.Texture, lightPos, lightSprite.Rect, lightColor);
+			}
+		}
+
+		private void DrawPointLightMasks(IEnumerable<Entity> toLight, Sprite2D lightSprite, SpriteBatch spriteBatch)
+		{
+			foreach (var pe in toLight) {
+				var lightPos = pe.Get<Drawable>().DrawPos;
+				var lightColor = pe.Get<PointLight> ().LightColor;
+				lightPos.X -= (lightSprite.Rect.Width - Globals.CELL_WIDTH)/2;
+				lightPos.Y -= (lightSprite.Rect.Height - Globals.CELL_HEIGHT)/2;
+				spriteBatch.Draw(lightSprite.Texture, lightPos, lightSprite.Rect, lightColor);
+			}
 		}
 
 		protected override void LoadLayers()

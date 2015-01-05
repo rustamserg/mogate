@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Xna.Framework;
 
 namespace mogate
 {
@@ -6,10 +7,14 @@ namespace mogate
 	{
 		public Type Behavior { get { return typeof(PointLight); } }
 
-		public int Distance { get; set; }
+		public enum DistanceType { Small, Normal };
 
-		public PointLight(int dist)
+		public DistanceType Distance { get; set; }
+		public Color LightColor { get; set; }
+
+		public PointLight(DistanceType dist, Color light)
 		{
+			LightColor = light;
 			Distance = dist;
 		}
 	}

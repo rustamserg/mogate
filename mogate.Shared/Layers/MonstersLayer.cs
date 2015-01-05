@@ -212,6 +212,9 @@ namespace mogate
 						me.Register (new Sprite (sprites.GetSprite (spriteName)));
 						me.Register (new Drawable (new Vector2 (pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
 		
+						if (arch ["visible"] == 1)
+							me.Register (new DirectLight (Color.Red));
+
 						me.Get<Execute> ().Add (new ActionEntity (me, (_) => {
 							StartPatrol (me);
 						}), "patrol_loop");
