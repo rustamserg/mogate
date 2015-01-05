@@ -167,7 +167,7 @@ namespace mogate
 
 		public static readonly Dictionary<string, int>[] MonsterLoot = {
 			new Dictionary<string, int> {
-				{"spawn_weight", 10},
+				{"spawn_weight", 30},
 				{"loot_type", (int)LootTypes.Money},
 				{"money", 100},
 			},

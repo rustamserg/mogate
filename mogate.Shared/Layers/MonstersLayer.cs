@@ -232,11 +232,11 @@ namespace mogate
 			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
 
 			var map = world.GetLevel(gameState.Level);
-			int maxWeight = Globals.MONSTER_SPAWN_WEIGHT [gameState.Level];
+			int maxWeight = Globals.BOSSES_SPAWN_WEIGHT [gameState.Level];
 		
-			Archetypes.Bosses.Shuffle ();
-
 			foreach (var room in map.GetRooms()) {
+				Archetypes.Bosses.Shuffle ();
+
 				foreach (var arch in Archetypes.Bosses) {
 					var w = Utils.ThrowDice (maxWeight);
 					var spriteName = string.Format ("boss_{0:D2}", arch ["sprite_index"]);
