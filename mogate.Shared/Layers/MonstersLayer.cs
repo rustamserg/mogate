@@ -67,11 +67,14 @@ namespace mogate
 				if (!mapLine.Any (e => e.Type != monster.Get<AllowedMapArea> ().Area)) {
 					Utils.Direction lookDir;
 					if (Utils.FindDirection (monsterPos, enemyPos, out lookDir)) {
-						var distToEnemy = (int)Utils.DirectionDist (monsterPos, enemyPos, lookDir);
+						var distToEnemy = Utils.DirectionDist (monsterPos, enemyPos, lookDir);
 						if (distToEnemy < monster.Get<Perception> ().AlertDistance) {
 							monster.Get<LookDirection> ().Direction = lookDir;
 							monster.Get<Patrol> ().Steps = Math.Min (monster.Get<Patrol> ().MaxSteps,
 								monster.Get<Perception> ().AlertDistance - distToEnemy + 1);
+							if (monster.Has<DirectLight> ()) {
+								monster.Get<DirectLight> ().LightColor = Color.Red;
+							}
 							return true;
 						}
 					}
@@ -89,7 +92,7 @@ namespace mogate
 				var enemyPos = enemy.Get<Position> ().MapPos;
 				var monsterPos = monster.Get<Position> ().MapPos;
 
-				var distToEnemy = (int)Utils.DirectionDist (monsterPos, enemyPos, monster.Get<LookDirection> ().Direction);
+				var distToEnemy = Utils.DirectionDist (monsterPos, enemyPos, monster.Get<LookDirection> ().Direction);
 				if (distToEnemy < monster.Get<Perception> ().AlertDistance) {
 					monster.Get<Patrol> ().Steps += monster.Get<Perception> ().AlertDistance - distToEnemy + 1;
 					if (monster.Has<DirectLight> ()) {
