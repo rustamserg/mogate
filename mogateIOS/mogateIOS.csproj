@@ -122,7 +122,6 @@
     <BundleResource Include="Resources\Content\Sprites\sprites.plist" />
     <BundleResource Include="Resources\Content\Sprites\sprites.png" />
     <BundleResource Include="Resources\Content\Fonts\arial-22.xnb" />
-    <BundleResource Include="Resources\Content\Sprites\lightmask.png" />
     <BundleResource Include="Resources\Content\Shaders\fade.xnb" />
     <BundleResource Include="Resources\Content\Shaders\lighting.xnb" />
   </ItemGroup>

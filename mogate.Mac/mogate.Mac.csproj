@@ -92,6 +92,5 @@
     <BundleResource Include="Resources\Content\Sprites\sprites.plist" />
     <BundleResource Include="Resources\Content\Sprites\sprites.png" />
     <BundleResource Include="Resources\Content\Shaders\lighting.xnb" />
-    <BundleResource Include="Resources\Content\Sprites\lightmask.png" />
   </ItemGroup>
 </Project>

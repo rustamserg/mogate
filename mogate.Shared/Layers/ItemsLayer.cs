@@ -35,7 +35,7 @@ namespace mogate
 				ent.Register (new Health (1, () => OnChestDestroyed(ent)));
 				ent.Register (new Attackable ((attacker, _) => OnChestAttacked(ent, attacker)));
 				ent.Register (new IFFSystem (Globals.IFF_MONSTER_ID));
-				ent.Register (new PointLight (PointLight.DistanceType.Normal, Color.Gold));
+				ent.Register (new PointLight (PointLight.DistanceType.Small, Color.Green));
 			}
 		}
 

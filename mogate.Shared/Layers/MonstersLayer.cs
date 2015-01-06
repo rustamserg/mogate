@@ -92,7 +92,14 @@ namespace mogate
 				var distToEnemy = (int)Utils.DirectionDist (monsterPos, enemyPos, monster.Get<LookDirection> ().Direction);
 				if (distToEnemy < monster.Get<Perception> ().AlertDistance) {
 					monster.Get<Patrol> ().Steps += monster.Get<Perception> ().AlertDistance - distToEnemy + 1;
+					if (monster.Has<DirectLight> ()) {
+						monster.Get<DirectLight> ().LightColor = Color.Red;
+					}
 					break;
+				} else {
+					if (monster.Has<DirectLight> ()) {
+						monster.Get<DirectLight> ().LightColor = Color.White;
+					}
 				}
 			}
 		}
@@ -213,7 +220,7 @@ namespace mogate
 						me.Register (new Drawable (new Vector2 (pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
 		
 						if (arch ["visible"] == 1)
-							me.Register (new DirectLight (Color.Red));
+							me.Register (new DirectLight (Color.White));
 
 						me.Get<Execute> ().Add (new ActionEntity (me, (_) => {
 							StartPatrol (me);
