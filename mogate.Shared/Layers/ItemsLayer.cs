@@ -96,22 +96,22 @@ namespace mogate
 				int cost = item.Get<Price> ().Cost;
 				int armorId = item.Get<Loot> ().Drop;
 
-				if (attacker.Get<Consumable<ConsumableTypes>> ().TryConsume (ConsumableTypes.Money, cost)) {
-					if (attacker.Has<Armor> ()) {
-						if (attacker.Get<Armor> ().ArchetypeID < armorId) {
+				if (attacker.Has<Armor> () && attacker.Get<Armor> ().ArchetypeID >= armorId) {
+					hud.FeedbackMessage ("Broken");
+				} else {
+					if (attacker.Get<Consumable<ConsumableTypes>> ().TryConsume (ConsumableTypes.Money, cost)) {
+						if (!attacker.Has<Armor> ()) {
+							attacker.Register (new Armor (Archetypes.Armors [armorId] ["defence"], armorId));
+						} else {
 							attacker.Get<Armor> ().ArchetypeID = armorId;
 							attacker.Get<Armor> ().Defence = Archetypes.Armors [armorId] ["defence"];
-							gameState.PlayerArmorID = armorId;
-							RemoveEntityByTag (item.Tag);
-						} else {
-							hud.FeedbackMessage ("Broken");
 						}
+						gameState.PlayerArmorID = armorId;
+						RemoveEntityByTag (item.Tag);
 					} else {
-						attacker.Register(new Armor(Archetypes.Armors[armorId]["defence"], armorId));
+						string feedbackMsg = string.Format ("Cost: {0}", cost);
+						hud.FeedbackMessage (feedbackMsg);
 					}
-				} else {
-					string feedbackMsg = string.Format ("Cost: {0}", cost);
-					hud.FeedbackMessage (feedbackMsg);
 				}
 			}
 		}
@@ -125,18 +125,18 @@ namespace mogate
 				int cost = item.Get<Price> ().Cost;
 				int weaponId = item.Get<Loot> ().Drop;
 
-				if (attacker.Get<Consumable<ConsumableTypes>> ().TryConsume (ConsumableTypes.Money, cost)) {
-					if (attacker.Get<Attack> ().ArchetypeID < weaponId) {
+				if (attacker.Has<Attack> () && attacker.Get<Attack> ().ArchetypeID >= weaponId) {
+					hud.FeedbackMessage ("Broken");
+				} else {
+					if (attacker.Get<Consumable<ConsumableTypes>> ().TryConsume (ConsumableTypes.Money, cost)) {
 						attacker.Get<Attack> ().ArchetypeID = weaponId;
 						attacker.Get<Attack> ().Damage = Archetypes.Weapons [weaponId] ["attack"];
 						gameState.PlayerWeaponID = weaponId;
 						RemoveEntityByTag (item.Tag);
 					} else {
-						hud.FeedbackMessage ("Broken");
+						string feedbackMsg = string.Format ("Cost: {0}", cost);
+						hud.FeedbackMessage (feedbackMsg);
 					}
-				} else {
-					string feedbackMsg = string.Format ("Cost: {0}", cost);
-					hud.FeedbackMessage (feedbackMsg);
 				}
 			}
 		}
