@@ -253,12 +253,6 @@ namespace mogate
 				{"price", 500},
 			},
 			new Dictionary<string, int> {
-				{"spawn_weight", 10},
-				{"loot_type", (int)LootTypes.Weapon},
-				{"weapon_index", 0},
-				{"price", 200},
-			},
-			new Dictionary<string, int> {
 				{"spawn_weight", 20},
 				{"loot_type", (int)LootTypes.Weapon},
 				{"weapon_index", 1},
