@@ -77,5 +77,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Loot.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Price.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\DirectLight.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\CriticalHit.cs" />
   </ItemGroup>
 </Project>

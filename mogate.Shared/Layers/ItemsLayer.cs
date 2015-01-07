@@ -39,13 +39,11 @@ namespace mogate
 			}
 		}
 
-		public void DropLoot(Point pos, Dictionary<string, int>[] loots)
+		public void DropLoot(Point pos, Dictionary<string, int>[] loots, int maxWeight)
 		{
-			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
 
 			loots.Shuffle ();
-			int maxWeight = Globals.DROP_LOOT_WEIGHT [gameState.Level];
 
 			foreach (var arch in loots) {
 				var w = Utils.ThrowDice (maxWeight);
@@ -174,7 +172,7 @@ namespace mogate
 				ent.Register (new Sprite (sprites.GetSprite ("artefact_01")));
 				ent.Register (new Triggerable (1, (from) => OnArtefactTriggered(ent, from)));
 			} else {
-				DropLoot (mp, Archetypes.ChestLoot);
+				DropLoot (mp, Archetypes.ChestLoot, Globals.CHEST_DROP_LOOT_WEIGHT[gameState.Level]);
 			}
 		}
 			

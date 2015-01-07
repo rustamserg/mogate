@@ -179,7 +179,9 @@ namespace mogate
 				RemoveEntityByTag (monster.Tag);
 			
 				var items = (ItemsLayer)Scene.GetLayer ("items");
-				items.DropLoot (monster.Get<Position> ().MapPos, Archetypes.MonsterLoot);
+				var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
+
+				items.DropLoot (monster.Get<Position> ().MapPos, Archetypes.MonsterLoot, Globals.MONSTER_DROP_LOOT_WEIGHT[gameState.Level]);
 			}
 		}
 
@@ -209,7 +211,6 @@ namespace mogate
 						me.Register (new Position (pos.X, pos.Y));
 						me.Register (new Health (arch["health"], () => OnHealthChanged(me)));
 						me.Register (new Attack (arch["attack"]));
-						me.Register (new Poison (arch["poison_damage"], arch["poison_chance"], arch["poison_effect_delay_msec"]));
 						me.Register (new MoveSpeed (arch["move_duration_msec"]));
 						me.Register (new AttackSpeed (arch["attack_duration_msec"]));
 						me.Register (new Attackable ((attacker, _) => OnAttacked(me, attacker)));
@@ -221,6 +222,12 @@ namespace mogate
 						me.Register (new AllowedMapArea(MapGridTypes.ID.Tunnel));
 						me.Register (new Sprite (sprites.GetSprite (spriteName)));
 						me.Register (new Drawable (new Vector2 (pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
+
+						if (arch ["poison_chance"] > 0)
+							me.Register (new Poison (arch["poison_damage"], arch["poison_chance"], arch["poison_effect_delay_msec"]));
+
+						if (arch ["critical_chance"] > 0)
+							me.Register (new CriticalHit (arch ["critical_change"], arch ["critical_damage"]));
 		
 						if (arch ["visible"] == 1)
 							me.Register (new DirectLight (Color.White));
@@ -258,7 +265,6 @@ namespace mogate
 						boss.Register (new Position (pos.X, pos.Y));
 						boss.Register (new Health (arch["health"], () => OnHealthChanged(boss)));
 						boss.Register (new Attack (arch["attack"]));
-						boss.Register (new Poison (arch["poison_damage"], arch["poison_chance"], arch["poison_effect_delay_msec"]));
 						boss.Register (new MoveSpeed (arch["move_duration_msec"]));
 						boss.Register (new AttackSpeed (arch["attack_duration_msec"]));
 						boss.Register (new Attackable ((attacker, _) => OnAttacked(boss, attacker)));
@@ -270,6 +276,15 @@ namespace mogate
 						boss.Register (new AllowedMapArea(MapGridTypes.ID.Room));
 						boss.Register (new Sprite (sprites.GetSprite (spriteName)));
 						boss.Register (new Drawable (new Vector2 (pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
+
+						if (arch ["poison_chance"] > 0)
+							boss.Register (new Poison (arch["poison_damage"], arch["poison_chance"], arch["poison_effect_delay_msec"]));
+
+						if (arch ["critical_chance"] > 0)
+							boss.Register (new CriticalHit (arch ["critical_change"], arch ["critical_damage"]));
+
+						if (arch ["visible"] == 1)
+							boss.Register (new DirectLight (Color.White));
 
 						boss.Get<Execute> ().Add (new ActionEntity (boss, (_) => {
 							StartPatrol (boss);

@@ -27,12 +27,13 @@ namespace mogate
 		public static readonly int PLAYER_MOVE_SPEED = 300;
 		public static readonly int PLAYER_SPRITES_MAX = 4;
 
-		public static readonly int[] DROP_LOOT_WEIGHT = {30, 30, 30, 30, 30};
+		public static readonly int[] MONSTER_DROP_LOOT_WEIGHT = {30, 30, 30, 30, 30};
+		public static readonly int[] CHEST_DROP_LOOT_WEIGHT = {10, 20, 30, 40, 40};
 
-		public static readonly int[] MONSTER_POPULATION = {10, 20, 30, 30, 30};
+		public static readonly int[] MONSTER_POPULATION = {8, 10, 12, 15, 20};
 		public static readonly int[] MONSTER_SPAWN_DELAY_MSEC = {400, 300, 200, 100, 50};
 		public static readonly int[] MONSTER_SPAWN_WEIGHT = {10, 20, 30, 30, 40};
-		public static readonly int[] BOSSES_SPAWN_WEIGHT = {20, 20, 20, 20, 20};
+		public static readonly int[] BOSSES_SPAWN_WEIGHT = {10, 20, 30, 30, 40};
 
 		public static readonly int[] MAP_WALLS_MAX = {3, 3, 1, 3, 1, 3};
 		public static readonly int[] MAP_TILES_ID = {1, 1, 2, 1, 2, 1};
