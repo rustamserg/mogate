@@ -227,7 +227,7 @@ namespace mogate
 							me.Register (new Poison (arch["poison_damage"], arch["poison_chance"], arch["poison_effect_delay_msec"]));
 
 						if (arch ["critical_chance"] > 0)
-							me.Register (new CriticalHit (arch ["critical_change"], arch ["critical_damage"]));
+							me.Register (new CriticalHit (arch ["critical_chance"], arch ["critical_damage"]));
 		
 						if (arch ["visible"] == 1)
 							me.Register (new DirectLight (Color.White));
