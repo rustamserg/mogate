@@ -10,6 +10,7 @@ namespace mogate
 {
 	public enum ConsumableTypes { Money };
 	public enum LootTypes { Money, Health, Antitod, Armor, Weapon };
+	public enum TreasureTypes { Chest, Trash };
 
 	public class ItemsLayer : Layer
 	{
@@ -35,8 +36,18 @@ namespace mogate
 				ent.Register (new Health (1, () => OnChestDestroyed(ent)));
 				ent.Register (new Attackable ((attacker, _) => OnChestAttacked(ent, attacker)));
 				ent.Register (new IFFSystem (Globals.IFF_MONSTER_ID));
+				ent.Register (new State<TreasureTypes> (TreasureTypes.Chest));
 				ent.Register (new PointLight (PointLight.DistanceType.Small, Color.Green));
 			}
+
+			int spawnDelay = Globals.TRASH_SPAWN_DELAY_MSEC [gameState.Level];
+
+			var spawner = CreateEntity ();
+			spawner.Register (new Execute ());
+
+			var seq = new Sequence ();
+			seq.Add (new Loop (new ActionEntity (spawner, SpawnTrash), spawnDelay));
+			spawner.Get<Execute> ().Add (seq);
 		}
 
 		public void DropLoot(Point pos, Dictionary<string, int>[] loots, int maxWeight)
@@ -175,7 +186,16 @@ namespace mogate
 				DropLoot (mp, Archetypes.ChestLoot, Globals.CHEST_DROP_LOOT_WEIGHT[gameState.Level]);
 			}
 		}
-			
+
+		void OnTrashDestroyed(Entity trash)
+		{
+			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
+
+			RemoveEntityByTag (trash.Tag);
+			var mp = trash.Get<Position> ().MapPos;
+			DropLoot (mp, Archetypes.TrashLoot, Globals.TRASH_DROP_LOOT_WEIGHT[gameState.Level]);
+		}
+
 		void OnHealthTriggered (Entity item, Entity from)
 		{
 			if (from.Has<Health> ()) {
@@ -202,6 +222,31 @@ namespace mogate
 
 			mapGridLayer.AddExitPoint (true);
 			RemoveEntityByTag (item.Tag);
+		}
+
+		void SpawnTrash(Entity spawner)
+		{
+			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
+			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
+			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
+
+			var map = world.GetLevel(gameState.Level);
+			int trash = GetAllEntities ().Where (e => e.Has<State<TreasureTypes>> () && e.Get<State<TreasureTypes>> ().EState == TreasureTypes.Trash).Count();
+
+			if (trash < Globals.MONSTER_POPULATION [gameState.Level]) {
+				var tunnels = map.GetTunnels ();
+				var pos = tunnels [Utils.ThrowDice (tunnels.Count)];
+
+				var ent = CreateEntity ();
+				ent.Register (new Sprite (sprites.GetSprite ("skeleton_01")));
+				ent.Register (new Drawable (new Vector2(pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
+				ent.Register (new Position (pos.X, pos.Y));
+				ent.Register (new Health (1, () => OnTrashDestroyed(ent)));
+				ent.Register (new Attackable ((attacker, _) => OnChestAttacked(ent, attacker)));
+				ent.Register (new IFFSystem (Globals.IFF_MONSTER_ID));
+				ent.Register (new State<TreasureTypes> (TreasureTypes.Trash));
+				ent.Register (new PointLight (PointLight.DistanceType.Small, Color.Crimson));
+			}
 		}
 	}
 }

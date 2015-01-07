@@ -189,7 +189,7 @@ namespace mogate
 			new Dictionary<string, int> {
 				{"spawn_weight", 30},
 				{"loot_type", (int)LootTypes.Money},
-				{"money", 100},
+				{"money", Globals.MONEY_PACK},
 			},
 			new Dictionary<string, int> {
 				{"spawn_weight", 15},
@@ -198,6 +198,23 @@ namespace mogate
 			},
 			new Dictionary<string, int> {
 				{"spawn_weight", 7},
+				{"loot_type", (int)LootTypes.Antitod},
+			},
+		};
+
+		public static readonly Dictionary<string, int>[] TrashLoot = {
+			new Dictionary<string, int> {
+				{"spawn_weight", 30},
+				{"loot_type", (int)LootTypes.Money},
+				{"money", (int)Globals.MONEY_PACK/5},
+			},
+			new Dictionary<string, int> {
+				{"spawn_weight", 15},
+				{"loot_type", (int)LootTypes.Health},
+				{"health", (int)Globals.HEALTH_PACK/4},
+			},
+			new Dictionary<string, int> {
+				{"spawn_weight", 5},
 				{"loot_type", (int)LootTypes.Antitod},
 			},
 		};
