@@ -28,8 +28,10 @@ namespace mogate
 		public int HP {
 			get { return m_hp; }
 			set {
+				var isChanged = (m_hp != value);
 				m_hp = value;
-				if (m_onChanged != null)
+
+				if (isChanged && m_onChanged != null)
 					m_onChanged ();
 			}
 		}

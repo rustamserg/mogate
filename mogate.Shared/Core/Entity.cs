@@ -19,6 +19,9 @@ namespace mogate
 
 		public void OnRemoved()
 		{
+			if (Has<Execute> ())
+				Get<Execute> ().Cancel ();
+
 			m_gameStats.EntityRemoved (Tag);
 		}
 

@@ -18,7 +18,7 @@ namespace mogate
 		public static readonly int IFF_PLAYER_ID = 0;
 		public static readonly int IFF_MONSTER_ID = 1;
 
-		public static readonly int HEALTH_PACK = 40;
+		public static readonly int HEALTH_PACK = 100;
 		public static readonly int MONEY_PACK = 100;
 
 		public static readonly int HALL_OF_FAME_SIZE = 5;

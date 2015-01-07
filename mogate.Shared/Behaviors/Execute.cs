@@ -52,6 +52,11 @@ namespace mogate
 		{
 			m_actions.Remove (tag);
 		}
+
+		public void CancelAll()
+		{
+			m_actions.Clear ();
+		}
 	}
 }
 

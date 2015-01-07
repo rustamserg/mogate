@@ -36,18 +36,18 @@ namespace mogate
 				foreach (var hof in gameState.HallOfFame) {
 					var hofsprite = CreateEntity ();
 					hofsprite.Register (new Sprite (sprites.GetSprite (string.Format("player_{0:D2}", hof.PlayerSpriteID))));
-					hofsprite.Register (new Drawable (new Vector2 (420, 320 + idx * 36)));
+					hofsprite.Register (new Drawable (new Vector2 (380, 320 + idx * 36)));
 
 					var hofname = CreateEntity();
 					hofname.Register (new Text (m_font, hof.PlayerName));
-					hofname.Register (new Drawable (new Vector2 (420 + 40, 320 + idx * 36)));
+					hofname.Register (new Drawable (new Vector2 (380 + 40, 320 + idx * 36)));
 
 					var ts = TimeSpan.FromTicks (hof.TotalPlaytime);
 					var time = string.Format ("{0:D2}:{1:D2}:{2:D2}", ts.Hours, ts.Minutes, ts.Seconds);
 
 					var hoftime = CreateEntity();
 					hoftime.Register (new Text (m_font, time));
-					hoftime.Register (new Drawable (new Vector2 (420 + 140, 320 + idx * 36)));
+					hoftime.Register (new Drawable (new Vector2 (380 + 140, 320 + idx * 36)));
 
 					++idx;
 				}
