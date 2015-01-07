@@ -140,6 +140,8 @@ namespace mogate
 					if (attacker.Get<Consumable<ConsumableTypes>> ().TryConsume (ConsumableTypes.Money, cost)) {
 						attacker.Get<Attack> ().ArchetypeID = weaponId;
 						attacker.Get<Attack> ().Damage = Archetypes.Weapons [weaponId] ["attack"];
+						attacker.Get<CriticalHit> ().HitChance = Archetypes.Weapons [weaponId] ["critical_chance"];
+						attacker.Get<CriticalHit> ().CriticalDamage = Archetypes.Weapons [weaponId] ["critical_damage"];
 						gameState.PlayerWeaponID = weaponId;
 						RemoveEntityByTag (item.Tag);
 					} else {
@@ -245,7 +247,7 @@ namespace mogate
 				ent.Register (new Attackable ((attacker, _) => OnChestAttacked(ent, attacker)));
 				ent.Register (new IFFSystem (Globals.IFF_MONSTER_ID));
 				ent.Register (new State<TreasureTypes> (TreasureTypes.Trash));
-				ent.Register (new PointLight (PointLight.DistanceType.Small, Color.Crimson));
+				ent.Register (new PointLight (PointLight.DistanceType.Small, Color.Gold));
 			}
 		}
 	}

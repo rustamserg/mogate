@@ -47,6 +47,7 @@ namespace mogate
 			player.Register (new Drawable (new Vector2(mapGrid.StairDown.X * Globals.CELL_WIDTH, mapGrid.StairDown.Y * Globals.CELL_HEIGHT)));
 			player.Register (new Clickable (new Rectangle (0, 0, Globals.CELL_WIDTH * Globals.WORLD_WIDTH, Globals.CELL_HEIGHT * Globals.WORLD_HEIGHT)));
 			player.Register (new Consumable<ConsumableTypes> ());
+			player.Register (new CriticalHit ());
 
 			player.Get<Clickable> ().OnLeftButtonPressed += OnMoveToPosition;
 			player.Get<Clickable> ().OnMoved += OnMoveToPosition;
@@ -156,7 +157,7 @@ namespace mogate
 			if (Utils.Dist(mapPos, actionPos) < 2) {
 				effects.SpawnEffect (actionPos, "weapon_01", 200);
 
-				var actionTargets = items.GetAllEntities ().ToList();
+				var actionTargets = items.GetAllEntities().Where (e => e.Has<Position> ()).ToList();
 				actionTargets.AddRange (monsters.GetAllEntities ().Where (e => e.Has<Position> ()));
 				var target = actionTargets.FirstOrDefault (m => m.Get<Position> ().MapPos == actionPos);
 				if (target != default(Entity)) {

@@ -281,7 +281,7 @@ namespace mogate
 							boss.Register (new Poison (arch["poison_damage"], arch["poison_chance"], arch["poison_effect_delay_msec"]));
 
 						if (arch ["critical_chance"] > 0)
-							boss.Register (new CriticalHit (arch ["critical_change"], arch ["critical_damage"]));
+							boss.Register (new CriticalHit (arch ["critical_chance"], arch ["critical_damage"]));
 
 						if (arch ["visible"] == 1)
 							boss.Register (new DirectLight (Color.White));

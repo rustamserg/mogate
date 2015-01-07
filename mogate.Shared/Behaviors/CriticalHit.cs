@@ -6,10 +6,10 @@ namespace mogate
 	{
 		public Type Behavior { get { return typeof(CriticalHit); } }
 
-		public int HitChance { get; private set; }
-		public int CriticalDamage { get; private set; }
+		public int HitChance { get; set; }
+		public int CriticalDamage { get; set; }
 
-		public CriticalHit (int hitChance, int criticalDamage)
+		public CriticalHit (int hitChance = 0, int criticalDamage = 0)
 		{
 			HitChance = hitChance;
 			CriticalDamage = criticalDamage;
