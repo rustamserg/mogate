@@ -230,45 +230,50 @@ namespace mogate
 		public static readonly Dictionary<string, int>[] ChestLoot = {
 			new Dictionary<string, int> {
 				{"spawn_weight", 10},
+				{"loot_type", (int)LootTypes.Money},
+				{"money", Globals.MONEY_PACK*2},
+			},
+			new Dictionary<string, int> {
+				{"spawn_weight", 10},
 				{"loot_type", (int)LootTypes.Armor},
 				{"armor_index", 0},
-				{"price", 200},
+				{"price", Globals.MONEY_PACK*4},
 			},
 			new Dictionary<string, int> {
 				{"spawn_weight", 20},
 				{"loot_type", (int)LootTypes.Armor},
 				{"armor_index", 1},
-				{"price", 300},
+				{"price", Globals.MONEY_PACK*4},
 			},
 			new Dictionary<string, int> {
 				{"spawn_weight", 30},
 				{"loot_type", (int)LootTypes.Armor},
 				{"armor_index", 2},
-				{"price", 400},
+				{"price", Globals.MONEY_PACK*5},
 			},
 			new Dictionary<string, int> {
 				{"spawn_weight", 40},
 				{"loot_type", (int)LootTypes.Armor},
 				{"armor_index", 3},
-				{"price", 500},
+				{"price", Globals.MONEY_PACK*6},
 			},
 			new Dictionary<string, int> {
 				{"spawn_weight", 20},
 				{"loot_type", (int)LootTypes.Weapon},
 				{"weapon_index", 1},
-				{"price", 300},
+				{"price", Globals.MONEY_PACK*4},
 			},
 			new Dictionary<string, int> {
 				{"spawn_weight", 30},
 				{"loot_type", (int)LootTypes.Weapon},
 				{"weapon_index", 2},
-				{"price", 400},
+				{"price", Globals.MONEY_PACK*5},
 			},
 			new Dictionary<string, int> {
 				{"spawn_weight", 40},
 				{"loot_type", (int)LootTypes.Weapon},
 				{"weapon_index", 3},
-				{"price", 500},
+				{"price", Globals.MONEY_PACK*6},
 			},
 		};
 	}
