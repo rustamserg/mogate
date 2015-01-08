@@ -33,6 +33,7 @@ namespace mogate
 		int PlayerMoveSpeed { get; set; }
 		int PlayerAttackSpeed { get; set; }
 		int PlayerAttackDistance { get; set; }
+		int PlayerViewDistanceType { get; set; }
 
 		int PlayerWeaponID { get; set; }
 		int PlayerArmorID { get; set; }
@@ -60,6 +61,7 @@ namespace mogate
 		public int PlayerHealth;
 		public int PlayerHealthMax;
 		public int PlayerMoney;
+		public int PlayerViewDistanceType;
 		public int PlayerAttackMultiplier;
 		public int PlayerMoneyMultiplier;
 		public int PlayerPoisonMultiplier;
@@ -85,6 +87,7 @@ namespace mogate
 		public int PlayerSpriteID { get; set; }
 		public int PlayerHealth { get; set; }
 		public int PlayerHealthMax { get; set; }
+		public int PlayerViewDistanceType { get; set; }
 		public int PlayerMoney { get; set; }
 		public int PlayerMoveSpeed { get; set; }
 		public int PlayerAttackSpeed { get; set; }
@@ -155,6 +158,7 @@ namespace mogate
 			PlayerPoisonMultiplier = archetype ["poison_multiplier"];
 			PlayerAttackSpeed = archetype ["attack_duration_msec"];
 			PlayerAttackDistance = archetype ["attack_distance"];
+			PlayerViewDistanceType = archetype ["view_distance_type"];
 		}
 
 		void UpdateHallOfFame()
@@ -230,6 +234,7 @@ namespace mogate
 					PlayerHealth = this.PlayerHealth,
 					PlayerHealthMax = this.PlayerHealthMax,
 					PlayerMoney = this.PlayerMoney,
+					PlayerViewDistanceType = this.PlayerViewDistanceType,
 					PlayerAttackDistance = this.PlayerAttackDistance,
 					PlayerMoneyMultiplier = this.PlayerMoneyMultiplier,
 					PlayerAttackMultiplier = this.PlayerAttackMultiplier,
@@ -278,6 +283,7 @@ namespace mogate
 					PlayerHealth = save.PlayerHealth;
 					PlayerHealthMax = save.PlayerHealthMax;
 					PlayerMoney = save.PlayerMoney;
+					PlayerViewDistanceType = save.PlayerViewDistanceType;
 					PlayerAttackDistance = save.PlayerAttackDistance;
 					PlayerMoneyMultiplier = save.PlayerMoneyMultiplier;
 					PlayerAttackMultiplier = save.PlayerAttackMultiplier;

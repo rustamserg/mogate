@@ -11,6 +11,7 @@ namespace mogate
 	{
 		private Sprite2D m_lightSpritePointSmall;
 		private Sprite2D m_lightSpritePointNormal;
+		private Sprite2D m_lightSpritePointBig;
 		private Sprite2D m_lightSpriteDirectUp;
 		private Sprite2D m_lightSpriteDirectDown;
 		private Sprite2D m_lightSpriteDirectLeft;
@@ -33,6 +34,7 @@ namespace mogate
 			m_lightTarget = new RenderTarget2D (Game.GraphicsDevice, backBufWidth, backBufHeight);
 			m_lightSpritePointSmall = sprites.GetSprite("lightmask_small");
 			m_lightSpritePointNormal = sprites.GetSprite ("lightmask_normal");
+			m_lightSpritePointBig = sprites.GetSprite ("lightmask_big");
 			m_lightSpriteDirectUp = sprites.GetSprite ("lightmask_up");
 			m_lightSpriteDirectDown = sprites.GetSprite ("lightmask_down");
 			m_lightSpriteDirectLeft = sprites.GetSprite ("lightmask_left");
@@ -56,6 +58,7 @@ namespace mogate
 
 			var toLightPointSmall = toLightPoint.Where (e => e.Get<PointLight> ().Distance == PointLight.DistanceType.Small);
 			var toLightPointNormal = toLightPoint.Where (e => e.Get<PointLight> ().Distance == PointLight.DistanceType.Normal);
+			var toLightPointBig = toLightPoint.Where (e => e.Get<PointLight> ().Distance == PointLight.DistanceType.Big);
 
 			var toLightDirect = monsters.GetAllEntities().Where(e => e.Has<DirectLight> () && e.Has<Drawable> () && e.Has<LookDirection>());
 			var toLightDirectUp = toLightDirect.Where (e => e.Get<LookDirection> ().Direction == Utils.Direction.Up);
@@ -69,6 +72,7 @@ namespace mogate
 
 			DrawPointLightMasks (toLightPointSmall, m_lightSpritePointSmall, spriteBatch);
 			DrawPointLightMasks (toLightPointNormal, m_lightSpritePointNormal, spriteBatch);
+			DrawPointLightMasks (toLightPointBig, m_lightSpritePointBig, spriteBatch);
 			DrawDirectLightMasks (toLightDirectUp, m_lightSpriteDirectUp, spriteBatch);
 			DrawDirectLightMasks (toLightDirectDown, m_lightSpriteDirectDown, spriteBatch);
 			DrawDirectLightMasks (toLightDirectLeft, m_lightSpriteDirectLeft, spriteBatch);

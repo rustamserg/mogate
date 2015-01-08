@@ -7,7 +7,7 @@ namespace mogate
 	{
 		public Type Behavior { get { return typeof(PointLight); } }
 
-		public enum DistanceType { Small, Normal };
+		public enum DistanceType { Small, Normal, Big };
 
 		public DistanceType Distance { get; set; }
 		public Color LightColor { get; set; }

@@ -47,6 +47,10 @@ namespace mogate
 			ent.Register (new Text (m_font));
 			ent.Register (new Drawable (new Vector2 (420, 380)));
 
+			ent = CreateEntity ("player_skill");
+			ent.Register (new Text (m_font));
+			ent.Register (new Drawable (new Vector2 (420, 410)));
+
 			ent = CreateEntity ();
 			ent.Register (new Text (m_font, "Go to dangeon"));
 			ent.Register (new Drawable (new Vector2 (410, 500)));
@@ -80,6 +84,17 @@ namespace mogate
 
 			ent = GetEntityByTag ("player_move_speed");
 			ent.Get<Text> ().Message = string.Format ("Speed: {0}", GetMoveSpeedLabel (gameState.PlayerMoveSpeed));
+
+			ent = GetEntityByTag ("player_skill");
+			if (gameState.PlayerMoneyMultiplier > 1) {
+				ent.Get<Text> ().Message = string.Format ("Money: x{0}", gameState.PlayerMoneyMultiplier);
+			} else if (gameState.PlayerAttackMultiplier > 1) {
+				ent.Get<Text> ().Message = string.Format ("Attack: x{0}", gameState.PlayerAttackMultiplier);
+			} else if (gameState.PlayerPoisonMultiplier == 0) {
+				ent.Get<Text> ().Message = "Immune to poison";
+			} else {
+				ent.Get<Text> ().Message = string.Format ("Range: x{0}", gameState.PlayerAttackDistance);
+			}
 		}
 
 		private string GetMoveSpeedLabel(int moveSpeed)
