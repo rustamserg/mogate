@@ -46,6 +46,7 @@ namespace mogate
 			m_director.RegisterScene (new GameScene (this, "game"));
 			m_director.RegisterScene (new MainScene (this, "main"));
 			m_director.RegisterScene (new InterScene (this, "inter"));
+			m_director.RegisterScene (new PlayerSelectScene (this, "player_select"));
 
 			base.Initialize ();
 		}

@@ -78,5 +78,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Price.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\DirectLight.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\CriticalHit.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layers\PlayerSelectLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\PlayerSelectScene.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Tag.cs" />
   </ItemGroup>
 </Project>

@@ -26,9 +26,10 @@ namespace mogate
 		TimeSpan Playtime { get; }
 
 		string PlayerName { get; }
-		int PlayerSpriteID { get; }
+		int PlayerSpriteID { get; set; }
 		int PlayerHealth { get; set; }
-		int MaxPlayerHealth { get; }
+		int PlayerHealthMax { get; set; }
+		int PlayerMoveSpeed { get; set; }
 
 		int PlayerWeaponID { get; set; }
 		int PlayerArmorID { get; set; }
@@ -41,6 +42,7 @@ namespace mogate
 
 		void NewGame();
 		void NextLevel();
+		void ApplyArchetype (Dictionary<string, int> archetype);
 	}
 
 	[Serializable]
@@ -49,6 +51,8 @@ namespace mogate
 		public int Level;
 		public long PlaytimeTicks;
 		public int PlayerHealth;
+		public int PlayerHealthMax;
+		public int PlayerMoveSpeed;
 		public int PlayerSpriteID;
 		public int PlayerWeaponID;
 		public int PlayerArmorID;
@@ -65,9 +69,10 @@ namespace mogate
 
 		public bool IsGameEnd { get; private set; }
 
-		public int PlayerSpriteID { get; private set; }
+		public int PlayerSpriteID { get; set; }
 		public int PlayerHealth { get; set; }
-		public int MaxPlayerHealth { get; private set; }
+		public int PlayerHealthMax { get; set; }
+		public int PlayerMoveSpeed { get; set; }
 
 		public int PlayerWeaponID { get; set; }
 		public int PlayerArmorID { get; set; }
@@ -115,6 +120,17 @@ namespace mogate
 			SaveGame ();
 		}
 
+		public void ApplyArchetype(Dictionary<string, int> archetype)
+		{
+			PlayerHealth = archetype ["health_packs"] * Globals.HEALTH_PACK;
+			PlayerHealthMax = archetype ["health_packs_max"] * Globals.HEALTH_PACK;
+			PlayerMoveSpeed = archetype ["move_duration_msec"];
+			PlayerWeaponID = 0;
+			PlayerArmorID = -1;
+			PlayerSpriteID = archetype ["sprite_index"];
+			PlayerName = NameGenerator.Generate ();
+		}
+
 		void UpdateHallOfFame()
 		{
 			HallOfFame.Add (new HallOfFameEntry {
@@ -138,12 +154,8 @@ namespace mogate
 			IsGameEnd = false;
 			Playtime = TimeSpan.Zero;
 
-			PlayerHealth = Globals.PLAYER_HEALTH * Globals.HEALTH_PACK;
-			MaxPlayerHealth = Globals.PLAYER_HEALTH_MAX * Globals.HEALTH_PACK;
-			PlayerWeaponID = 0;
-			PlayerArmorID = 0;
-			PlayerSpriteID = Utils.ThrowDice (Globals.PLAYER_SPRITES_MAX) + 1;
-			PlayerName = NameGenerator.Generate ();
+			var arch = Archetypes.Players.First ();
+			ApplyArchetype (arch);
 		}
 
 		void LoadGame()
@@ -190,6 +202,8 @@ namespace mogate
 					PlayerName = this.PlayerName,
 					PlaytimeTicks = this.Playtime.Ticks,
 					PlayerHealth = this.PlayerHealth,
+					PlayerHealthMax = this.PlayerHealthMax,
+					PlayerMoveSpeed = this.PlayerMoveSpeed,
 					PlayerSpriteID = this.PlayerSpriteID,
 					PlayerArmorID= this.PlayerArmorID,
 					PlayerWeaponID = this.PlayerWeaponID,
@@ -230,6 +244,8 @@ namespace mogate
 					PlayerName = save.PlayerName;
 					Playtime = TimeSpan.FromTicks(save.PlaytimeTicks);
 					PlayerHealth = save.PlayerHealth;
+					PlayerHealthMax = save.PlayerHealthMax;
+					PlayerMoveSpeed = save.PlayerMoveSpeed;
 					PlayerSpriteID = save.PlayerSpriteID;
 					PlayerArmorID = save.PlayerArmorID;
 					PlayerWeaponID = save.PlayerWeaponID;

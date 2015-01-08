@@ -48,16 +48,16 @@ namespace mogate
 			}
 		}
 
-		void StartNewGame(Point _)
+		void StartNewGame(Point _, Entity __)
 		{
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 			gameState.NewGame ();
 
 			var director = (IDirector)Game.Services.GetService (typeof(IDirector));
-			director.ActivateScene ("game");
+			director.ActivateScene ("player_select");
 		}
 
-		void ContinueGame(Point _)
+		void ContinueGame(Point _, Entity __)
 		{
 			var director = (IDirector)Game.Services.GetService (typeof(IDirector));
 			director.ActivateScene ("game");

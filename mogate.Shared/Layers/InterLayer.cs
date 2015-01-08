@@ -56,7 +56,7 @@ namespace mogate
 			}
 		}
 
-		private void OnAction(Point _)
+		private void OnAction(Point _, Entity __)
 		{
 			var director = (IDirector)Game.Services.GetService (typeof(IDirector));
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));

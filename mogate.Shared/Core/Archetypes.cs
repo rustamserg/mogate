@@ -276,5 +276,36 @@ namespace mogate
 				{"price", Globals.MONEY_PACK*6},
 			},
 		};
+
+		public static readonly Dictionary<string, int>[] Players = {
+			new Dictionary<string, int> {
+				{ "sprite_index", 1 },
+				{ "health_packs", 3 },
+				{ "health_packs_max", 6 },
+				{ "move_duration_msec", 300 },
+				{ "money_bonus", 0 },
+			},
+			new Dictionary<string, int> {
+				{ "sprite_index", 2 },
+				{ "health_packs", 5 },
+				{ "health_packs_max", 8 },
+				{ "move_duration_msec", 400 },
+				{ "money_bonus", 100 },
+			},
+			new Dictionary<string, int> {
+				{ "sprite_index", 3 },
+				{ "health_packs", 2 },
+				{ "health_packs_max", 4 },
+				{ "move_duration_msec", 200 },
+				{ "money_bonus", 0 },
+			},
+			new Dictionary<string, int> {
+				{ "sprite_index", 4 },
+				{ "health_packs", 8 },
+				{ "health_packs_max", 12 },
+				{ "move_duration_msec", 500 },
+				{ "money_bonus", 200 },
+			},
+		};
 	}
 }

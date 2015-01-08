@@ -13,20 +13,21 @@ namespace mogate
 
 		public Rectangle ClickArea;
 
-		public Action<Point> OnLeftButtonPressed;
-		public Action<Point> OnRightButtonPressed;
+		public Action<Point, Entity> OnLeftButtonPressed;
+		public Action<Point, Entity> OnRightButtonPressed;
 
-		public Action<Point> OnTouched;
-		public Action<Point> OnMoved;
+		public Action<Point, Entity> OnTouched;
+		public Action<Point, Entity> OnMoved;
 
 		private int m_lastTouchID;
 		private Vector2 m_lastTouchPos;
 		private bool m_isTouchMoved;
+		private Entity m_entity;
 
-
-		public Clickable (Rectangle clickArea)
+		public Clickable (Rectangle clickArea, Entity entity = null)
 		{
 			ClickArea = clickArea;
+			m_entity = entity;
 		}
 
 		public void HandleMouseInput(MouseState state, Vector2 screenToWorldScale)
@@ -40,11 +41,11 @@ namespace mogate
 
 			if (state.LeftButton == ButtonState.Pressed) {
 				if (OnLeftButtonPressed != null)
-					OnLeftButtonPressed (clickPos);
+					OnLeftButtonPressed (clickPos, m_entity);
 			}
 			if (state.RightButton == ButtonState.Pressed) {
 				if (OnRightButtonPressed != null)
-					OnRightButtonPressed (clickPos);
+					OnRightButtonPressed (clickPos, m_entity);
 			}
 		}
 
@@ -63,7 +64,7 @@ namespace mogate
 					if (touch.Id == m_lastTouchID) {
 						if (!m_isTouchMoved && ClickArea.Contains (touchPos)) {
 							if (OnTouched != null) {
-								OnTouched (touchPos);
+								OnTouched (touchPos, m_entity);
 							}
 						}
 						m_isTouchMoved = false;
@@ -77,7 +78,7 @@ namespace mogate
 						m_isTouchMoved = true;
 						if (ClickArea.Contains (touchPos)) {
 							if (OnMoved != null) {
-								OnMoved (touchPos);
+								OnMoved (touchPos, m_entity);
 							}
 						}
 					}

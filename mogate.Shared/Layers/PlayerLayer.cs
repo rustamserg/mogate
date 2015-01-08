@@ -33,11 +33,11 @@ namespace mogate
 			var player = CreateEntity ("player");
 
 			player.Register (new State<PlayerState> (PlayerState.Idle));
-			player.Register (new Health (gameState.PlayerHealth, gameState.MaxPlayerHealth,
+			player.Register (new Health (gameState.PlayerHealth, gameState.PlayerHealthMax,
 											() => OnHealthChanged(player)));
 			player.Register (new Attack (Archetypes.Weapons[gameState.PlayerWeaponID]["attack"], gameState.PlayerWeaponID));
 			player.Register (new PointLight (PointLight.DistanceType.Normal, Color.White));
-			player.Register (new MoveSpeed (Globals.PLAYER_MOVE_SPEED));
+			player.Register (new MoveSpeed (gameState.PlayerMoveSpeed));
 			player.Register (new IFFSystem (Globals.IFF_PLAYER_ID, 2));
 			player.Register (new Attackable (OnAttacked));
 			player.Register (new Position (mapGrid.StairDown.X, mapGrid.StairDown.Y));
@@ -48,6 +48,10 @@ namespace mogate
 			player.Register (new Clickable (new Rectangle (0, 0, Globals.CELL_WIDTH * Globals.WORLD_WIDTH, Globals.CELL_HEIGHT * Globals.WORLD_HEIGHT)));
 			player.Register (new Consumable<ConsumableTypes> ());
 			player.Register (new CriticalHit ());
+
+			if (gameState.PlayerArmorID >= 0) {
+				player.Register (new Armor (Archetypes.Armors [gameState.PlayerArmorID] ["defence"], gameState.PlayerArmorID));
+			}
 
 			player.Get<Clickable> ().OnLeftButtonPressed += OnMoveToPosition;
 			player.Get<Clickable> ().OnMoved += OnMoveToPosition;
@@ -103,7 +107,7 @@ namespace mogate
 				if (mapGrid.GetID (mapPos.X, mapPos.Y) != MapGridTypes.ID.Blocked && mapPos != player.Get<Position> ().MapPos) {
 					var seq = new Sequence ();
 					var spawn = new Spawn ();
-					spawn.Add (new MoveSpriteTo (player, new Vector2 (mapPos.X * Globals.CELL_WIDTH, mapPos.Y * Globals.CELL_HEIGHT), 300));
+					spawn.Add (new MoveSpriteTo (player, new Vector2 (mapPos.X * Globals.CELL_WIDTH, mapPos.Y * Globals.CELL_HEIGHT), player.Get<MoveSpeed>().Speed));
 					//spawn.Add (new AnimSprite (player, sprites.GetSprite("hero_move"), player.Get<MoveSpeed>().Speed));
 					seq.Add (spawn);
 					seq.Add (new ActionEntity (player, (_) => {
@@ -117,7 +121,7 @@ namespace mogate
 			}
 		}
 
-		private void OnMoveToPosition(Point clickPos)
+		private void OnMoveToPosition(Point clickPos, Entity _)
 		{
 			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
@@ -134,7 +138,7 @@ namespace mogate
 			}
 		}
 
-		private void OnAction(Point clickPos)
+		private void OnAction(Point clickPos, Entity _)
 		{
 			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
