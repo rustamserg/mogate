@@ -64,7 +64,7 @@ namespace mogate
 
 				var mapLine = mapGrid.GetLine (monsterPos, enemyPos);
 
-				if (!mapLine.Any (e => e.Type != monster.Get<AllowedMapArea> ().Area)) {
+				if (mapLine.Any() && !mapLine.Any (e => e.Type != monster.Get<AllowedMapArea> ().Area)) {
 					Utils.Direction lookDir;
 					if (Utils.FindDirection (monsterPos, enemyPos, out lookDir)) {
 						var distToEnemy = Utils.DirectionDist (monsterPos, enemyPos, lookDir);

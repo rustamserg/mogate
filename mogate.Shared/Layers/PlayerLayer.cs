@@ -10,7 +10,8 @@ namespace mogate
 	public enum PlayerState
 	{
 		Idle,
-		Moving
+		Moving,
+		Attacking,
 	};
 
 	public class PlayerLayer : Layer
@@ -52,10 +53,12 @@ namespace mogate
 			player.Register (new AttackMultiplier (gameState.PlayerAttackMultiplier));
 			player.Register (new PoisonMultiplier (gameState.PlayerPoisonMultiplier));
 			player.Register (new AttackSpeed (gameState.PlayerAttackSpeed));
+			player.Register (new AttackDistance (gameState.PlayerAttackDistance));
 
 			if (gameState.PlayerArmorID >= 0) {
 				player.Register (new Armor (Archetypes.Armors [gameState.PlayerArmorID] ["defence"], gameState.PlayerArmorID));
 			}
+			player.Get<Consumable<ConsumableTypes>> ().Refill (ConsumableTypes.Money, gameState.PlayerMoney);
 
 			player.Get<Clickable> ().OnLeftButtonPressed += OnMoveToPosition;
 			player.Get<Clickable> ().OnMoved += OnMoveToPosition;
@@ -67,14 +70,16 @@ namespace mogate
 			})), "player_update_loop");
 
 			m_toMove = mapGrid.StairDown;
-			StartIdle ();
+			StartIdle (player);
 		}
 
 		public override void OnDeactivated ()
 		{
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 			var player = GetEntityByTag("player");
+
 			gameState.PlayerHealth = player.Get<Health> ().HP;
+			gameState.PlayerMoney = player.Get<Consumable<ConsumableTypes>> ().Amount (ConsumableTypes.Money);
 		}
 			
 		private void UpdatePlayer (Entity player)
@@ -148,36 +153,44 @@ namespace mogate
 
 			var actionPosID = mapGrid.GetID (actionPos.X, actionPos.Y);
 			var playerPosID = mapGrid.GetID (mapPos.X, mapPos.Y);
+			var state = player.Get<State<PlayerState>> ().EState;
 
-			if (actionPosID == MapGridTypes.ID.Blocked || actionPosID != playerPosID || actionPos == mapPos)
+			if (state != PlayerState.Idle ||
+				actionPosID == MapGridTypes.ID.Blocked ||
+				actionPosID != playerPosID ||
+				actionPos == mapPos)
 				return;
 
 			var effects = (EffectsLayer)Scene.GetLayer ("effects");
 			var items = (ItemsLayer)Scene.GetLayer ("items");
 			var monsters = (MonstersLayer)Scene.GetLayer ("monsters");
 
-			if (Utils.Dist(mapPos, actionPos) < 2) {
-				effects.SpawnEffect (actionPos, "weapon_01", 200);
+			if (Utils.Dist(mapPos, actionPos) <= player.Get<AttackDistance>().Distance) {
+				var mapLine = mapGrid.GetLine (mapPos, actionPos);
+				if (mapLine.Any() && !mapLine.Any (e => e.Type == MapGridTypes.ID.Blocked)) {
+					var seq = new Sequence ();
+					effects.SpawnEffect (actionPos, "weapon_01", player.Get<AttackSpeed> ().Speed);
 
-				var actionTargets = items.GetAllEntities().Where (e => e.Has<Position> ()).ToList();
-				actionTargets.AddRange (monsters.GetAllEntities ().Where (e => e.Has<Position> ()));
-				var target = actionTargets.FirstOrDefault (m => m.Get<Position> ().MapPos == actionPos);
-				if (target != default(Entity)) {
-					if (target.Has<IFFSystem> ()) {
-						if (player.Get<IFFSystem> ().IsFoe (target)) {
-							var seq = new Sequence ();
-							seq.Add (new AttackEntity (player, target));
-							seq.Add (new Delay (player.Get<AttackSpeed> ().Speed));
-							player.Get<Execute> ().Add (seq);
+					var actionTargets = items.GetAllEntities ().Where (e => e.Has<Position> ()).ToList ();
+					actionTargets.AddRange (monsters.GetAllEntities ().Where (e => e.Has<Position> ()));
+					var target = actionTargets.FirstOrDefault (m => m.Get<Position> ().MapPos == actionPos);
+					if (target != default(Entity)) {
+						if (target.Has<IFFSystem> ()) {
+							if (player.Get<IFFSystem> ().IsFoe (target)) {
+								seq.Add (new AttackEntity (player, target));
+							}
 						}
 					}
+					seq.Add (new Delay (player.Get<AttackSpeed> ().Speed));
+					seq.Add (new ActionEntity (player, StartIdle));
+					player.Get<Execute> ().Add (seq, "attack");
+					player.Get<State<PlayerState>> ().EState = PlayerState.Attacking;
 				}
 			}
 		}
 
-		private void OnEndMove(Entity hero)
+		private void OnEndMove(Entity player)
 		{
-			var player = GetEntityByTag ("player");
 			var items = (ItemsLayer)Scene.GetLayer ("items");
 			var maps = (MapGridLayer)Scene.GetLayer ("map");
 
@@ -187,7 +200,7 @@ namespace mogate
 			foreach (var item in toTrigger) {
 				player.Get<Execute> ().Add (new TriggerEntity (player, item));
 			}
-			StartIdle ();
+			StartIdle (player);
 		}
 
 		private void OnAttacked(Entity attacker, int damage)
@@ -224,9 +237,8 @@ namespace mogate
 			hud.FeedbackMessage (feedbackMsg);
 		}
 
-		private void StartIdle()
+		private void StartIdle(Entity player)
 		{
-			var player = GetEntityByTag("player");
 			player.Get<State<PlayerState>>().EState = PlayerState.Idle;
 		}
 	}

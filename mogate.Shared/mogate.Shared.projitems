@@ -84,5 +84,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\MoneyMultiplier.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\AttackMultiplier.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\PoisonMultiplier.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\AttackDistance.cs" />
   </ItemGroup>
 </Project>
