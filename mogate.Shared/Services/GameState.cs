@@ -30,9 +30,14 @@ namespace mogate
 		int PlayerHealth { get; set; }
 		int PlayerHealthMax { get; set; }
 		int PlayerMoveSpeed { get; set; }
+		int PlayerAttackSpeed { get; set; }
 
 		int PlayerWeaponID { get; set; }
 		int PlayerArmorID { get; set; }
+
+		int PlayerAttackMultiplier { get; set; }
+		int PlayerMoneyMultiplier { get; set; }
+		int PlayerPoisonMultiplier { get; set; }
 
 		bool IsGameEnd { get; }
 		SaveDataState DataState { get; }
@@ -52,6 +57,10 @@ namespace mogate
 		public long PlaytimeTicks;
 		public int PlayerHealth;
 		public int PlayerHealthMax;
+		public int PlayerAttackMultiplier;
+		public int PlayerMoneyMultiplier;
+		public int PlayerPoisonMultiplier;
+		public int PlayerAttackSpeed;
 		public int PlayerMoveSpeed;
 		public int PlayerSpriteID;
 		public int PlayerWeaponID;
@@ -73,6 +82,11 @@ namespace mogate
 		public int PlayerHealth { get; set; }
 		public int PlayerHealthMax { get; set; }
 		public int PlayerMoveSpeed { get; set; }
+		public int PlayerAttackSpeed { get; set; }
+
+		public int PlayerAttackMultiplier { get; set; }
+		public int PlayerMoneyMultiplier { get; set; }
+		public int PlayerPoisonMultiplier { get; set; }
 
 		public int PlayerWeaponID { get; set; }
 		public int PlayerArmorID { get; set; }
@@ -129,6 +143,10 @@ namespace mogate
 			PlayerArmorID = -1;
 			PlayerSpriteID = archetype ["sprite_index"];
 			PlayerName = NameGenerator.Generate ();
+			PlayerMoneyMultiplier = archetype ["money_multiplier"];
+			PlayerAttackMultiplier = archetype ["attack_multiplier"];
+			PlayerPoisonMultiplier = archetype ["poison_multiplier"];
+			PlayerAttackSpeed = archetype ["attack_duration_msec"];
 		}
 
 		void UpdateHallOfFame()
@@ -203,6 +221,10 @@ namespace mogate
 					PlaytimeTicks = this.Playtime.Ticks,
 					PlayerHealth = this.PlayerHealth,
 					PlayerHealthMax = this.PlayerHealthMax,
+					PlayerMoneyMultiplier = this.PlayerMoneyMultiplier,
+					PlayerAttackMultiplier = this.PlayerAttackMultiplier,
+					PlayerPoisonMultiplier = this.PlayerPoisonMultiplier,
+					PlayerAttackSpeed = this.PlayerAttackSpeed,
 					PlayerMoveSpeed = this.PlayerMoveSpeed,
 					PlayerSpriteID = this.PlayerSpriteID,
 					PlayerArmorID= this.PlayerArmorID,
@@ -245,6 +267,10 @@ namespace mogate
 					Playtime = TimeSpan.FromTicks(save.PlaytimeTicks);
 					PlayerHealth = save.PlayerHealth;
 					PlayerHealthMax = save.PlayerHealthMax;
+					PlayerMoneyMultiplier = save.PlayerMoneyMultiplier;
+					PlayerAttackMultiplier = save.PlayerAttackMultiplier;
+					PlayerPoisonMultiplier = save.PlayerPoisonMultiplier;
+					PlayerAttackSpeed = save.PlayerAttackSpeed;
 					PlayerMoveSpeed = save.PlayerMoveSpeed;
 					PlayerSpriteID = save.PlayerSpriteID;
 					PlayerArmorID = save.PlayerArmorID;

@@ -48,6 +48,10 @@ namespace mogate
 			player.Register (new Clickable (new Rectangle (0, 0, Globals.CELL_WIDTH * Globals.WORLD_WIDTH, Globals.CELL_HEIGHT * Globals.WORLD_HEIGHT)));
 			player.Register (new Consumable<ConsumableTypes> ());
 			player.Register (new CriticalHit ());
+			player.Register (new MoneyMultiplier (gameState.PlayerMoneyMultiplier));
+			player.Register (new AttackMultiplier (gameState.PlayerAttackMultiplier));
+			player.Register (new PoisonMultiplier (gameState.PlayerPoisonMultiplier));
+			player.Register (new AttackSpeed (gameState.PlayerAttackSpeed));
 
 			if (gameState.PlayerArmorID >= 0) {
 				player.Register (new Armor (Archetypes.Armors [gameState.PlayerArmorID] ["defence"], gameState.PlayerArmorID));
@@ -106,10 +110,7 @@ namespace mogate
 
 				if (mapGrid.GetID (mapPos.X, mapPos.Y) != MapGridTypes.ID.Blocked && mapPos != player.Get<Position> ().MapPos) {
 					var seq = new Sequence ();
-					var spawn = new Spawn ();
-					spawn.Add (new MoveSpriteTo (player, new Vector2 (mapPos.X * Globals.CELL_WIDTH, mapPos.Y * Globals.CELL_HEIGHT), player.Get<MoveSpeed>().Speed));
-					//spawn.Add (new AnimSprite (player, sprites.GetSprite("hero_move"), player.Get<MoveSpeed>().Speed));
-					seq.Add (spawn);
+					seq.Add (new MoveSpriteTo (player, new Vector2 (mapPos.X * Globals.CELL_WIDTH, mapPos.Y * Globals.CELL_HEIGHT), player.Get<MoveSpeed>().Speed));
 					seq.Add (new ActionEntity (player, (_) => {
 						player.Get<Position> ().MapPos = mapPos;
 					}));
@@ -126,15 +127,12 @@ namespace mogate
 			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 
-			//var effects = (EffectsLayer)Scene.GetLayer ("effects");
-
 			var mapGrid = world.GetLevel(gameState.Level);
 			var actionPos = mapGrid.ScreenToWorld (clickPos.X, clickPos.Y);
 
 			if (mapGrid.GetID (actionPos.X, actionPos.Y) != MapGridTypes.ID.Blocked
 				&& m_toMove != actionPos) {
 				m_toMove = actionPos;
-				//effects.SpawnEffect (m_toMove, "effects_marker", 200);
 			}
 		}
 
@@ -167,7 +165,10 @@ namespace mogate
 				if (target != default(Entity)) {
 					if (target.Has<IFFSystem> ()) {
 						if (player.Get<IFFSystem> ().IsFoe (target)) {
-							player.Get<Execute> ().Add (new AttackEntity (player, target));
+							var seq = new Sequence ();
+							seq.Add (new AttackEntity (player, target));
+							seq.Add (new Delay (player.Get<AttackSpeed> ().Speed));
+							player.Get<Execute> ().Add (seq);
 						}
 					}
 				}

@@ -81,5 +81,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Layers\PlayerSelectLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\PlayerSelectScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Tag.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\MoneyMultiplier.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\AttackMultiplier.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\PoisonMultiplier.cs" />
   </ItemGroup>
 </Project>

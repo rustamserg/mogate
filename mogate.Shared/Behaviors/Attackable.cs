@@ -24,8 +24,9 @@ namespace mogate
 							criticaldmg = attacker.Get<CriticalHit> ().CriticalDamage;
 						}
 					}
+					int attackMult = attacker.Has<AttackMultiplier> () ? attacker.Get<AttackMultiplier> ().Multiplier : 1;
 					int defence = defender.Has<Armor> () ? defender.Get<Armor> ().Defence : 0;
-					int damage = Math.Max(0, basedmg + criticaldmg - defence);
+					int damage = Math.Max(0, (basedmg + criticaldmg) * attackMult - defence);
 
 					if (m_onAttack != null)
 						m_onAttack (attacker, damage);

@@ -21,10 +21,15 @@ namespace mogate
 				if (defender.Has<Health> ()) {
 					if (Utils.DropChance (attacker.Get<Poison> ().Chance)) {
 						if (defender.Has<Execute> ()) {
-							var poisonLoop = new Loop (new DoPoisonEntity (defender, attacker.Get<Poison> ().Damage, m_onPoisoned),
-								attacker.Get<Poison> ().Speed);
-							defender.Get<Execute> ().AddNew (poisonLoop, "poison_effect");
-							IsPoisoned = true;
+							int poisonMult = defender.Has<PoisonMultiplier> () ? defender.Get<PoisonMultiplier> ().Multiplier : 1;
+							int poisonDamage = attacker.Get<Poison> ().Damage * poisonMult;
+
+							if (poisonDamage > 0) {
+								var poisonLoop = new Loop (new DoPoisonEntity (defender, attacker.Get<Poison> ().Damage, m_onPoisoned),
+									                attacker.Get<Poison> ().Speed);
+								defender.Get<Execute> ().AddNew (poisonLoop, "poison_effect");
+								IsPoisoned = true;
+							}
 						}
 					}
 				}
