@@ -231,10 +231,15 @@ namespace mogate
 			var effects = (EffectsLayer)Scene.GetLayer ("effects");
 			var hud = (HUDLayer)Scene.GetLayer ("hud");
 
-			effects.AttachEffect (player, "damage_01", 400);
+			if (player.Get<Consumable<ConsumableTypes>> ().TryConsume (ConsumableTypes.Antitod, 1)) {
+				hud.FeedbackMessage ("Cured");
+				player.Get<Poisonable> ().CancelPoison (player);
+			} else {
+				effects.AttachEffect (player, "damage_01", 400);
 
-			string feedbackMsg = string.Format ("Poisoned: {0}", damage);
-			hud.FeedbackMessage (feedbackMsg);
+				string feedbackMsg = string.Format ("Poisoned: {0}", damage);
+				hud.FeedbackMessage (feedbackMsg);
+			}
 		}
 
 		private void StartIdle(Entity player)

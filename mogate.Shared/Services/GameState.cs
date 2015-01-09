@@ -34,6 +34,7 @@ namespace mogate
 		int PlayerAttackSpeed { get; set; }
 		int PlayerAttackDistance { get; set; }
 		int PlayerViewDistanceType { get; set; }
+		int PlayerAntitodPotionsMax { get; set; }
 
 		int PlayerWeaponID { get; set; }
 		int PlayerArmorID { get; set; }
@@ -60,6 +61,7 @@ namespace mogate
 		public long PlaytimeTicks;
 		public int PlayerHealth;
 		public int PlayerHealthMax;
+		public int PlayerAntitodPotionsMax;
 		public int PlayerMoney;
 		public int PlayerViewDistanceType;
 		public int PlayerAttackMultiplier;
@@ -92,6 +94,7 @@ namespace mogate
 		public int PlayerMoveSpeed { get; set; }
 		public int PlayerAttackSpeed { get; set; }
 		public int PlayerAttackDistance { get; set; }
+		public int PlayerAntitodPotionsMax { get; set; }
 
 		public int PlayerAttackMultiplier { get; set; }
 		public int PlayerMoneyMultiplier { get; set; }
@@ -159,6 +162,7 @@ namespace mogate
 			PlayerAttackSpeed = archetype ["attack_duration_msec"];
 			PlayerAttackDistance = archetype ["attack_distance"];
 			PlayerViewDistanceType = archetype ["view_distance_type"];
+			PlayerAntitodPotionsMax = archetype ["antitod_potions_max"];
 		}
 
 		void UpdateHallOfFame()
@@ -233,6 +237,7 @@ namespace mogate
 					PlaytimeTicks = this.Playtime.Ticks,
 					PlayerHealth = this.PlayerHealth,
 					PlayerHealthMax = this.PlayerHealthMax,
+					PlayerAntitodPotionsMax = this.PlayerAntitodPotionsMax,
 					PlayerMoney = this.PlayerMoney,
 					PlayerViewDistanceType = this.PlayerViewDistanceType,
 					PlayerAttackDistance = this.PlayerAttackDistance,
@@ -282,6 +287,7 @@ namespace mogate
 					Playtime = TimeSpan.FromTicks(save.PlaytimeTicks);
 					PlayerHealth = save.PlayerHealth;
 					PlayerHealthMax = save.PlayerHealthMax;
+					PlayerAntitodPotionsMax = save.PlayerAntitodPotionsMax;
 					PlayerMoney = save.PlayerMoney;
 					PlayerViewDistanceType = save.PlayerViewDistanceType;
 					PlayerAttackDistance = save.PlayerAttackDistance;

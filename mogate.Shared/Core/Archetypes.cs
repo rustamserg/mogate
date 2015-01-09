@@ -303,6 +303,7 @@ namespace mogate
 				{ "view_distance_type", 1 },
 				{ "attack_distance", 1 },
 				{ "attack_duration_msec", 200 },
+				{ "antitod_potions_max", 3 },
 			},
 			new Dictionary<string, int> {
 				{ "sprite_index", 2 },
@@ -315,6 +316,7 @@ namespace mogate
 				{ "view_distance_type", 1 },
 				{ "attack_distance", 1 },
 				{ "attack_duration_msec", 200 },
+				{ "antitod_potions_max", 3 },
 			},
 			new Dictionary<string, int> {
 				{ "sprite_index", 3 },
@@ -327,6 +329,7 @@ namespace mogate
 				{ "view_distance_type", 2 },
 				{ "attack_distance", 3 },
 				{ "attack_duration_msec", 100 },
+				{ "antitod_potions_max", 3 },
 			},
 			new Dictionary<string, int> {
 				{ "sprite_index", 4 },
@@ -339,6 +342,7 @@ namespace mogate
 				{ "view_distance_type", 1 },
 				{ "attack_distance", 1 },
 				{ "attack_duration_msec", 400 },
+				{ "antitod_potions_max", 3 },
 			},
 		};
 	}

@@ -7,6 +7,7 @@ namespace mogate
 	public class HUDLayer : Layer
 	{
 		Sprite2D m_life;
+		Sprite2D m_antitod;
 
 		public HUDLayer (Game game, string name, Scene scene, int z) : base(game, name, scene, z)
 		{
@@ -17,6 +18,7 @@ namespace mogate
 			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
 
 			m_life = sprites.GetSprite ("health_01");
+			m_antitod = sprites.GetSprite ("antitod_potion_01");
 
 			var infoEnt = CreateEntity ();
 			infoEnt.Register (new Execute ());
@@ -68,16 +70,20 @@ namespace mogate
 				var drawPos = new Vector2 (Globals.WORLD_WIDTH * Globals.CELL_WIDTH, i  * Globals.CELL_HEIGHT);
 				spriteBatch.Draw (m_life.Texture, drawPos, m_life.GetFrameRect (0), Color.White);
 			}
+			for (int i = 0; i < player.Get<Consumable<ConsumableTypes>>().Amount(ConsumableTypes.Antitod); i++) {
+				var drawPos = new Vector2 (Globals.WORLD_WIDTH * Globals.CELL_WIDTH, (i + 15)  * Globals.CELL_HEIGHT);
+				spriteBatch.Draw (m_antitod.Texture, drawPos, m_antitod.GetFrameRect (0), Color.White);
+			}
 
 			if (player.Has<Armor> ()) {
-				var armorDrawPos = new Vector2 (Globals.WORLD_WIDTH * Globals.CELL_WIDTH, 10 * Globals.CELL_HEIGHT);
+				var armorDrawPos = new Vector2 (Globals.WORLD_WIDTH * Globals.CELL_WIDTH, 20 * Globals.CELL_HEIGHT);
 				int armorId = player.Get<Armor> ().ArchetypeID;
 				var armorSpriteName = string.Format ("armor_{0:D2}", Archetypes.Armors [armorId] ["sprite_index"]);
 				var armorSprite = sprites.GetSprite (armorSpriteName);
 				spriteBatch.Draw (armorSprite.Texture, armorDrawPos, armorSprite.GetFrameRect (0), Color.White);
 			}
 
-			var weaponDrawPos = new Vector2 (Globals.WORLD_WIDTH * Globals.CELL_WIDTH, 11 * Globals.CELL_HEIGHT);
+			var weaponDrawPos = new Vector2 (Globals.WORLD_WIDTH * Globals.CELL_WIDTH, 21 * Globals.CELL_HEIGHT);
 			int weaponId = player.Get<Attack> ().ArchetypeID;
 			string weaponSpriteName = string.Format ("weapon_{0:D2}", Archetypes.Weapons [weaponId] ["sprite_index"]);
 			var weaponSprite = sprites.GetSprite (weaponSpriteName);

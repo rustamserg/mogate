@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace mogate
 {
-	public enum ConsumableTypes { Money };
+	public enum ConsumableTypes { Money, Antitod };
 	public enum LootTypes { Money, Health, Antitod, Armor, Weapon };
 	public enum TreasureTypes { Chest, Trash };
 
@@ -234,6 +234,12 @@ namespace mogate
 				if (from.Get<Poisonable> ().IsPoisoned) {
 					from.Get<Poisonable> ().CancelPoison (from);
 					RemoveEntityByTag (item.Tag);
+				} else {
+					var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
+					if (from.Get<Consumable<ConsumableTypes>> ().Amount (ConsumableTypes.Antitod) < gameState.PlayerAntitodPotionsMax) {
+						from.Get<Consumable<ConsumableTypes>> ().Refill (ConsumableTypes.Antitod, 1);
+						RemoveEntityByTag (item.Tag);
+					}
 				}
 			}
 		}
