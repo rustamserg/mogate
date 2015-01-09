@@ -197,16 +197,19 @@ namespace mogate
 			new Dictionary<string, int> {
 				{"spawn_weight", 30},
 				{"loot_type", (int)LootTypes.Money},
+				{"lifetime_sec", 10},
 				{"money", Globals.MONEY_PACK},
 			},
 			new Dictionary<string, int> {
 				{"spawn_weight", 15},
 				{"loot_type", (int)LootTypes.Health},
+				{"lifetime_sec", 10},
 				{"health", Globals.HEALTH_PACK},
 			},
 			new Dictionary<string, int> {
 				{"spawn_weight", 7},
 				{"loot_type", (int)LootTypes.Antitod},
+				{"lifetime_sec", 10},
 			},
 		};
 
@@ -214,16 +217,19 @@ namespace mogate
 			new Dictionary<string, int> {
 				{"spawn_weight", 30},
 				{"loot_type", (int)LootTypes.Money},
+				{"lifetime_sec", 10},
 				{"money", (int)Globals.MONEY_PACK/5},
 			},
 			new Dictionary<string, int> {
 				{"spawn_weight", 15},
 				{"loot_type", (int)LootTypes.Health},
+				{"lifetime_sec", 10},
 				{"health", (int)Globals.HEALTH_PACK/4},
 			},
 			new Dictionary<string, int> {
 				{"spawn_weight", 5},
 				{"loot_type", (int)LootTypes.Antitod},
+				{"lifetime_sec", 10},
 			},
 		};
 
@@ -231,47 +237,55 @@ namespace mogate
 			new Dictionary<string, int> {
 				{"spawn_weight", 10},
 				{"loot_type", (int)LootTypes.Money},
+				{"lifetime_sec", 10},
 				{"money", Globals.MONEY_PACK*2},
 			},
 			new Dictionary<string, int> {
 				{"spawn_weight", 10},
 				{"loot_type", (int)LootTypes.Armor},
+				{"lifetime_sec", 10},
 				{"armor_index", 0},
 				{"price", Globals.MONEY_PACK*4},
 			},
 			new Dictionary<string, int> {
 				{"spawn_weight", 20},
 				{"loot_type", (int)LootTypes.Armor},
+				{"lifetime_sec", 10},
 				{"armor_index", 1},
 				{"price", Globals.MONEY_PACK*4},
 			},
 			new Dictionary<string, int> {
 				{"spawn_weight", 30},
 				{"loot_type", (int)LootTypes.Armor},
+				{"lifetime_sec", 10},
 				{"armor_index", 2},
 				{"price", Globals.MONEY_PACK*5},
 			},
 			new Dictionary<string, int> {
 				{"spawn_weight", 40},
 				{"loot_type", (int)LootTypes.Armor},
+				{"lifetime_sec", 10},
 				{"armor_index", 3},
 				{"price", Globals.MONEY_PACK*6},
 			},
 			new Dictionary<string, int> {
 				{"spawn_weight", 20},
 				{"loot_type", (int)LootTypes.Weapon},
+				{"lifetime_sec", 10},
 				{"weapon_index", 1},
 				{"price", Globals.MONEY_PACK*4},
 			},
 			new Dictionary<string, int> {
 				{"spawn_weight", 30},
 				{"loot_type", (int)LootTypes.Weapon},
+				{"lifetime_sec", 10},
 				{"weapon_index", 2},
 				{"price", Globals.MONEY_PACK*5},
 			},
 			new Dictionary<string, int> {
 				{"spawn_weight", 40},
 				{"loot_type", (int)LootTypes.Weapon},
+				{"lifetime_sec", 10},
 				{"weapon_index", 3},
 				{"price", Globals.MONEY_PACK*6},
 			},
