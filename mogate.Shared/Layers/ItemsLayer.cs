@@ -37,7 +37,7 @@ namespace mogate
 				ent.Register (new Attackable ((attacker, _) => OnChestAttacked(ent, attacker)));
 				ent.Register (new IFFSystem (Globals.IFF_MONSTER_ID));
 				ent.Register (new State<TreasureTypes> (TreasureTypes.Chest));
-				ent.Register (new PointLight (PointLight.DistanceType.Small, Color.Green));
+				ent.Register (new PointLight (PointLight.DistanceType.Small, Color.White));
 			}
 
 			int spawnDelay = Globals.TRASH_SPAWN_DELAY_MSEC [gameState.Level];

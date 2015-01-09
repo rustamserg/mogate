@@ -56,7 +56,7 @@ namespace mogate
 			var ent = CreateEntity ();
 			ent.Register (new Sprite (sprites.GetSprite (isFinal ? "final_exit_01" : "exit_01")));
 			ent.Register (new Drawable (new Vector2 (mapGrid.StairUp.X * Globals.CELL_WIDTH, mapGrid.StairUp.Y * Globals.CELL_HEIGHT)));
-			ent.Register (new PointLight (PointLight.DistanceType.Normal, Color.Blue));
+			ent.Register (new PointLight (PointLight.DistanceType.Normal, Color.Green));
 			ent.Register (new Position (mapGrid.StairUp.X, mapGrid.StairUp.Y));
 			ent.Register (new Triggerable(1, (from) => OnExitTriggered(ent, from)));
 		}
