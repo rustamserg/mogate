@@ -58,7 +58,7 @@ namespace mogate
 			ent.Register (new Drawable (new Vector2 (mapGrid.StairUp.X * Globals.CELL_WIDTH, mapGrid.StairUp.Y * Globals.CELL_HEIGHT)));
 			ent.Register (new PointLight (PointLight.DistanceType.Normal, Color.Green));
 			ent.Register (new Position (mapGrid.StairUp.X, mapGrid.StairUp.Y));
-			ent.Register (new Triggerable(1, (from) => OnExitTriggered(ent, from)));
+			ent.Register (new Triggerable((from) => OnExitTriggered(ent, from)));
 		}
 
 		void OnExitTriggered(Entity stair, Entity from)

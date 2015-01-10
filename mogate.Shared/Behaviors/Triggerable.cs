@@ -9,7 +9,7 @@ namespace mogate
 		private Action<Entity> m_onTrigger;
 		public int Distance { get; private set; }
 
-		public Triggerable(int distance = 0, Action<Entity> onTrigger = null)
+		public Triggerable(Action<Entity> onTrigger, int distance = 0)
 		{
 			m_onTrigger = onTrigger;
 			Distance = distance;

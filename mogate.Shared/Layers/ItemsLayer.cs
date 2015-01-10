@@ -88,27 +88,27 @@ namespace mogate
 
 					if (lootType == LootTypes.Money) {
 						ent.Register (new Sprite (sprites.GetSprite ("money_01")));
-						ent.Register (new Triggerable (1, (from) => OnMoneyTriggered (ent, from)));
+						ent.Register (new Triggerable ((from) => OnMoneyTriggered (ent, from)));
 						ent.Register (new Loot (Utils.ThrowDice (arch ["money"])));
 					} else if (lootType == LootTypes.Health) {
 						ent.Register (new Sprite (sprites.GetSprite ("health_potion_01")));
-						ent.Register (new Triggerable (1, (from) => OnHealthTriggered (ent, from)));
+						ent.Register (new Triggerable ((from) => OnHealthTriggered (ent, from)));
 						ent.Register (new Loot (Utils.ThrowDice (arch ["health"])));
 					} else if (lootType == LootTypes.Armor) {
 						var armorSprite = string.Format ("armor_{0:D2}", Archetypes.Armors [arch ["armor_index"]] ["sprite_index"]);
 						ent.Register (new Sprite (sprites.GetSprite (armorSprite)));
-						ent.Register (new Triggerable (1, (from) => OnArmorTriggered (ent, from)));
+						ent.Register (new Triggerable ((from) => OnArmorTriggered (ent, from)));
 						ent.Register (new Loot (arch ["armor_index"]));
 						ent.Register (new Price (arch ["price"]));
 					} else if (lootType == LootTypes.Weapon) {
 						var weaponSprite = string.Format ("weapon_{0:D2}", Archetypes.Weapons [arch ["weapon_index"]] ["sprite_index"]);
 						ent.Register (new Sprite (sprites.GetSprite (weaponSprite)));
-						ent.Register (new Triggerable (1, (from) => OnWeaponTriggered (ent, from)));
+						ent.Register (new Triggerable ((from) => OnWeaponTriggered (ent, from)));
 						ent.Register (new Loot (arch ["weapon_index"]));
 						ent.Register (new Price (arch ["price"]));
 					} else {
 						ent.Register (new Sprite (sprites.GetSprite ("antitod_potion_01")));
-						ent.Register (new Triggerable (1, (from) => OnAntitodTriggered (ent, from)));
+						ent.Register (new Triggerable ((from) => OnAntitodTriggered (ent, from)));
 					}
 					break;
 				}
@@ -203,7 +203,7 @@ namespace mogate
 				ent.Register (new Position (mp.X, mp.Y));
 				ent.Register (new PointLight (PointLight.DistanceType.Normal, Color.Green));
 				ent.Register (new Sprite (sprites.GetSprite ("artefact_01")));
-				ent.Register (new Triggerable (1, (from) => OnArtefactTriggered(ent, from)));
+				ent.Register (new Triggerable ((from) => OnArtefactTriggered(ent, from)));
 			} else {
 				DropLoot (mp, Archetypes.ChestLoot, Globals.CHEST_DROP_LOOT_WEIGHT[gameState.Level]);
 			}

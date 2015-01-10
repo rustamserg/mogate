@@ -80,6 +80,7 @@ namespace mogate
 
 			gameState.PlayerHealth = player.Get<Health> ().HP;
 			gameState.PlayerMoney = player.Get<Consumable<ConsumableTypes>> ().Amount (ConsumableTypes.Money);
+			gameState.PlayerAntitodPotionsMax = player.Get<Consumable<ConsumableTypes>> ().Amount (ConsumableTypes.Antitod);
 		}
 			
 		private void UpdatePlayer (Entity player)
