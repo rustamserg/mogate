@@ -69,10 +69,13 @@ namespace mogate
 			textMsg.Register (new Drawable (new Vector2 (440, Globals.CELL_HEIGHT * Globals.WORLD_HEIGHT), Color.Green));
 		}
 
-		public void FeedbackMessage(string message, int duration = 1000)
+		public void FeedbackMessage(string message, Color color, int duration = 1000)
 		{
 			var feedbackEnt = GetEntityByTag ("hud_feedback");
 			var seq = new Sequence ();
+			seq.Add (new ActionEntity (feedbackEnt, (_) => {
+				feedbackEnt.Get<Drawable> ().DrawColor = color;
+			}));
 			seq.Add (new Timeline(new ActionEntity (feedbackEnt, (_) => {
 				feedbackEnt.Get<Text> ().Message = message;
 			}), duration));

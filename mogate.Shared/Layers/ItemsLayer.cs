@@ -112,7 +112,7 @@ namespace mogate
 				int armorId = item.Get<Loot> ().Drop;
 
 				if (attacker.Has<Armor> () && attacker.Get<Armor> ().ArchetypeID >= armorId) {
-					hud.FeedbackMessage ("Broken");
+					hud.FeedbackMessage ("Broken", Color.Red);
 				} else {
 					if (attacker.Get<Consumable<ConsumableTypes>> ().TryConsume (ConsumableTypes.Money, cost)) {
 						if (!attacker.Has<Armor> ()) {
@@ -123,9 +123,10 @@ namespace mogate
 						}
 						gameState.PlayerArmorID = armorId;
 						RemoveEntityByTag (item.Tag);
+						hud.FeedbackMessage ("Picked up new armor", Color.Yellow);
 					} else {
 						string feedbackMsg = string.Format ("Cost: {0}", cost);
-						hud.FeedbackMessage (feedbackMsg);
+						hud.FeedbackMessage (feedbackMsg, Color.Red);
 					}
 				}
 			}
@@ -141,7 +142,7 @@ namespace mogate
 				int weaponId = item.Get<Loot> ().Drop;
 
 				if (attacker.Has<Attack> () && attacker.Get<Attack> ().ArchetypeID >= weaponId) {
-					hud.FeedbackMessage ("Broken");
+					hud.FeedbackMessage ("Broken", Color.Red);
 				} else {
 					if (attacker.Get<Consumable<ConsumableTypes>> ().TryConsume (ConsumableTypes.Money, cost)) {
 						attacker.Get<Attack> ().ArchetypeID = weaponId;
@@ -149,10 +150,12 @@ namespace mogate
 						attacker.Get<CriticalHit> ().HitChance = Archetypes.Weapons [weaponId] ["critical_chance"];
 						attacker.Get<CriticalHit> ().CriticalDamage = Archetypes.Weapons [weaponId] ["critical_damage"];
 						gameState.PlayerWeaponID = weaponId;
+
 						RemoveEntityByTag (item.Tag);
+						hud.FeedbackMessage ("Picked up new weapon", Color.Yellow);
 					} else {
 						string feedbackMsg = string.Format ("Cost: {0}", cost);
-						hud.FeedbackMessage (feedbackMsg);
+						hud.FeedbackMessage (feedbackMsg, Color.Red);
 					}
 				}
 			}
@@ -160,12 +163,17 @@ namespace mogate
 
 		void OnMoneyTriggered(Entity item, Entity attacker)
 		{
+			var hud = (HUDLayer)Scene.GetLayer ("hud");
+
 			if (attacker.Has<Consumable<ConsumableTypes>> ()) {
 				int droppedMoney = item.Get<Loot>().Drop;
 				float moneyMult = attacker.Get<MoneyMultiplier> ().Multiplier;
-				attacker.Get<Consumable<ConsumableTypes>> ().Refill (ConsumableTypes.Money, (int)(droppedMoney * moneyMult));
-
+				droppedMoney = (int)(droppedMoney * moneyMult);
+				attacker.Get<Consumable<ConsumableTypes>> ().Refill (ConsumableTypes.Money, droppedMoney);
 				RemoveEntityByTag (item.Tag);
+
+				string feedbackMsg = string.Format ("Picked money: {0}", droppedMoney);
+				hud.FeedbackMessage (feedbackMsg, Color.Yellow);
 			}
 		}
 
@@ -213,16 +221,21 @@ namespace mogate
 
 		void OnHealthTriggered (Entity item, Entity from)
 		{
+			var hud = (HUDLayer)Scene.GetLayer ("hud");
+
 			if (from.Has<Health> ()) {
 				if (from.Get<Health> ().HP < from.Get<Health> ().MaxHP) {
 					from.Get<Health> ().HP = from.Get<Health> ().HP + item.Get<Loot>().Drop;
 					RemoveEntityByTag (item.Tag);
+					hud.FeedbackMessage ("Picked up health potion", Color.Yellow);
 				}
 			}
 		}
 
 		void OnAntitodTriggered (Entity item, Entity from)
 		{
+			var hud = (HUDLayer)Scene.GetLayer ("hud");
+
 			if (from.Has<Poisonable> ()) {
 				if (from.Get<Poisonable> ().IsPoisoned) {
 					from.Get<Poisonable> ().CancelPoison (from);
@@ -232,6 +245,7 @@ namespace mogate
 					if (from.Get<Consumable<ConsumableTypes>> ().Amount (ConsumableTypes.Antitod) < gameState.PlayerAntitodPotionsMax) {
 						from.Get<Consumable<ConsumableTypes>> ().Refill (ConsumableTypes.Antitod, 1);
 						RemoveEntityByTag (item.Tag);
+						hud.FeedbackMessage ("Picked up antitod potion", Color.Yellow);
 					}
 				}
 			}
@@ -239,10 +253,13 @@ namespace mogate
 
 		void OnArtefactTriggered (Entity item, Entity from)
 		{
+			var hud = (HUDLayer)Scene.GetLayer ("hud");
 			var mapGridLayer = (MapGridLayer)Scene.GetLayer ("map");
 
 			mapGridLayer.AddExitPoint (true);
 			RemoveEntityByTag (item.Tag);
+
+			hud.FeedbackMessage ("Final exit is open", Color.White, 2000);
 		}
 
 		void SpawnTrash(Entity spawner)

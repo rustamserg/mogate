@@ -208,7 +208,7 @@ namespace mogate
 
 			string feedbackMsg = string.Format ("{0} went into stage {1}. {2}",
 				gameState.PlayerName, gameState.Level + 1, msgs[Utils.ThrowDice(msgs.Count)]);
-			hud.FeedbackMessage (feedbackMsg, 6000);
+			hud.FeedbackMessage (feedbackMsg, Color.Yellow, 6000);
 		}
 
 		private void OnEndMove(Entity player)
@@ -234,7 +234,7 @@ namespace mogate
 			effects.AttachEffect (player, "damage_01", 400);
 
 			string feedbackMsg = string.Format ("Dmg/Crit: {0}/{1}", damage, critical);
-			hud.FeedbackMessage (feedbackMsg);
+			hud.FeedbackMessage (feedbackMsg, Color.Red);
 		}
 
 		private void OnHealthChanged(Entity player)
@@ -254,13 +254,13 @@ namespace mogate
 			var hud = (HUDLayer)Scene.GetLayer ("hud");
 
 			if (player.Get<Consumable<ConsumableTypes>> ().TryConsume (ConsumableTypes.Antitod, 1)) {
-				hud.FeedbackMessage ("Cured");
+				hud.FeedbackMessage ("Cured", Color.Yellow);
 				player.Get<Poisonable> ().CancelPoison (player);
 			} else {
 				effects.AttachEffect (player, "damage_01", 400);
 
 				string feedbackMsg = string.Format ("Poisoned: {0}", damage);
-				hud.FeedbackMessage (feedbackMsg);
+				hud.FeedbackMessage (feedbackMsg, Color.Red);
 			}
 		}
 
