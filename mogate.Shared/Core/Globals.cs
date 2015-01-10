@@ -31,7 +31,7 @@ namespace mogate
 		public static readonly int[] MONSTER_DROP_LOOT_WEIGHT = {30, 30, 30, 30, 30};
 		public static readonly int[] CHEST_DROP_LOOT_WEIGHT = {10, 20, 30, 40, 40};
 		public static readonly int[] CHEST_HEALTH = {100, 200, 300, 400, 500};
-		public static readonly int[] CHEST_SPAWN_DELAY_MSEC = {400, 500, 700, 1000, 2000};
+		public static readonly int[] CHEST_SPAWN_DELAY_SEC = {20, 20, 20, 20, 60};
 
 		public static readonly int[] MONSTER_POPULATION = {8, 10, 12, 15, 20};
 		public static readonly int[] MONSTER_SPAWN_DELAY_MSEC = {400, 300, 200, 100, 50};

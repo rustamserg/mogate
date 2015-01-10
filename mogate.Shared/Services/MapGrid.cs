@@ -40,11 +40,14 @@ namespace mogate
 
 		public class Room : Cell
 		{
+			public int RoomID;
 			public int Width;
 			public int Height;
 			public List<Door> Doors = new List<Door>();
 
-			public Room(Point p) : base(p, ID.Room) {
+			public Room(Point p, int id) : base(p, ID.Room)
+			{
+				RoomID = id;
 			}
 		}
 	}

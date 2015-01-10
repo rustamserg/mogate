@@ -168,11 +168,12 @@ namespace mogate
 
 		static List<MapGridTypes.Room> GetRooms (IMapGrid map)
 		{
+			int roomId = 0;
 			List<MapGridTypes.Room> sills = new List<MapGridTypes.Room> ();
 
 			for (int i = 0; i < map.Width/2; i++) {
 				for (int j = 0; j < map.Height/2; j++) {
-					MapGridTypes.Room r = new MapGridTypes.Room(new Point(i*2 + 1, j*2 + 1));
+					MapGridTypes.Room r = new MapGridTypes.Room(new Point(i*2 + 1, j*2 + 1), ++roomId);
 					r.Width = Math.Max (m_params.RoomMinSize, Utils.Rand.Next (m_params.RoomMaxSize/2)*2 + 1);
 					r.Height = Math.Max (m_params.RoomMinSize, Utils.Rand.Next (m_params.RoomMaxSize/2)*2 + 1);
 

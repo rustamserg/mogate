@@ -20,34 +20,17 @@ namespace mogate
 
 		public override void OnActivated()
 		{
-			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
-			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
-
-			var mapGrid = world.GetLevel(gameState.Level);
-
-			foreach (var room in mapGrid.GetRooms()) {
-				var pos = new Point (room.Pos.X + Utils.Rand.Next (room.Width), room.Pos.Y + Utils.Rand.Next (room.Height));
-
-				var ent = CreateEntity ();
-				ent.Register (new Sprite (sprites.GetSprite ("grave_01")));
-				ent.Register (new Drawable (new Vector2(pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
-				ent.Register (new Position (pos.X, pos.Y));
-				ent.Register (new Health (Globals.CHEST_HEALTH[gameState.Level], () => OnChestDestroyed(ent)));
-				ent.Register (new Attackable ((attacker, _, __) => OnChestAttacked(ent, attacker)));
-				ent.Register (new IFFSystem (Globals.IFF_MONSTER_ID));
-				ent.Register (new State<TreasureTypes> (TreasureTypes.Chest));
-				ent.Register (new PointLight (PointLight.DistanceType.Small, Color.White));
-			}
-
-			int spawnDelay = Globals.TRASH_SPAWN_DELAY_MSEC [gameState.Level];
 
 			var spawner = CreateEntity ();
+			int spawnDelay = Globals.TRASH_SPAWN_DELAY_MSEC [gameState.Level];
 			spawner.Register (new Execute ());
+			spawner.Get<Execute> ().Add (new Loop (new ActionEntity (spawner, SpawnTrash), spawnDelay));
 
-			var seq = new Sequence ();
-			seq.Add (new Loop (new ActionEntity (spawner, SpawnTrash), spawnDelay));
-			spawner.Get<Execute> ().Add (seq);
+			spawner = CreateEntity ();
+			spawnDelay = Globals.CHEST_SPAWN_DELAY_SEC [gameState.Level] * 1000;
+			spawner.Register (new Execute ());
+			spawner.Get<Execute> ().Add (new Loop (new ActionEntity (spawner, SpawnChest), spawnDelay));
 		}
 
 		public void DropLoot(Point pos, Dictionary<string, int>[] loots, int maxWeight)
@@ -281,6 +264,35 @@ namespace mogate
 				ent.Register (new State<TreasureTypes> (TreasureTypes.Trash));
 				ent.Register (new PointLight (PointLight.DistanceType.Small, Color.Gold));
 			}
+		}
+
+		void SpawnChest(Entity spawner)
+		{
+			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
+			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
+			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
+
+			var map = world.GetLevel(gameState.Level);
+			var chests = GetAllEntities ().Where (e => e.Has<State<TreasureTypes>> () && e.Get<State<TreasureTypes>> ().EState == TreasureTypes.Chest);
+
+			foreach (var room in map.GetRooms()) {
+				if (chests.Any (e => e.Get<Tag> ().ID == room.RoomID))
+					continue;
+
+				var pos = new Point (room.Pos.X + Utils.Rand.Next (room.Width), room.Pos.Y + Utils.Rand.Next (room.Height));
+
+				var ent = CreateEntity ();
+				ent.Register (new Sprite (sprites.GetSprite ("grave_01")));
+				ent.Register (new Drawable (new Vector2(pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
+				ent.Register (new Position (pos.X, pos.Y));
+				ent.Register (new Health (Globals.CHEST_HEALTH[gameState.Level], () => OnChestDestroyed(ent)));
+				ent.Register (new Attackable ((attacker, _, __) => OnChestAttacked(ent, attacker)));
+				ent.Register (new IFFSystem (Globals.IFF_MONSTER_ID));
+				ent.Register (new State<TreasureTypes> (TreasureTypes.Chest));
+				ent.Register (new PointLight (PointLight.DistanceType.Small, Color.White));
+				ent.Register (new Tag (room.RoomID));
+			}
+
 		}
 	}
 }
