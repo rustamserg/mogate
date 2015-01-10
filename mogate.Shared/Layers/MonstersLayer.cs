@@ -22,11 +22,7 @@ namespace mogate
 
 			var spawner = CreateEntity ();
 			spawner.Register (new Execute ());
-
-			var seq = new Sequence ();
-			seq.Add (new ActionEntity (spawner, SpawnBosses));
-			seq.Add (new Loop (new ActionEntity (spawner, SpawnMonsters), spawnDelay));
-			spawner.Get<Execute> ().Add (seq);
+			spawner.Get<Execute> ().Add (new Loop (new ActionEntity (spawner, SpawnMonsters), spawnDelay));
 		}
 
 		void StartPatrol(Entity monster)
@@ -242,55 +238,59 @@ namespace mogate
 			}
 		}
 
-		void SpawnBosses(Entity spawner)
+		public void SpawnBoss(MapGridTypes.Room room)
 		{
-			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
 
-			var map = world.GetLevel(gameState.Level);
 			int maxWeight = Globals.BOSSES_SPAWN_WEIGHT [gameState.Level];
-		
-			foreach (var room in map.GetRooms()) {
-				Archetypes.Bosses.Shuffle ();
+			var bosses = GetAllEntities ().Where (e => e.Has<State<MonsterType>> () && e.Get<State<MonsterType>> ().EState == MonsterType.Boss);
+			int bossInRoom = bosses.Count (e => e.Get<Tag> ().ID == room.RoomID);
 
-				foreach (var arch in Archetypes.Bosses) {
-					var w = Utils.ThrowDice (maxWeight);
-					var spriteName = string.Format ("boss_{0:D2}", arch ["sprite_index"]);
-					var pos = new Point (room.Pos.X + Utils.Rand.Next (room.Width), room.Pos.Y + Utils.Rand.Next (room.Height));
+			if (bossInRoom < Globals.BOSSES_PER_ROOM_MAX [gameState.Level]) {
 
-					if (arch ["spawn_weight"] >= w && arch["spawn_weight"] <= maxWeight) {
-						var boss = CreateEntity ();
-						boss.Register (new State<MonsterType> (MonsterType.Boss));
-						boss.Register (new Position (pos.X, pos.Y));
-						boss.Register (new Health (arch["health"], () => OnHealthChanged(boss)));
-						boss.Register (new Attack (arch["attack"], arch["attack_distance"]));
-						boss.Register (new MoveSpeed (arch["move_duration_msec"]));
-						boss.Register (new AttackSpeed (arch["attack_duration_msec"]));
-						boss.Register (new Attackable ((attacker, _, __) => OnAttacked(boss, attacker)));
-						boss.Register (new Execute ());
-						boss.Register (new Patrol (arch["patrol_min_steps"], arch["patrol_max_steps"]));
-						boss.Register (new IFFSystem (Globals.IFF_MONSTER_ID));
-						boss.Register (new LookDirection (Utils.Direction.Down));
-						boss.Register (new Perception (arch["perception"]));
-						boss.Register (new AllowedMapArea(MapGridTypes.ID.Room));
-						boss.Register (new Sprite (sprites.GetSprite (spriteName)));
-						boss.Register (new Drawable (new Vector2 (pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
+				for (int i = 0; i < Globals.BOSSES_SPAWN_PER_ROOM [gameState.Level]; ++i) {
+					Archetypes.Bosses.Shuffle ();
 
-						if (arch ["poison_chance"] > 0)
-							boss.Register (new Poison (arch["poison_damage"], arch["poison_chance"], arch["poison_effect_delay_msec"]));
+					foreach (var arch in Archetypes.Bosses) {
+						var w = Utils.ThrowDice (maxWeight);
+						var spriteName = string.Format ("boss_{0:D2}", arch ["sprite_index"]);
+						var pos = new Point (room.Pos.X + Utils.Rand.Next (room.Width), room.Pos.Y + Utils.Rand.Next (room.Height));
 
-						if (arch ["critical_chance"] > 0)
-							boss.Register (new CriticalHit (arch ["critical_chance"], arch ["critical_damage"]));
+						if (arch ["spawn_weight"] >= w && arch ["spawn_weight"] <= maxWeight) {
+							var boss = CreateEntity ();
+							boss.Register (new State<MonsterType> (MonsterType.Boss));
+							boss.Register (new Position (pos.X, pos.Y));
+							boss.Register (new Health (arch ["health"], () => OnHealthChanged (boss)));
+							boss.Register (new Attack (arch ["attack"], arch ["attack_distance"]));
+							boss.Register (new MoveSpeed (arch ["move_duration_msec"]));
+							boss.Register (new AttackSpeed (arch ["attack_duration_msec"]));
+							boss.Register (new Attackable ((attacker, _, __) => OnAttacked (boss, attacker)));
+							boss.Register (new Execute ());
+							boss.Register (new Patrol (arch ["patrol_min_steps"], arch ["patrol_max_steps"]));
+							boss.Register (new IFFSystem (Globals.IFF_MONSTER_ID));
+							boss.Register (new LookDirection (Utils.Direction.Down));
+							boss.Register (new Perception (arch ["perception"]));
+							boss.Register (new AllowedMapArea (MapGridTypes.ID.Room));
+							boss.Register (new Sprite (sprites.GetSprite (spriteName)));
+							boss.Register (new Drawable (new Vector2 (pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
+							boss.Register (new Tag (room.RoomID));
 
-						if (arch ["visible"] == 1)
-							boss.Register (new DirectLight (Color.White));
+							if (arch ["poison_chance"] > 0)
+								boss.Register (new Poison (arch ["poison_damage"], arch ["poison_chance"], arch ["poison_effect_delay_msec"]));
 
-						boss.Get<Execute> ().Add (new ActionEntity (boss, (_) => {
-							StartPatrol (boss);
-						}), "patrol_loop");
+							if (arch ["critical_chance"] > 0)
+								boss.Register (new CriticalHit (arch ["critical_chance"], arch ["critical_damage"]));
 
-						break;
+							if (arch ["visible"] == 1)
+								boss.Register (new DirectLight (Color.White));
+
+							boss.Get<Execute> ().Add (new ActionEntity (boss, (_) => {
+								StartPatrol (boss);
+							}), "patrol_loop");
+
+							break;
+						}
 					}
 				}
 			}

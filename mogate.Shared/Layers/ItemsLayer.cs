@@ -30,7 +30,11 @@ namespace mogate
 			spawner = CreateEntity ();
 			spawnDelay = Globals.CHEST_SPAWN_DELAY_SEC [gameState.Level] * 1000;
 			spawner.Register (new Execute ());
-			spawner.Get<Execute> ().Add (new Loop (new ActionEntity (spawner, SpawnChest), spawnDelay));
+
+			var seq = new Sequence ();
+			seq.Add (new ActionEntity (spawner, SpawnChest));
+			seq.Add (new Loop (new ActionEntity (spawner, SpawnChest), spawnDelay));
+			spawner.Get<Execute> ().Add (seq);
 		}
 
 		public void DropLoot(Point pos, Dictionary<string, int>[] loots, int maxWeight)
@@ -271,6 +275,7 @@ namespace mogate
 			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
+			var monsters = (MonstersLayer)Scene.GetLayer ("monsters");
 
 			var map = world.GetLevel(gameState.Level);
 			var chests = GetAllEntities ().Where (e => e.Has<State<TreasureTypes>> () && e.Get<State<TreasureTypes>> ().EState == TreasureTypes.Chest);
@@ -291,8 +296,9 @@ namespace mogate
 				ent.Register (new State<TreasureTypes> (TreasureTypes.Chest));
 				ent.Register (new PointLight (PointLight.DistanceType.Small, Color.White));
 				ent.Register (new Tag (room.RoomID));
-			}
 
+				monsters.SpawnBoss (room);
+			}
 		}
 	}
 }

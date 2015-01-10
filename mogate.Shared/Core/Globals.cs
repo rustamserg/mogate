@@ -31,12 +31,15 @@ namespace mogate
 		public static readonly int[] MONSTER_DROP_LOOT_WEIGHT = {30, 30, 30, 30, 30};
 		public static readonly int[] CHEST_DROP_LOOT_WEIGHT = {10, 20, 30, 40, 40};
 		public static readonly int[] CHEST_HEALTH = {100, 200, 300, 400, 500};
-		public static readonly int[] CHEST_SPAWN_DELAY_SEC = {20, 20, 20, 20, 60};
+		public static readonly int[] CHEST_SPAWN_DELAY_SEC = {20, 20, 20, 20, 600};
 
 		public static readonly int[] MONSTER_POPULATION = {8, 10, 12, 15, 20};
 		public static readonly int[] MONSTER_SPAWN_DELAY_MSEC = {400, 300, 200, 100, 50};
 		public static readonly int[] MONSTER_SPAWN_WEIGHT = {10, 20, 30, 30, 40};
+
 		public static readonly int[] BOSSES_SPAWN_WEIGHT = {10, 20, 30, 30, 40};
+		public static readonly int[] BOSSES_PER_ROOM_MAX = {3, 3, 4, 4, 10};
+		public static readonly int[] BOSSES_SPAWN_PER_ROOM = {1, 1, 2, 2, 10};
 
 		public static readonly int[] MAP_WALLS_MAX = {3, 3, 1, 3, 1, 3};
 		public static readonly int[] MAP_TILES_ID = {1, 1, 2, 1, 2, 1};
