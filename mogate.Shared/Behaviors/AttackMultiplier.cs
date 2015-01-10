@@ -6,9 +6,9 @@ namespace mogate
 	{
 		public Type Behavior { get { return typeof(AttackMultiplier); } }
 
-		public int Multiplier { get; set; }
+		public float Multiplier { get; set; }
 
-		public AttackMultiplier (int mult)
+		public AttackMultiplier (float mult)
 		{
 			Multiplier = mult;
 		}

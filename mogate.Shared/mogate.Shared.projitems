@@ -83,7 +83,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Tag.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\MoneyMultiplier.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\AttackMultiplier.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\PoisonMultiplier.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\AttackDistance.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\AttackDistanceMultiplier.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\PoisonChanceMultiplier.cs" />
   </ItemGroup>
 </Project>

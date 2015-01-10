@@ -19,17 +19,13 @@ namespace mogate
 		{
 			if (attacker.Has<Poison> ()) {
 				if (defender.Has<Health> ()) {
-					if (Utils.DropChance (attacker.Get<Poison> ().Chance)) {
+					float poisonChanceMult = defender.Has<PoisonChanceMultiplier> () ? defender.Get<PoisonChanceMultiplier> ().Multiplier : 1;
+					if (Utils.DropChance ((int)(attacker.Get<Poison> ().Chance * poisonChanceMult))) {
 						if (defender.Has<Execute> ()) {
-							int poisonMult = defender.Has<PoisonMultiplier> () ? defender.Get<PoisonMultiplier> ().Multiplier : 1;
-							int poisonDamage = attacker.Get<Poison> ().Damage * poisonMult;
-
-							if (poisonDamage > 0) {
-								var poisonLoop = new Loop (new DoPoisonEntity (defender, attacker.Get<Poison> ().Damage, m_onPoisoned),
+							var poisonLoop = new Loop (new DoPoisonEntity (defender, attacker.Get<Poison> ().Damage, m_onPoisoned),
 									                attacker.Get<Poison> ().Speed);
-								defender.Get<Execute> ().AddNew (poisonLoop, "poison_effect");
-								IsPoisoned = true;
-							}
+							defender.Get<Execute> ().AddNew (poisonLoop, "poison_effect");
+							IsPoisoned = true;
 						}
 					}
 				}

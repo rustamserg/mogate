@@ -32,16 +32,16 @@ namespace mogate
 		int PlayerMoney { get; set; }
 		int PlayerMoveSpeed { get; set; }
 		int PlayerAttackSpeed { get; set; }
-		int PlayerAttackDistance { get; set; }
 		int PlayerViewDistanceType { get; set; }
 		int PlayerAntitodPotionsMax { get; set; }
 
 		int PlayerWeaponID { get; set; }
 		int PlayerArmorID { get; set; }
 
-		int PlayerAttackMultiplier { get; set; }
-		int PlayerMoneyMultiplier { get; set; }
-		int PlayerPoisonMultiplier { get; set; }
+		float PlayerAttackMultiplier { get; set; }
+		float PlayerMoneyMultiplier { get; set; }
+		float PlayerPoisonChanceMultiplier { get; set; }
+		float PlayerAttackDistanceMultiplier { get; set; }
 
 		bool IsGameEnd { get; }
 		SaveDataState DataState { get; }
@@ -51,7 +51,7 @@ namespace mogate
 
 		void NewGame();
 		void NextLevel();
-		void ApplyArchetype (Dictionary<string, int> archetype);
+		void ApplyArchetype (Dictionary<string, float> archetype);
 	}
 
 	[Serializable]
@@ -64,15 +64,17 @@ namespace mogate
 		public int PlayerAntitodPotionsMax;
 		public int PlayerMoney;
 		public int PlayerViewDistanceType;
-		public int PlayerAttackMultiplier;
-		public int PlayerMoneyMultiplier;
-		public int PlayerPoisonMultiplier;
 		public int PlayerAttackSpeed;
-		public int PlayerAttackDistance;
 		public int PlayerMoveSpeed;
 		public int PlayerSpriteID;
 		public int PlayerWeaponID;
 		public int PlayerArmorID;
+
+		public float PlayerAttackMultiplier;
+		public float PlayerMoneyMultiplier;
+		public float PlayerPoisonChanceMultiplier;
+		public float PlayerAttackDistanceMultiplier;
+
 		public string PlayerName;
 		public List<HallOfFameEntry> HallOfFame;
 	}
@@ -93,12 +95,12 @@ namespace mogate
 		public int PlayerMoney { get; set; }
 		public int PlayerMoveSpeed { get; set; }
 		public int PlayerAttackSpeed { get; set; }
-		public int PlayerAttackDistance { get; set; }
 		public int PlayerAntitodPotionsMax { get; set; }
 
-		public int PlayerAttackMultiplier { get; set; }
-		public int PlayerMoneyMultiplier { get; set; }
-		public int PlayerPoisonMultiplier { get; set; }
+		public float PlayerAttackMultiplier { get; set; }
+		public float PlayerMoneyMultiplier { get; set; }
+		public float PlayerPoisonChanceMultiplier { get; set; }
+		public float PlayerAttackDistanceMultiplier { get; set; }
 
 		public int PlayerWeaponID { get; set; }
 		public int PlayerArmorID { get; set; }
@@ -146,23 +148,24 @@ namespace mogate
 			SaveGame ();
 		}
 
-		public void ApplyArchetype(Dictionary<string, int> archetype)
+		public void ApplyArchetype(Dictionary<string, float> archetype)
 		{
-			PlayerHealth = archetype ["health_packs"] * Globals.HEALTH_PACK;
-			PlayerHealthMax = archetype ["health_packs_max"] * Globals.HEALTH_PACK;
-			PlayerMoveSpeed = archetype ["move_duration_msec"];
+			PlayerHealth = (int)archetype ["health_packs"] * Globals.HEALTH_PACK;
+			PlayerHealthMax = (int)archetype ["health_packs_max"] * Globals.HEALTH_PACK;
+			PlayerMoveSpeed = (int)archetype ["move_duration_msec"];
 			PlayerWeaponID = 0;
 			PlayerArmorID = -1;
 			PlayerMoney = 0;
-			PlayerSpriteID = archetype ["sprite_index"];
+			PlayerSpriteID = (int)archetype ["sprite_index"];
 			PlayerName = NameGenerator.Generate ();
+			PlayerAttackSpeed = (int)archetype ["attack_duration_msec"];
+			PlayerViewDistanceType = (int)archetype ["view_distance_type"];
+			PlayerAntitodPotionsMax = (int)archetype ["antitod_potions_max"];
+
 			PlayerMoneyMultiplier = archetype ["money_multiplier"];
 			PlayerAttackMultiplier = archetype ["attack_multiplier"];
-			PlayerPoisonMultiplier = archetype ["poison_multiplier"];
-			PlayerAttackSpeed = archetype ["attack_duration_msec"];
-			PlayerAttackDistance = archetype ["attack_distance"];
-			PlayerViewDistanceType = archetype ["view_distance_type"];
-			PlayerAntitodPotionsMax = archetype ["antitod_potions_max"];
+			PlayerPoisonChanceMultiplier = archetype ["poison_chance_multiplier"];
+			PlayerAttackDistanceMultiplier = archetype ["attack_distance_multiplier"];
 		}
 
 		void UpdateHallOfFame()
@@ -240,10 +243,10 @@ namespace mogate
 					PlayerAntitodPotionsMax = this.PlayerAntitodPotionsMax,
 					PlayerMoney = this.PlayerMoney,
 					PlayerViewDistanceType = this.PlayerViewDistanceType,
-					PlayerAttackDistance = this.PlayerAttackDistance,
+					PlayerAttackDistanceMultiplier = this.PlayerAttackDistanceMultiplier,
 					PlayerMoneyMultiplier = this.PlayerMoneyMultiplier,
 					PlayerAttackMultiplier = this.PlayerAttackMultiplier,
-					PlayerPoisonMultiplier = this.PlayerPoisonMultiplier,
+					PlayerPoisonChanceMultiplier = this.PlayerPoisonChanceMultiplier,
 					PlayerAttackSpeed = this.PlayerAttackSpeed,
 					PlayerMoveSpeed = this.PlayerMoveSpeed,
 					PlayerSpriteID = this.PlayerSpriteID,
@@ -290,10 +293,10 @@ namespace mogate
 					PlayerAntitodPotionsMax = save.PlayerAntitodPotionsMax;
 					PlayerMoney = save.PlayerMoney;
 					PlayerViewDistanceType = save.PlayerViewDistanceType;
-					PlayerAttackDistance = save.PlayerAttackDistance;
+					PlayerAttackDistanceMultiplier = save.PlayerAttackDistanceMultiplier;
 					PlayerMoneyMultiplier = save.PlayerMoneyMultiplier;
 					PlayerAttackMultiplier = save.PlayerAttackMultiplier;
-					PlayerPoisonMultiplier = save.PlayerPoisonMultiplier;
+					PlayerPoisonChanceMultiplier = save.PlayerPoisonChanceMultiplier;
 					PlayerAttackSpeed = save.PlayerAttackSpeed;
 					PlayerMoveSpeed = save.PlayerMoveSpeed;
 					PlayerSpriteID = save.PlayerSpriteID;

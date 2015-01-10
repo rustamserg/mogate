@@ -175,8 +175,8 @@ namespace mogate
 		{
 			if (attacker.Has<Consumable<ConsumableTypes>> ()) {
 				int droppedMoney = item.Get<Loot>().Drop;
-				int moneyMult = attacker.Get<MoneyMultiplier> ().Multiplier;
-				attacker.Get<Consumable<ConsumableTypes>> ().Refill (ConsumableTypes.Money, droppedMoney * moneyMult);
+				float moneyMult = attacker.Get<MoneyMultiplier> ().Multiplier;
+				attacker.Get<Consumable<ConsumableTypes>> ().Refill (ConsumableTypes.Money, (int)(droppedMoney * moneyMult));
 
 				RemoveEntityByTag (item.Tag);
 			}

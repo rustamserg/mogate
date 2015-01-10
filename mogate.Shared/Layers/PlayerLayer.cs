@@ -36,7 +36,7 @@ namespace mogate
 			player.Register (new State<PlayerState> (PlayerState.Idle));
 			player.Register (new Health (gameState.PlayerHealth, gameState.PlayerHealthMax,
 											() => OnHealthChanged(player)));
-			player.Register (new Attack (Archetypes.Weapons[gameState.PlayerWeaponID]["attack"], gameState.PlayerWeaponID));
+			player.Register (new Attack (Archetypes.Weapons[gameState.PlayerWeaponID]["attack"], Archetypes.Weapons[gameState.PlayerWeaponID]["attack_distance"], gameState.PlayerWeaponID));
 			player.Register (new PointLight ((PointLight.DistanceType)gameState.PlayerViewDistanceType, Color.White));
 			player.Register (new MoveSpeed (gameState.PlayerMoveSpeed));
 			player.Register (new IFFSystem (Globals.IFF_PLAYER_ID, 2));
@@ -51,9 +51,9 @@ namespace mogate
 			player.Register (new CriticalHit ());
 			player.Register (new MoneyMultiplier (gameState.PlayerMoneyMultiplier));
 			player.Register (new AttackMultiplier (gameState.PlayerAttackMultiplier));
-			player.Register (new PoisonMultiplier (gameState.PlayerPoisonMultiplier));
+			player.Register (new PoisonChanceMultiplier (gameState.PlayerPoisonChanceMultiplier));
+			player.Register (new AttackDistanceMultiplier (gameState.PlayerAttackDistanceMultiplier));
 			player.Register (new AttackSpeed (gameState.PlayerAttackSpeed));
-			player.Register (new AttackDistance (gameState.PlayerAttackDistance));
 
 			if (gameState.PlayerArmorID >= 0) {
 				player.Register (new Armor (Archetypes.Armors [gameState.PlayerArmorID] ["defence"], gameState.PlayerArmorID));
@@ -166,7 +166,9 @@ namespace mogate
 			var items = (ItemsLayer)Scene.GetLayer ("items");
 			var monsters = (MonstersLayer)Scene.GetLayer ("monsters");
 
-			if (Utils.Dist(mapPos, actionPos) <= player.Get<AttackDistance>().Distance) {
+			float distMult = player.Get<AttackDistanceMultiplier> ().Multiplier;
+
+			if (Utils.Dist(mapPos, actionPos) <= (int)(player.Get<Attack>().Distance * distMult)) {
 				var mapLine = mapGrid.GetLine (mapPos, actionPos);
 				if (mapLine.Any() && !mapLine.Any (e => e.Type == MapGridTypes.ID.Blocked)) {
 					var seq = new Sequence ();

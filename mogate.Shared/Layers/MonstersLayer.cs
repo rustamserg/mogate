@@ -210,7 +210,7 @@ namespace mogate
 						me.Register (new State<MonsterType> (MonsterType.Monster));
 						me.Register (new Position (pos.X, pos.Y));
 						me.Register (new Health (arch["health"], () => OnHealthChanged(me)));
-						me.Register (new Attack (arch["attack"]));
+						me.Register (new Attack (arch["attack"], arch["attack_distance"]));
 						me.Register (new MoveSpeed (arch["move_duration_msec"]));
 						me.Register (new AttackSpeed (arch["attack_duration_msec"]));
 						me.Register (new Attackable ((attacker, _) => OnAttacked(me, attacker)));
@@ -264,7 +264,7 @@ namespace mogate
 						boss.Register (new State<MonsterType> (MonsterType.Boss));
 						boss.Register (new Position (pos.X, pos.Y));
 						boss.Register (new Health (arch["health"], () => OnHealthChanged(boss)));
-						boss.Register (new Attack (arch["attack"]));
+						boss.Register (new Attack (arch["attack"], arch["attack_distance"]));
 						boss.Register (new MoveSpeed (arch["move_duration_msec"]));
 						boss.Register (new AttackSpeed (arch["attack_duration_msec"]));
 						boss.Register (new Attackable ((attacker, _) => OnAttacked(boss, attacker)));
