@@ -33,6 +33,7 @@ namespace mogate
 		int PlayerMoveSpeed { get; set; }
 		int PlayerAttackSpeed { get; set; }
 		int PlayerViewDistanceType { get; set; }
+		int PlayerAntitodPotions { get; set; }
 		int PlayerAntitodPotionsMax { get; set; }
 
 		int PlayerWeaponID { get; set; }
@@ -61,6 +62,7 @@ namespace mogate
 		public long PlaytimeTicks;
 		public int PlayerHealth;
 		public int PlayerHealthMax;
+		public int PlayerAntitodPotions;
 		public int PlayerAntitodPotionsMax;
 		public int PlayerMoney;
 		public int PlayerViewDistanceType;
@@ -95,6 +97,7 @@ namespace mogate
 		public int PlayerMoney { get; set; }
 		public int PlayerMoveSpeed { get; set; }
 		public int PlayerAttackSpeed { get; set; }
+		public int PlayerAntitodPotions { get; set; }
 		public int PlayerAntitodPotionsMax { get; set; }
 
 		public float PlayerAttackMultiplier { get; set; }
@@ -156,6 +159,7 @@ namespace mogate
 			PlayerWeaponID = 0;
 			PlayerArmorID = -1;
 			PlayerMoney = 0;
+			PlayerAntitodPotions = 0;
 			PlayerSpriteID = (int)archetype ["sprite_index"];
 			PlayerName = NameGenerator.Generate ();
 			PlayerAttackSpeed = (int)archetype ["attack_duration_msec"];
@@ -240,6 +244,7 @@ namespace mogate
 					PlaytimeTicks = this.Playtime.Ticks,
 					PlayerHealth = this.PlayerHealth,
 					PlayerHealthMax = this.PlayerHealthMax,
+					PlayerAntitodPotions = this.PlayerAntitodPotions,
 					PlayerAntitodPotionsMax = this.PlayerAntitodPotionsMax,
 					PlayerMoney = this.PlayerMoney,
 					PlayerViewDistanceType = this.PlayerViewDistanceType,
@@ -290,6 +295,7 @@ namespace mogate
 					Playtime = TimeSpan.FromTicks(save.PlaytimeTicks);
 					PlayerHealth = save.PlayerHealth;
 					PlayerHealthMax = save.PlayerHealthMax;
+					PlayerAntitodPotions = save.PlayerAntitodPotions;
 					PlayerAntitodPotionsMax = save.PlayerAntitodPotionsMax;
 					PlayerMoney = save.PlayerMoney;
 					PlayerViewDistanceType = save.PlayerViewDistanceType;

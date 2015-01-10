@@ -59,6 +59,7 @@ namespace mogate
 				player.Register (new Armor (Archetypes.Armors [gameState.PlayerArmorID] ["defence"], gameState.PlayerArmorID));
 			}
 			player.Get<Consumable<ConsumableTypes>> ().Refill (ConsumableTypes.Money, gameState.PlayerMoney);
+			player.Get<Consumable<ConsumableTypes>> ().Refill (ConsumableTypes.Money, gameState.PlayerAntitodPotions);
 
 			player.Get<Clickable> ().OnLeftButtonPressed += OnMoveToPosition;
 			player.Get<Clickable> ().OnMoved += OnMoveToPosition;
@@ -80,7 +81,7 @@ namespace mogate
 
 			gameState.PlayerHealth = player.Get<Health> ().HP;
 			gameState.PlayerMoney = player.Get<Consumable<ConsumableTypes>> ().Amount (ConsumableTypes.Money);
-			gameState.PlayerAntitodPotionsMax = player.Get<Consumable<ConsumableTypes>> ().Amount (ConsumableTypes.Antitod);
+			gameState.PlayerAntitodPotions = player.Get<Consumable<ConsumableTypes>> ().Amount (ConsumableTypes.Antitod);
 		}
 			
 		private void UpdatePlayer (Entity player)
@@ -206,7 +207,7 @@ namespace mogate
 			StartIdle (player);
 		}
 
-		private void OnAttacked(Entity attacker, int damage)
+		private void OnAttacked(Entity attacker, int damage, int critical)
 		{
 			var effects = (EffectsLayer)Scene.GetLayer ("effects");
 			var hud = (HUDLayer)Scene.GetLayer ("hud");
@@ -214,7 +215,7 @@ namespace mogate
 			var player = GetEntityByTag("player");
 			effects.AttachEffect (player, "damage_01", 400);
 
-			string feedbackMsg = string.Format ("Damaged: {0}", damage);
+			string feedbackMsg = string.Format ("Dmg/Crit: {0}/{1}", damage, critical);
 			hud.FeedbackMessage (feedbackMsg);
 		}
 

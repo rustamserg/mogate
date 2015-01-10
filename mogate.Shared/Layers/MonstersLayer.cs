@@ -213,7 +213,7 @@ namespace mogate
 						me.Register (new Attack (arch["attack"], arch["attack_distance"]));
 						me.Register (new MoveSpeed (arch["move_duration_msec"]));
 						me.Register (new AttackSpeed (arch["attack_duration_msec"]));
-						me.Register (new Attackable ((attacker, _) => OnAttacked(me, attacker)));
+						me.Register (new Attackable ((attacker, _, __) => OnAttacked(me, attacker)));
 						me.Register (new Execute ());
 						me.Register (new Patrol (arch["patrol_min_steps"], arch["patrol_max_steps"]));
 						me.Register (new IFFSystem (Globals.IFF_MONSTER_ID, 0));
@@ -267,7 +267,7 @@ namespace mogate
 						boss.Register (new Attack (arch["attack"], arch["attack_distance"]));
 						boss.Register (new MoveSpeed (arch["move_duration_msec"]));
 						boss.Register (new AttackSpeed (arch["attack_duration_msec"]));
-						boss.Register (new Attackable ((attacker, _) => OnAttacked(boss, attacker)));
+						boss.Register (new Attackable ((attacker, _, __) => OnAttacked(boss, attacker)));
 						boss.Register (new Execute ());
 						boss.Register (new Patrol (arch["patrol_min_steps"], arch["patrol_max_steps"]));
 						boss.Register (new IFFSystem (Globals.IFF_MONSTER_ID));

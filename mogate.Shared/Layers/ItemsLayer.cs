@@ -33,8 +33,8 @@ namespace mogate
 				ent.Register (new Sprite (sprites.GetSprite ("grave_01")));
 				ent.Register (new Drawable (new Vector2(pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
 				ent.Register (new Position (pos.X, pos.Y));
-				ent.Register (new Health (1, () => OnChestDestroyed(ent)));
-				ent.Register (new Attackable ((attacker, _) => OnChestAttacked(ent, attacker)));
+				ent.Register (new Health (Globals.CHEST_HEALTH[gameState.Level], () => OnChestDestroyed(ent)));
+				ent.Register (new Attackable ((attacker, _, __) => OnChestAttacked(ent, attacker)));
 				ent.Register (new IFFSystem (Globals.IFF_MONSTER_ID));
 				ent.Register (new State<TreasureTypes> (TreasureTypes.Chest));
 				ent.Register (new PointLight (PointLight.DistanceType.Small, Color.White));
@@ -190,6 +190,9 @@ namespace mogate
 
 		void OnChestDestroyed(Entity chest)
 		{
+			if (chest.Get<Health> ().HP > 0)
+				return;
+
 			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 
@@ -211,6 +214,9 @@ namespace mogate
 
 		void OnTrashDestroyed(Entity trash)
 		{
+			if (trash.Get<Health> ().HP > 0)
+				return;
+
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 
 			RemoveEntityByTag (trash.Tag);
@@ -269,8 +275,8 @@ namespace mogate
 				ent.Register (new Sprite (sprites.GetSprite ("skeleton_01")));
 				ent.Register (new Drawable (new Vector2(pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
 				ent.Register (new Position (pos.X, pos.Y));
-				ent.Register (new Health (1, () => OnTrashDestroyed(ent)));
-				ent.Register (new Attackable ((attacker, _) => OnChestAttacked(ent, attacker)));
+				ent.Register (new Health (Globals.TRASH_HEALTH[gameState.Level], () => OnTrashDestroyed(ent)));
+				ent.Register (new Attackable ((attacker, _, __) => OnChestAttacked(ent, attacker)));
 				ent.Register (new IFFSystem (Globals.IFF_MONSTER_ID));
 				ent.Register (new State<TreasureTypes> (TreasureTypes.Trash));
 				ent.Register (new PointLight (PointLight.DistanceType.Small, Color.Gold));

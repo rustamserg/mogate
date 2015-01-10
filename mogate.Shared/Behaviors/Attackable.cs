@@ -6,9 +6,9 @@ namespace mogate
 	{
 		public Type Behavior { get { return typeof(Attackable); } }
 
-		private Action<Entity, int> m_onAttack;
+		private Action<Entity, int, int> m_onAttack;
 
-		public Attackable(Action<Entity, int> onAttack = null)
+		public Attackable(Action<Entity, int, int> onAttack = null)
 		{
 			m_onAttack = onAttack;
 		}
@@ -26,10 +26,12 @@ namespace mogate
 					}
 					float attackMult = attacker.Has<AttackMultiplier> () ? attacker.Get<AttackMultiplier> ().Multiplier : 1;
 					int defence = defender.Has<Armor> () ? defender.Get<Armor> ().Defence : 0;
-					int damage = Math.Max(0, (int)((basedmg + criticaldmg) * attackMult) - defence);
+					basedmg = (int)(basedmg * attackMult);
+					criticaldmg = (int)(criticaldmg * attackMult);
+					int damage = Math.Max(0, basedmg + criticaldmg - defence);
 
 					if (m_onAttack != null)
-						m_onAttack (attacker, damage);
+						m_onAttack (attacker, damage, criticaldmg);
 
 					defender.Get<Health> ().HP = Math.Max (0, defender.Get<Health> ().HP - damage);
 				}
