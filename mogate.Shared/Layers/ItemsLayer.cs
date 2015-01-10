@@ -76,11 +76,11 @@ namespace mogate
 					if (lootType == LootTypes.Money) {
 						ent.Register (new Sprite (sprites.GetSprite ("money_01")));
 						ent.Register (new Triggerable ((from) => OnMoneyTriggered (ent, from)));
-						ent.Register (new Loot (Utils.ThrowDice (arch ["money"])));
+						ent.Register (new Loot (arch["money"]));
 					} else if (lootType == LootTypes.Health) {
 						ent.Register (new Sprite (sprites.GetSprite ("health_potion_01")));
 						ent.Register (new Triggerable ((from) => OnHealthTriggered (ent, from)));
-						ent.Register (new Loot (Utils.ThrowDice (arch ["health"])));
+						ent.Register (new Loot (arch ["health"]));
 					} else if (lootType == LootTypes.Armor) {
 						var armorSprite = string.Format ("armor_{0:D2}", Archetypes.Armors [arch ["armor_index"]] ["sprite_index"]);
 						ent.Register (new Sprite (sprites.GetSprite (armorSprite)));
@@ -112,7 +112,7 @@ namespace mogate
 				int armorId = item.Get<Loot> ().Drop;
 
 				if (attacker.Has<Armor> () && attacker.Get<Armor> ().ArchetypeID >= armorId) {
-					hud.FeedbackMessage ("Broken", Color.Red);
+					hud.FeedbackMessage ("Already weared", Color.Red);
 				} else {
 					if (attacker.Get<Consumable<ConsumableTypes>> ().TryConsume (ConsumableTypes.Money, cost)) {
 						if (!attacker.Has<Armor> ()) {
@@ -125,7 +125,7 @@ namespace mogate
 						RemoveEntityByTag (item.Tag);
 						hud.FeedbackMessage ("Picked up new armor", Color.Yellow);
 					} else {
-						string feedbackMsg = string.Format ("Cost: {0}", cost);
+						string feedbackMsg = string.Format ("Need {0} money", cost);
 						hud.FeedbackMessage (feedbackMsg, Color.Red);
 					}
 				}
@@ -142,7 +142,7 @@ namespace mogate
 				int weaponId = item.Get<Loot> ().Drop;
 
 				if (attacker.Has<Attack> () && attacker.Get<Attack> ().ArchetypeID >= weaponId) {
-					hud.FeedbackMessage ("Broken", Color.Red);
+					hud.FeedbackMessage ("Already weared", Color.Red);
 				} else {
 					if (attacker.Get<Consumable<ConsumableTypes>> ().TryConsume (ConsumableTypes.Money, cost)) {
 						attacker.Get<Attack> ().ArchetypeID = weaponId;
@@ -154,7 +154,7 @@ namespace mogate
 						RemoveEntityByTag (item.Tag);
 						hud.FeedbackMessage ("Picked up new weapon", Color.Yellow);
 					} else {
-						string feedbackMsg = string.Format ("Cost: {0}", cost);
+						string feedbackMsg = string.Format ("Need {0} money", cost);
 						hud.FeedbackMessage (feedbackMsg, Color.Red);
 					}
 				}
@@ -172,7 +172,7 @@ namespace mogate
 				attacker.Get<Consumable<ConsumableTypes>> ().Refill (ConsumableTypes.Money, droppedMoney);
 				RemoveEntityByTag (item.Tag);
 
-				string feedbackMsg = string.Format ("Picked money: {0}", droppedMoney);
+				string feedbackMsg = string.Format ("Picked {0} money", droppedMoney);
 				hud.FeedbackMessage (feedbackMsg, Color.Yellow);
 			}
 		}

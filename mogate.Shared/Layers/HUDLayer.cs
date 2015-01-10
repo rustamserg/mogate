@@ -30,7 +30,7 @@ namespace mogate
 			var feedbackEnt = CreateEntity ("hud_feedback");
 			feedbackEnt.Register (new Execute ());
 			feedbackEnt.Register (new Text (sprites.GetFont ("SpriteFont1")));
-			feedbackEnt.Register (new Drawable (new Vector2 (550, Globals.CELL_HEIGHT * Globals.WORLD_HEIGHT), Color.Yellow));
+			feedbackEnt.Register (new Drawable (new Vector2 (570, Globals.CELL_HEIGHT * Globals.WORLD_HEIGHT), Color.Yellow));
 
 			var hudIcon = CreateEntity ();
 			hudIcon.Register (new Sprite (sprites.GetSprite("health_01")));

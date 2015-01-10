@@ -203,8 +203,8 @@ namespace mogate
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 			var hud = (HUDLayer)Scene.GetLayer ("hud");
 
-			var msgs = new List<string> () { "He is scary", "Too sad", "No way",
-				"All will die", "Monsters ahead", "He is a champ", "He wants more"};
+			var msgs = new List<string> () { "He is scary", "He is sad", "He is happy",
+				"All will die", "Monsters ahead", "He is a champ", "He wants eat"};
 
 			string feedbackMsg = string.Format ("{0} went into stage {1}. {2}",
 				gameState.PlayerName, gameState.Level + 1, msgs[Utils.ThrowDice(msgs.Count)]);
@@ -233,7 +233,7 @@ namespace mogate
 			var player = GetEntityByTag("player");
 			effects.AttachEffect (player, "damage_01", 400);
 
-			string feedbackMsg = string.Format ("Dmg/Crit: {0}/{1}", damage, critical);
+			string feedbackMsg = string.Format ("Damage {0} Critical {1}", damage, critical);
 			hud.FeedbackMessage (feedbackMsg, Color.Red);
 		}
 
@@ -259,7 +259,7 @@ namespace mogate
 			} else {
 				effects.AttachEffect (player, "damage_01", 400);
 
-				string feedbackMsg = string.Format ("Poisoned: {0}", damage);
+				string feedbackMsg = string.Format ("Poison {0}", damage);
 				hud.FeedbackMessage (feedbackMsg, Color.Red);
 			}
 		}
