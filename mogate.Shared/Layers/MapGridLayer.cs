@@ -63,7 +63,10 @@ namespace mogate
 
 		void OnExitTriggered(Entity stair, Entity from)
 		{
+			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 			var director = (IDirector)Game.Services.GetService (typeof(IDirector));
+
+			gameState.NextLevel ();
 			director.ActivateScene ("inter", TimeSpan.FromSeconds (1));
 		}
 	}

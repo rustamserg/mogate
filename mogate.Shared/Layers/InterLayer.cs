@@ -15,11 +15,10 @@ namespace mogate
 
 		public override void OnActivated()
 		{
-			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
-			m_font = sprites.GetFont ("SpriteFont1");
-
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
-			gameState.NextLevel ();
+			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
+
+			m_font = sprites.GetFont ("SpriteFont1");
 
 			var ent = CreateEntity ();
 			ent.Register (new Text (m_font));
@@ -28,7 +27,9 @@ namespace mogate
 			ent.Get<Clickable> ().OnLeftButtonPressed += OnAction;
 			ent.Get<Clickable> ().OnTouched += OnAction;
 
-			if (gameState.IsGameEnd) {
+			if (gameState.GameProgress == GameProgressState.InGame) {
+				ent.Get<Text> ().Message = "Next level";
+			} else {
 				ent.Get<Text> ().Message = "New game";
 
 				int idx = 0;
@@ -51,8 +52,6 @@ namespace mogate
 
 					++idx;
 				}
-			} else {
-				ent.Get<Text> ().Message = "Next level";
 			}
 		}
 
@@ -61,10 +60,10 @@ namespace mogate
 			var director = (IDirector)Game.Services.GetService (typeof(IDirector));
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 
-			if (gameState.IsGameEnd)
-				director.ActivateScene ("main");
-			else
+			if (gameState.GameProgress == GameProgressState.InGame)
 				director.ActivateScene ("game");
+			else
+				director.ActivateScene ("main");
 		}
 	}
 }

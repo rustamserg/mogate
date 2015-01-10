@@ -19,6 +19,7 @@ namespace mogate
 	}
 
 	public enum SaveDataState { Unsync, Loading, Saving, Ready };
+	public enum GameProgressState { Win, Death, InGame };
 
 	public interface IGameState
 	{
@@ -44,7 +45,7 @@ namespace mogate
 		float PlayerPoisonChanceMultiplier { get; set; }
 		float PlayerAttackDistanceMultiplier { get; set; }
 
-		bool IsGameEnd { get; }
+		GameProgressState GameProgress { get; set; }
 		SaveDataState DataState { get; }
 		bool CountPlaytime { get; set; }
 
@@ -88,7 +89,7 @@ namespace mogate
 		public int Level { get; private set; }
 		public TimeSpan Playtime { get; private set; }
 
-		public bool IsGameEnd { get; private set; }
+		public GameProgressState GameProgress { get; set; }
 
 		public int PlayerSpriteID { get; set; }
 		public int PlayerHealth { get; set; }
@@ -144,7 +145,7 @@ namespace mogate
 			Level = Level + 1;
 		
 			if (Level == Globals.MAX_LEVELS) {
-				IsGameEnd = true;
+				GameProgress = GameProgressState.Win;
 				Level = 0;
 				UpdateHallOfFame ();
 			}
@@ -192,7 +193,7 @@ namespace mogate
 			world.GenerateLevels (Globals.MAX_LEVELS);
 
 			Level = 0;
-			IsGameEnd = false;
+			GameProgress = GameProgressState.InGame;
 			Playtime = TimeSpan.Zero;
 
 			var arch = Archetypes.Players.First ();

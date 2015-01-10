@@ -102,6 +102,7 @@ namespace mogate
 
 			var director = (IDirector)Game.Services.GetService (typeof(IDirector));
 			if (m_isLevelCompleted) {
+				gameState.NextLevel ();
 				director.ActivateScene ("inter", TimeSpan.FromSeconds (1));
 				return;
 			}
