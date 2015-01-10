@@ -59,7 +59,7 @@ namespace mogate
 				player.Register (new Armor (Archetypes.Armors [gameState.PlayerArmorID] ["defence"], gameState.PlayerArmorID));
 			}
 			player.Get<Consumable<ConsumableTypes>> ().Refill (ConsumableTypes.Money, gameState.PlayerMoney);
-			player.Get<Consumable<ConsumableTypes>> ().Refill (ConsumableTypes.Money, gameState.PlayerAntitodPotions);
+			player.Get<Consumable<ConsumableTypes>> ().Refill (ConsumableTypes.Antitod, gameState.PlayerAntitodPotions);
 
 			player.Get<Clickable> ().OnLeftButtonPressed += OnMoveToPosition;
 			player.Get<Clickable> ().OnMoved += OnMoveToPosition;
