@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 using System.Linq;
+using System.Collections.Generic;
 
 
 namespace mogate
@@ -66,9 +67,13 @@ namespace mogate
 			player.Get<Clickable> ().OnRightButtonPressed += OnAction;
 			player.Get<Clickable> ().OnTouched += OnAction;
 
-			player.Get<Execute> ().Add (new Loop (new ActionEntity (player, (_) => {
+			var seq = new Sequence ();
+			seq.Add (new ActionEntity (player, OnEnterToLevel));
+			seq.Add (new Delay (2000));
+			seq.Add (new Loop (new ActionEntity (player, (_) => {
 				UpdatePlayer (player);
-			})), "player_update_loop");
+			})));
+			player.Get<Execute>().Add(seq, "player_update_loop");
 
 			m_toMove = mapGrid.StairDown;
 			StartIdle (player);
@@ -191,6 +196,19 @@ namespace mogate
 					player.Get<State<PlayerState>> ().EState = PlayerState.Attacking;
 				}
 			}
+		}
+
+		private void OnEnterToLevel(Entity player)
+		{
+			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
+			var hud = (HUDLayer)Scene.GetLayer ("hud");
+
+			var msgs = new List<string> () { "He is scary", "Too sad", "No way",
+				"All will die", "Monsters ahead", "He is a champ", "He wants more"};
+
+			string feedbackMsg = string.Format ("{0} went into stage {1}. {2}",
+				gameState.PlayerName, gameState.Level + 1, msgs[Utils.ThrowDice(msgs.Count)]);
+			hud.FeedbackMessage (feedbackMsg, 6000);
 		}
 
 		private void OnEndMove(Entity player)

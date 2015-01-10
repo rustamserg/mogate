@@ -22,10 +22,6 @@ namespace mogate
 
 			var infoEnt = CreateEntity ();
 			infoEnt.Register (new Execute ());
-			infoEnt.Register (new Text (sprites.GetFont ("SpriteFont1")));
-			infoEnt.Register (new Drawable (new Vector2 (Globals.CELL_WIDTH,
-				Globals.CELL_HEIGHT * Globals.WORLD_HEIGHT), Color.Green));
-
 			var infoMsg = new Loop (new ActionEntity(infoEnt, (_) => {
 				UpdateInfoMessage (infoEnt);
 			}));
@@ -34,8 +30,43 @@ namespace mogate
 			var feedbackEnt = CreateEntity ("hud_feedback");
 			feedbackEnt.Register (new Execute ());
 			feedbackEnt.Register (new Text (sprites.GetFont ("SpriteFont1")));
-			feedbackEnt.Register (new Drawable (new Vector2 (25 * Globals.CELL_WIDTH,
-				Globals.CELL_HEIGHT * Globals.WORLD_HEIGHT), Color.Red));
+			feedbackEnt.Register (new Drawable (new Vector2 (550, Globals.CELL_HEIGHT * Globals.WORLD_HEIGHT), Color.Yellow));
+
+			var hudIcon = CreateEntity ();
+			hudIcon.Register (new Sprite (sprites.GetSprite("health_01")));
+			hudIcon.Register (new Drawable (new Vector2 (0, Globals.CELL_HEIGHT * Globals.WORLD_HEIGHT)));
+
+			hudIcon = CreateEntity ();
+			hudIcon.Register (new Sprite (sprites.GetSprite("money_01")));
+			hudIcon.Register (new Drawable (new Vector2 (100, Globals.CELL_HEIGHT * Globals.WORLD_HEIGHT)));
+
+			hudIcon = CreateEntity ();
+			hudIcon.Register (new Sprite (sprites.GetSprite("weapon_01")));
+			hudIcon.Register (new Drawable (new Vector2 (200, Globals.CELL_HEIGHT * Globals.WORLD_HEIGHT)));
+
+			hudIcon = CreateEntity ();
+			hudIcon.Register (new Sprite (sprites.GetSprite("armor_01")));
+			hudIcon.Register (new Drawable (new Vector2 (300, Globals.CELL_HEIGHT * Globals.WORLD_HEIGHT)));
+
+			var textMsg = CreateEntity ("hud_health");
+			textMsg.Register (new Text(sprites.GetFont ("SpriteFont1")));
+			textMsg.Register (new Drawable (new Vector2 (40, Globals.CELL_HEIGHT * Globals.WORLD_HEIGHT), Color.Green));
+
+			textMsg = CreateEntity ("hud_weapon");
+			textMsg.Register (new Text(sprites.GetFont ("SpriteFont1")));
+			textMsg.Register (new Drawable (new Vector2 (240, Globals.CELL_HEIGHT * Globals.WORLD_HEIGHT), Color.Green));
+
+			textMsg = CreateEntity ("hud_money");
+			textMsg.Register (new Text(sprites.GetFont ("SpriteFont1")));
+			textMsg.Register (new Drawable (new Vector2 (140, Globals.CELL_HEIGHT * Globals.WORLD_HEIGHT), Color.Green));
+
+			textMsg = CreateEntity ("hud_armor");
+			textMsg.Register (new Text(sprites.GetFont ("SpriteFont1")));
+			textMsg.Register (new Drawable (new Vector2 (340, Globals.CELL_HEIGHT * Globals.WORLD_HEIGHT), Color.Green));
+
+			textMsg = CreateEntity ("hud_time");
+			textMsg.Register (new Text(sprites.GetFont ("SpriteFont1")));
+			textMsg.Register (new Drawable (new Vector2 (440, Globals.CELL_HEIGHT * Globals.WORLD_HEIGHT), Color.Green));
 		}
 
 		public void FeedbackMessage(string message, int duration = 1000)
@@ -56,9 +87,24 @@ namespace mogate
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 			var player = Scene.GetLayer("player").GetEntityByTag("player");
 
-			infoEnt.Get<Text>().Message = string.Format ("Player: {0} Stage: {1} HP: {2} Money: {3} Time: {4:D2}:{5:D2}:{6:D2}",
-				gameState.PlayerName, gameState.Level + 1, player.Get<Health>().HP, player.Get<Consumable<ConsumableTypes>>().Amount(ConsumableTypes.Money),
-				gameState.Playtime.Hours, gameState.Playtime.Minutes, gameState.Playtime.Seconds);
+			var textMsg = GetEntityByTag ("hud_health");
+			textMsg.Get<Text> ().Message = player.Get<Health> ().HP.ToString();
+
+			textMsg = GetEntityByTag ("hud_money");
+			textMsg.Get<Text> ().Message = player.Get<Consumable<ConsumableTypes>> ().Amount (ConsumableTypes.Money).ToString ();
+
+			textMsg = GetEntityByTag ("hud_weapon");
+			textMsg.Get<Text> ().Message = player.Get<Attack> ().Damage.ToString();
+
+			textMsg = GetEntityByTag ("hud_armor");
+			if (player.Has<Armor> ()) {
+				textMsg.Get<Text> ().Message = player.Get<Armor> ().Defence.ToString ();
+			} else {
+				textMsg.Get<Text> ().Message = "none";
+			}
+
+			textMsg = GetEntityByTag ("hud_time");
+			textMsg.Get<Text> ().Message = string.Format ("{0:D2}:{1:D2}:{2:D2}", gameState.Playtime.Hours, gameState.Playtime.Minutes, gameState.Playtime.Seconds);
 		}
 
 		protected override void OnPostDraw (SpriteBatch spriteBatch, GameTime gameTime)
