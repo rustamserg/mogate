@@ -30,17 +30,17 @@ namespace mogate
 					var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
 
 					var newGameBtn = CreateEntity ("new_game_btn");
-					newGameBtn.Register (new Text (sprites.GetFont ("SpriteFont1"), "Start new game"));
-					newGameBtn.Register (new Drawable (new Vector2 (420, 270)));
-					newGameBtn.Register (new Clickable (new Rectangle (420, 270, 400, 40)));
+					newGameBtn.Register (new Text (sprites.GetFont ("SpriteFont1"), "New game"));
+					newGameBtn.Register (new Drawable (new Vector2 (440, 270)));
+					newGameBtn.Register (new Clickable (new Rectangle (440, 270, 400, 40)));
 					newGameBtn.Get<Clickable> ().OnLeftButtonPressed += StartNewGame;
 					newGameBtn.Get<Clickable> ().OnTouched += StartNewGame;
 
 					if (gameState.Level > 0) {
 						var cntGameBtn = CreateEntity ();
-						cntGameBtn.Register (new Text (sprites.GetFont ("SpriteFont1"), "Continue game"));
-						cntGameBtn.Register (new Drawable (new Vector2 (420, 320)));
-						cntGameBtn.Register (new Clickable (new Rectangle (420, 320, 400, 40)));
+						cntGameBtn.Register (new Text (sprites.GetFont ("SpriteFont1"), "Continue"));
+						cntGameBtn.Register (new Drawable (new Vector2 (450, 320)));
+						cntGameBtn.Register (new Clickable (new Rectangle (450, 320, 400, 40)));
 						cntGameBtn.Get<Clickable> ().OnLeftButtonPressed += ContinueGame;
 						cntGameBtn.Get<Clickable> ().OnTouched += ContinueGame;
 					}

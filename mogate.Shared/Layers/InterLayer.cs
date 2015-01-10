@@ -7,8 +7,6 @@ namespace mogate
 {
 	public class InterLayer : Layer
 	{
-		private SpriteFont m_font;
-
 		public InterLayer (Game game, string name, Scene scene, int z) : base(game, name, scene, z)
 		{
 		}
@@ -18,19 +16,22 @@ namespace mogate
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
 
-			m_font = sprites.GetFont ("SpriteFont1");
-
-			var ent = CreateEntity ();
-			ent.Register (new Text (m_font));
-			ent.Register (new Drawable (new Vector2 (450, 200)));
-			ent.Register (new Clickable (new Rectangle (450, 200, 400, 40)));
-			ent.Get<Clickable> ().OnLeftButtonPressed += OnAction;
-			ent.Get<Clickable> ().OnTouched += OnAction;
+			var font = sprites.GetFont ("SpriteFont1");
 
 			if (gameState.GameProgress == GameProgressState.InGame) {
-				ent.Get<Text> ().Message = "Next level";
+				var ent = CreateEntity ();
+				ent.Register (new Text (font, "Next level"));
+				ent.Register (new Drawable (new Vector2 (450, 200)));
+				ent.Register (new Clickable (new Rectangle (450, 200, 400, 40)));
+				ent.Get<Clickable> ().OnLeftButtonPressed += OnAction;
+				ent.Get<Clickable> ().OnTouched += OnAction;
 			} else {
-				ent.Get<Text> ().Message = "New game";
+				var ent = CreateEntity ();
+				ent.Register (new Text (font, "Back to menu"));
+				ent.Register (new Drawable (new Vector2 (440, 550)));
+				ent.Register (new Clickable (new Rectangle (440, 550, 400, 40)));
+				ent.Get<Clickable> ().OnLeftButtonPressed += OnAction;
+				ent.Get<Clickable> ().OnTouched += OnAction;
 
 				int idx = 0;
 
@@ -40,17 +41,28 @@ namespace mogate
 					hofsprite.Register (new Drawable (new Vector2 (380, 320 + idx * 36)));
 
 					var hofname = CreateEntity();
-					hofname.Register (new Text (m_font, hof.PlayerName));
+					hofname.Register (new Text (font, hof.PlayerName));
 					hofname.Register (new Drawable (new Vector2 (380 + 40, 320 + idx * 36)));
 
 					var ts = TimeSpan.FromTicks (hof.TotalPlaytime);
 					var time = string.Format ("{0:D2}:{1:D2}:{2:D2}", ts.Hours, ts.Minutes, ts.Seconds);
 
 					var hoftime = CreateEntity();
-					hoftime.Register (new Text (m_font, time));
+					hoftime.Register (new Text (font, time));
 					hoftime.Register (new Drawable (new Vector2 (380 + 140, 320 + idx * 36)));
 
 					++idx;
+				}
+
+				ent = CreateEntity ();
+				ent.Register (new Text (font));
+
+				if (gameState.GameProgress == GameProgressState.Death) {
+					ent.Register (new Drawable (new Vector2 (400, 250)));
+					ent.Get<Text> ().Message = string.Format ("Rest in peace {0}", gameState.PlayerName);
+				} else {
+					ent.Register (new Drawable (new Vector2 (400, 250)));
+					ent.Get<Text> ().Message = string.Format ("{0} won the game", gameState.PlayerName);
 				}
 			}
 		}
@@ -60,10 +72,12 @@ namespace mogate
 			var director = (IDirector)Game.Services.GetService (typeof(IDirector));
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 
-			if (gameState.GameProgress == GameProgressState.InGame)
+			if (gameState.GameProgress == GameProgressState.InGame) {
 				director.ActivateScene ("game");
-			else
+			} else {
+				gameState.NewGame ();
 				director.ActivateScene ("main");
+			}
 		}
 	}
 }

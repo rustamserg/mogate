@@ -85,5 +85,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\AttackMultiplier.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\AttackDistanceMultiplier.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\PoisonChanceMultiplier.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layers\MenuBackgroundLayer.cs" />
   </ItemGroup>
 </Project>

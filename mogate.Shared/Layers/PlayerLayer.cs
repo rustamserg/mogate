@@ -244,8 +244,8 @@ namespace mogate
 			var state = (IGameState)Game.Services.GetService (typeof(IGameState));
 
 			if (player.Get<Health> ().HP == 0) {
-				state.NewGame ();
-				director.ActivateScene ("main");
+				state.GameProgress = GameProgressState.Death;
+				director.ActivateScene ("inter");
 			}
 		}
 
