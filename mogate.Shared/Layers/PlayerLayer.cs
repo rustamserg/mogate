@@ -189,7 +189,9 @@ namespace mogate
 				var mapLine = mapGrid.GetLine (mapPos, actionPos);
 				if (mapLine.Any() && !mapLine.Any (e => e.Type == MapGridTypes.ID.Blocked)) {
 					var seq = new Sequence ();
-					effects.SpawnEffect (actionPos, "weapon_01", player.Get<AttackSpeed> ().Speed);
+					int weaponId = player.Get<Attack> ().ArchetypeID;
+					string weaponSpriteName = string.Format ("weapon_{0:D2}", Archetypes.Weapons [weaponId] ["sprite_index"]);
+					effects.SpawnEffect (actionPos, weaponSpriteName, player.Get<AttackSpeed> ().Speed);
 
 					var actionTargets = items.GetAllEntities ().Where (e => e.Has<Position> ()).ToList ();
 					actionTargets.AddRange (monsters.GetAllEntities ().Where (e => e.Has<Position> ()));

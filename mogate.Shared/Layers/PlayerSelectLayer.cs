@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using System.Linq;
 using System.Collections.Generic;
+using System.Text;
 
 namespace mogate
 {
@@ -77,26 +78,30 @@ namespace mogate
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 
 			var ent = GetEntityByTag ("player_name");
-			ent.Get<Text> ().Message = string.Format ("Name: {0}", gameState.PlayerName);
+			ent.Get<Text> ().Message = string.Format ("name {0}", gameState.PlayerName);
 
 			ent = GetEntityByTag ("player_health");
-			ent.Get<Text> ().Message = string.Format ("Health: {0}", gameState.PlayerHealth);
+			ent.Get<Text> ().Message = string.Format ("health {0}", gameState.PlayerHealth);
 
 			ent = GetEntityByTag ("player_move_speed");
-			ent.Get<Text> ().Message = string.Format ("Speed: {0}", GetMoveSpeedLabel (gameState.PlayerMoveSpeed));
+			ent.Get<Text> ().Message = string.Format ("speed {0}", GetMoveSpeedLabel (gameState.PlayerMoveSpeed));
 
 			ent = GetEntityByTag ("player_skill");
+			var skillInfo = new StringBuilder ();
+
 			if (gameState.PlayerMoneyMultiplier > 1) {
-				ent.Get<Text> ().Message = string.Format ("Money: x{0}", gameState.PlayerMoneyMultiplier);
-			} else if (gameState.PlayerAttackMultiplier > 1) {
-				ent.Get<Text> ().Message = string.Format ("Attack: x{0}", gameState.PlayerAttackMultiplier);
-			} else if (gameState.PlayerPoisonChanceMultiplier < 1) {
-				ent.Get<Text> ().Message = string.Format ("Poison chance: x{0}", gameState.PlayerPoisonChanceMultiplier);
-			} else if (gameState.PlayerAttackDistanceMultiplier > 1) {
-				ent.Get<Text> ().Message = string.Format ("Range: x{0}", gameState.PlayerAttackDistanceMultiplier);
-			} else {
-				ent.Get<Text> ().Message = string.Empty;
+				skillInfo.AppendFormat ("money x{0} ", gameState.PlayerMoneyMultiplier);
 			}
+			if (gameState.PlayerAttackMultiplier > 1) {
+				skillInfo.AppendFormat ("attack x{0} ", gameState.PlayerAttackMultiplier);
+			}
+			if (gameState.PlayerPoisonChanceMultiplier < 1) {
+				skillInfo.AppendFormat ("poison x{0} ", gameState.PlayerPoisonChanceMultiplier);
+			}
+			if (gameState.PlayerAttackDistanceMultiplier > 1) {
+				skillInfo.AppendFormat ("range x{0} ", gameState.PlayerAttackDistanceMultiplier);
+			}
+			ent.Get<Text> ().Message = skillInfo.ToString ();
 		}
 
 		private string GetMoveSpeedLabel(int moveSpeed)

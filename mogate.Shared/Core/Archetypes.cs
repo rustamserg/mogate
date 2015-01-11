@@ -349,7 +349,7 @@ namespace mogate
 				{ "health_packs_max", 12 },
 				{ "move_duration_msec", 500 },
 				{ "money_multiplier", 1 },
-				{ "attack_multiplier", 1 },
+				{ "attack_multiplier", 2 },
 				{ "poison_chance_multiplier", 0.2f },
 				{ "view_distance_type", 1 },
 				{ "attack_distance_multiplier", 1 },
