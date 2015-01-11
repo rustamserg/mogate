@@ -23,6 +23,8 @@ namespace mogate
 
 		public static readonly int HALL_OF_FAME_SIZE = 5;
 
+		public static readonly int PLAYER_SPAWN_SEC = 4;
+
 		public static readonly int[] TRASH_POPULATION = {5, 8, 10, 12, 15};
 		public static readonly int[] TRASH_DROP_LOOT_WEIGHT = {30, 30, 30, 30, 30};
 		public static readonly int[] TRASH_HEALTH = {10, 20, 30, 40, 50};

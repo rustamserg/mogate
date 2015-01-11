@@ -69,7 +69,17 @@ namespace mogate
 
 			var seq = new Sequence ();
 			seq.Add (new ActionEntity (player, OnEnterToLevel));
-			seq.Add (new Delay (2000));
+			var blink = new Loop(new ActionEntity(player, (_) => {
+				if (player.Get<Drawable>().DrawAlpha == 0.0f) {
+					player.Get<Drawable>().DrawAlpha = 1.0f;
+				} else {
+					player.Get<Drawable>().DrawAlpha = 0.0f;
+				}
+			}), 250);
+			seq.Add (new Timeline (blink, Globals.PLAYER_SPAWN_SEC * 1000));
+			seq.Add (new ActionEntity (player, (_AppDomain) => {
+				player.Get<Drawable>().DrawAlpha = 1.0f;
+			}));
 			seq.Add (new Loop (new ActionEntity (player, (_) => {
 				UpdatePlayer (player);
 			})));
@@ -205,11 +215,11 @@ namespace mogate
 			var hud = (HUDLayer)Scene.GetLayer ("hud");
 
 			var msgs = new List<string> () { "He is scary", "He is sad", "He is happy",
-				"All will die", "Monsters ahead", "He is a champ", "He wants eat"};
+				"Monsters ahead", "He is a champ", "He wants eat"};
 
-			string feedbackMsg = string.Format ("{0} went into stage {1}. {2}",
+			string feedbackMsg = string.Format ("{0} is here. {2}",
 				gameState.PlayerName, gameState.Level + 1, msgs[Utils.ThrowDice(msgs.Count)]);
-			hud.FeedbackMessage (feedbackMsg, Color.Yellow, 6000);
+			hud.FeedbackMessage (feedbackMsg, Color.Yellow, (Globals.PLAYER_SPAWN_SEC + 2) * 1000);
 		}
 
 		private void OnEndMove(Entity player)

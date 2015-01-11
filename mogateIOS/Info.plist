@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleDisplayName</key>
-	<string>mogateIOS</string>
+	<string>mogate</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.your-company.mogateIOS</string>
+	<string>com.rustamserg.mogate</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
