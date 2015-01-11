@@ -108,6 +108,9 @@ namespace mogate
 				m_isLevelCompleted = true;
 			else if (KeyboardUtils.IsKeyPressed (Keys.M)) {
 				player.Get<Consumable<ConsumableTypes>> ().Refill (ConsumableTypes.Money, 100);
+			} else if (KeyboardUtils.IsKeyPressed (Keys.S)) {
+				var stats = (IStatistics)Game.Services.GetService (typeof(IStatistics));
+				stats.Dump ();
 			}
 
 			var director = (IDirector)Game.Services.GetService (typeof(IDirector));
