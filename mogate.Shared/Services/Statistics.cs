@@ -15,6 +15,7 @@ namespace mogate
 		void Dump();
 	}
 
+	#if DEBUG
 	public class Statistics : IStatistics
 	{
 		private object m_lock = new object();
@@ -68,5 +69,15 @@ namespace mogate
 			}
 		}
 	}
+	#else
+	public class Statistics : IStatistics
+	{
+		public void EntityAdded(string entity) {}
+		public void EntityRemoved(string entity) {}
+		public void BehaviorRegistered(string entity, string behavior) {}
+		public void BehaviorFetched (string entity, string behavior) {}
+		public void Dump() {}
+	}
+	#endif
 }
 
