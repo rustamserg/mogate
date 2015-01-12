@@ -5,6 +5,10 @@ namespace mogate
 {
 	public class MenuBackgroundLayer : Layer
 	{
+		private int m_tileSize;
+		private int m_tilesHeight;
+		private int m_tilesWidth;
+
 		public MenuBackgroundLayer (Game game, string name, Scene scene, int z) : base(game, name, scene, z)
 		{
 		}
@@ -12,12 +16,15 @@ namespace mogate
 		public override void OnActivated()
 		{
 			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
+			m_tileSize = sprites.GetSprite ("back_01").Rect.Width;
+			m_tilesWidth = Globals.VIEWPORT_WIDTH / m_tileSize + 1;
+			m_tilesHeight = Globals.VIEWPORT_HEIGHT / m_tileSize + 1;
 
-			for (int x = 0; x < (Globals.WORLD_WIDTH + 2); x++) {
-				for (int y = 0; y < (Globals.WORLD_HEIGHT + 2); y++) {
+			for (int x = 0; x < m_tilesWidth; x++) {
+				for (int y = 0; y < m_tilesHeight; y++) {
 					var tileEnt = CreateEntity (string.Format("{0}_{1}", x, y));
-					tileEnt.Register (new Sprite (sprites.GetSprite ("floor_02_01")));
-					tileEnt.Register (new Drawable (new Vector2 (x * Globals.CELL_WIDTH, y * Globals.CELL_HEIGHT)));
+					tileEnt.Register (new Sprite (sprites.GetSprite ("back_01"), false));
+					tileEnt.Register (new Drawable (new Vector2 (x * m_tileSize, y * m_tileSize)));
 				}
 			}
 			var controller = CreateEntity ();
@@ -29,14 +36,14 @@ namespace mogate
 
 		void Update(Entity controller)
 		{
-			for (int x = 0; x < (Globals.WORLD_WIDTH + 2); x++) {
-				for (int y = 0; y < (Globals.WORLD_HEIGHT + 2); y++) {
+			for (int x = 0; x < m_tilesWidth; x++) {
+				for (int y = 0; y < m_tilesHeight; y++) {
 					var tileEnt = GetEntityByTag (string.Format("{0}_{1}", x, y));
 					tileEnt.Get<Drawable> ().DrawPos.X--;
 					tileEnt.Get<Drawable> ().DrawPos.Y--;
-					if (tileEnt.Get<Drawable> ().DrawPos.X % Globals.CELL_WIDTH == 0) {
-						tileEnt.Get<Drawable> ().DrawPos.X = x * Globals.CELL_WIDTH;
-						tileEnt.Get<Drawable> ().DrawPos.Y = y * Globals.CELL_HEIGHT;
+					if (tileEnt.Get<Drawable> ().DrawPos.X % m_tileSize == 0) {
+						tileEnt.Get<Drawable> ().DrawPos.X = x * m_tileSize;
+						tileEnt.Get<Drawable> ().DrawPos.Y = y * m_tileSize;
 					}
 				}
 			}

@@ -58,10 +58,10 @@ namespace mogate
 				ent.Register (new Text (font));
 
 				if (gameState.GameProgress == GameProgressState.Death) {
-					ent.Register (new Drawable (new Vector2 (400, 250)));
+					ent.Register (new Drawable (new Vector2 (380, 250)));
 					ent.Get<Text> ().Message = string.Format ("Rest in peace {0}", gameState.PlayerName);
 				} else {
-					ent.Register (new Drawable (new Vector2 (400, 250)));
+					ent.Register (new Drawable (new Vector2 (380, 250)));
 					ent.Get<Text> ().Message = string.Format ("{0} won the game", gameState.PlayerName);
 				}
 			}
