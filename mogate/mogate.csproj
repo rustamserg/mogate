@@ -6,7 +6,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{0F36DD4E-D5EE-4ACD-AD24-7D86752E6521}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <RootNamespace>mogate</RootNamespace>
     <AssemblyName>mogate</AssemblyName>
   </PropertyGroup>
