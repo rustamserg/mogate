@@ -13,7 +13,6 @@ namespace mogate
 	public class GameMogate : Game
 	{
 		GraphicsDeviceManager m_graphics;
-		Director m_director;
 
 		public GameMogate ()
 		{
@@ -30,30 +29,30 @@ namespace mogate
 		{
 			var gameState = new GameState (this);
 			var sprites = new SpriteSheets (this);
+			var director = new Director (this);
 
 			Services.AddService (typeof(IWorld), new World());
 			Services.AddService (typeof(IGameState), gameState);
 			Services.AddService (typeof(ISpriteSheets), sprites);
 			Services.AddService (typeof(IStatistics), new Statistics ());
+			Services.AddService (typeof(IDirector), director);
 
 			Components.Add (sprites);
 			Components.Add (gameState);
+			Components.Add (director);
 
-			// new flow, there is only director game component is added
-			m_director = new Director (this);
-			Services.AddService (typeof(IDirector), m_director);
-
-			m_director.RegisterScene (new GameScene (this, "game"));
-			m_director.RegisterScene (new MainScene (this, "main"));
-			m_director.RegisterScene (new InterScene (this, "inter"));
-			m_director.RegisterScene (new PlayerSelectScene (this, "player_select"));
+			director.RegisterScene (new GameScene (this, "game"));
+			director.RegisterScene (new MainScene (this, "main"));
+			director.RegisterScene (new InterScene (this, "inter"));
+			director.RegisterScene (new PlayerSelectScene (this, "player_select"));
 
 			base.Initialize ();
 		}
 
 		protected override void LoadContent ()
 		{
-			m_director.ActivateScene ("main");
+			var director = (IDirector)Services.GetService (typeof(IDirector));
+			director.ActivateScene ("main");
 		}
 	}
 }
