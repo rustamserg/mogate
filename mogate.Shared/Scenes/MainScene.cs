@@ -1,11 +1,12 @@
 using System;
 using Microsoft.Xna.Framework;
+using Elizabeth;
 
 namespace mogate
 {
 	public class MainScene: Scene
 	{
-		public MainScene (Game game, string name) : base(game, name)
+		public MainScene (Game game, string name) : base(game, name, Globals.VIEWPORT_WIDTH, Globals.VIEWPORT_HEIGHT)
 		{
 		}
 

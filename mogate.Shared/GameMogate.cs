@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.Input;
+using Elizabeth;
 
 #endregion
 
@@ -27,9 +28,9 @@ namespace mogate
 
 		protected override void Initialize ()
 		{
-			var gameState = new GameState (this);
-			var sprites = new SpriteSheets (this);
 			var director = new Director (this);
+			var gameState = new GameState (this);
+			var sprites = new SpriteSheets (this, Globals.CELL_WIDTH, Globals.CELL_HEIGHT);
 
 			Services.AddService (typeof(IWorld), new World());
 			Services.AddService (typeof(IGameState), gameState);

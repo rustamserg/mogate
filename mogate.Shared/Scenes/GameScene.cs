@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
+using Elizabeth;
 
 namespace mogate
 {
@@ -20,7 +21,7 @@ namespace mogate
 		private RenderTarget2D m_lightTarget;
 		private Effect m_lightEffect;
 
-		public GameScene (Game game, string name) : base(game, name)
+		public GameScene (Game game, string name) : base(game, name, Globals.VIEWPORT_WIDTH, Globals.VIEWPORT_HEIGHT)
 		{
 		}
 

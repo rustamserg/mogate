@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>{2BE4AC35-7B61-428A-A9E2-A30C45055332}</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Elizabeth</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\ActionEntity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\AnimSprite.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\Delay.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\FollowSprite.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\Loop.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\MoveSpriteTo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\Sequence.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\Spawn.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\Timeline.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Clickable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Drawable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Execute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Sprite.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\State.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Tag.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Text.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Behavior.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Director.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Entity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\KeyboardUtils.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Layer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\PList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Scene.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\SpriteSheets.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\Statistics.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Consumable.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Actions\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Behaviors\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Core\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Services\" />
+  </ItemGroup>
+</Project>

@@ -9,23 +9,10 @@
     <Import_RootNamespace>mogate</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)Actions\ActionEntity.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Actions\AnimSprite.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Actions\FollowSprite.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Actions\Gameplay\AttackEntity.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Actions\Gameplay\TriggerEntity.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Actions\Loop.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Actions\MoveSpriteTo.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Actions\Sequence.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Actions\Spawn.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Actions\Timeline.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\AllowedMapArea.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Attack.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Attackable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\AttackSpeed.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Consumable.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Drawable.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Execute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Health.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\IFFSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\LookDirection.cs" />
@@ -34,19 +21,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Perception.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\PointLight.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Position.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Sprite.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\State.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Text.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Triggerable.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Core\Behavior.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Core\Director.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Core\Entity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Globals.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Core\KeyboardUtils.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Core\Layer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\MapGenerator.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Core\PList.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Core\Scene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Utils.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Layers\EffectsLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Layers\HUDLayer.cs" />
@@ -61,18 +38,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\MainScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\GameState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\MapGrid.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\SpriteSheets.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\World.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameMogate.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Clickable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\NameGenerator.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\Statistics.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Poison.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Poisonable.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Actions\Gameplay\TryPoisonEntity.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Actions\Gameplay\DoPoisonEntity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Archetypes.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Actions\Delay.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Armor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Loot.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Price.cs" />
@@ -80,11 +51,14 @@
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\CriticalHit.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Layers\PlayerSelectLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\PlayerSelectScene.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Tag.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\MoneyMultiplier.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\AttackMultiplier.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\AttackDistanceMultiplier.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\PoisonChanceMultiplier.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Layers\MenuBackgroundLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\AttackEntity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\DoPoisonEntity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\TriggerEntity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\TryPoisonEntity.cs" />
   </ItemGroup>
 </Project>

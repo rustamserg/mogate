@@ -73,13 +73,5 @@ namespace mogate
 				list[n] = value;  
 			}  
 		}
-
-		public static Rectangle RectangleFromString(string rect)
-		{
-			// convert {{x, y}, {w, h}} to rect
-			string parsed = rect.Replace ("{", "").Replace ("}", "");
-			string[] dt = parsed.Split (',');
-			return new Rectangle (int.Parse (dt [0]), int.Parse (dt [1]), int.Parse (dt [2]), int.Parse (dt [3]));
-		}
 	}
 }

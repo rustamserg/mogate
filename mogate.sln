@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mogate.Content", "mogate.Co
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "mogate.Shared", "mogate.Shared\mogate.Shared.shproj", "{019F46A5-D879-4218-8275-5080E6F90E7D}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Elizabeth", "Elizabeth\Elizabeth.shproj", "{2BE4AC35-7B61-428A-A9E2-A30C45055332}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -23,7 +25,6 @@ Global
 		{885B53C3-88D2-4252-8F87-362A7280721E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = mogate\mogate.csproj
 		Policies = $0
 		$0.DotNetNamingPolicy = $1
 		$1.DirectoryNamespaceAssociation = None
