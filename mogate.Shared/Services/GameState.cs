@@ -7,6 +7,7 @@ using System.Xml.Serialization;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using Elizabeth;
 
 
 namespace mogate
@@ -18,7 +19,6 @@ namespace mogate
 		public long TotalPlaytime;
 	}
 
-	public enum SaveDataState { Unsync, Loading, Saving, Ready };
 	public enum GameProgressState { Win, Death, InGame };
 
 	public interface IGameState
@@ -46,7 +46,6 @@ namespace mogate
 		float PlayerAttackDistanceMultiplier { get; set; }
 
 		GameProgressState GameProgress { get; set; }
-		SaveDataState DataState { get; }
 		bool CountPlaytime { get; set; }
 
 		List<HallOfFameEntry> HallOfFame { get; }
@@ -57,7 +56,7 @@ namespace mogate
 	}
 
 	[Serializable]
-	public class SaveData
+	public class MogateSaveData : SaveData
 	{
 		public int Level;
 		public long PlaytimeTicks;
@@ -84,8 +83,6 @@ namespace mogate
 
 	public class GameState : GameComponent, IGameState
 	{
-		StorageDevice m_storageDevice;
-
 		public int Level { get; private set; }
 		public TimeSpan Playtime { get; private set; }
 
@@ -110,7 +107,6 @@ namespace mogate
 		public int PlayerArmorID { get; set; }
 		public string PlayerName { get; private set; }
 
-		public SaveDataState DataState { get; private set; }
 		public bool CountPlaytime { get; set; }
 
 		public List<HallOfFameEntry> HallOfFame { get; private set; }
@@ -118,16 +114,13 @@ namespace mogate
 
 		public GameState (Game game) : base(game)
 		{
-			DataState = SaveDataState.Unsync;
 			CountPlaytime = false;
 			HallOfFame = new List<HallOfFameEntry> ();
+			InitGame ();
 		}
 
 		public override void Update (GameTime gameTime)
 		{
-			if (DataState == SaveDataState.Unsync) {
-				LoadGame ();
-			}
 			if (CountPlaytime) {
 				Playtime += gameTime.ElapsedGameTime;
 			}
@@ -215,60 +208,32 @@ namespace mogate
 
 		void SaveGame()
 		{
-			if (!Guide.IsVisible) {
-				m_storageDevice = null;
-				DataState = SaveDataState.Saving;
-				StorageDevice.BeginShowSelector (PlayerIndex.One, SaveToDevice, null);
-			}else {
-				DataState = SaveDataState.Ready;
-			}
+			var save = new MogateSaveData {
+				Level = this.Level,
+				PlayerName = this.PlayerName,
+				PlaytimeTicks = this.Playtime.Ticks,
+				PlayerHealth = this.PlayerHealth,
+				PlayerHealthMax = this.PlayerHealthMax,
+				PlayerAntitodPotions = this.PlayerAntitodPotions,
+				PlayerAntitodPotionsMax = this.PlayerAntitodPotionsMax,
+				PlayerMoney = this.PlayerMoney,
+				PlayerViewDistanceType = this.PlayerViewDistanceType,
+				PlayerAttackDistanceMultiplier = this.PlayerAttackDistanceMultiplier,
+				PlayerMoneyMultiplier = this.PlayerMoneyMultiplier,
+				PlayerAttackMultiplier = this.PlayerAttackMultiplier,
+				PlayerPoisonChanceMultiplier = this.PlayerPoisonChanceMultiplier,
+				PlayerAttackSpeed = this.PlayerAttackSpeed,
+				PlayerMoveSpeed = this.PlayerMoveSpeed,
+				PlayerSpriteID = this.PlayerSpriteID,
+				PlayerArmorID= this.PlayerArmorID,
+				PlayerWeaponID = this.PlayerWeaponID,
+				HallOfFame = this.HallOfFame
+			};
+
+			var gameCheckpoint = (IGameCheckpoint)Game.Services.GetType (typeof(IGameCheckpoint));
+			gameCheckpoint.SaveCheckpoint (save);
 		}
 
-		void SaveToDevice(IAsyncResult result)
-		{
-			m_storageDevice = StorageDevice.EndShowSelector (result);
-
-			if (m_storageDevice != null && m_storageDevice.IsConnected) {
-				var res = m_storageDevice.BeginOpenContainer ("mogate", null, null);
-				result.AsyncWaitHandle.WaitOne ();
-				var container = m_storageDevice.EndOpenContainer (res);
-
-				if (container.FileExists ("mogate.sav"))
-					container.DeleteFile ("mogate.sav");
-
-				var stream = container.CreateFile ("mogate.sav");
-				var serializer = new XmlSerializer (typeof(SaveData));
-
-				var save = new SaveData {
-					Level = this.Level,
-					PlayerName = this.PlayerName,
-					PlaytimeTicks = this.Playtime.Ticks,
-					PlayerHealth = this.PlayerHealth,
-					PlayerHealthMax = this.PlayerHealthMax,
-					PlayerAntitodPotions = this.PlayerAntitodPotions,
-					PlayerAntitodPotionsMax = this.PlayerAntitodPotionsMax,
-					PlayerMoney = this.PlayerMoney,
-					PlayerViewDistanceType = this.PlayerViewDistanceType,
-					PlayerAttackDistanceMultiplier = this.PlayerAttackDistanceMultiplier,
-					PlayerMoneyMultiplier = this.PlayerMoneyMultiplier,
-					PlayerAttackMultiplier = this.PlayerAttackMultiplier,
-					PlayerPoisonChanceMultiplier = this.PlayerPoisonChanceMultiplier,
-					PlayerAttackSpeed = this.PlayerAttackSpeed,
-					PlayerMoveSpeed = this.PlayerMoveSpeed,
-					PlayerSpriteID = this.PlayerSpriteID,
-					PlayerArmorID= this.PlayerArmorID,
-					PlayerWeaponID = this.PlayerWeaponID,
-					HallOfFame = this.HallOfFame
-				};
-
-				serializer.Serialize (stream, save);
-				stream.Close ();
-
-				container.Dispose ();
-				result.AsyncWaitHandle.Close ();
-			}
-			DataState = SaveDataState.Ready;
-		}
 
 		void LoadFromDevice(IAsyncResult result)
 		{
