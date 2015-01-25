@@ -5,6 +5,8 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "mogate.Shared", "mogate.Sha
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mogate.Linux", "mogate.Linux\mogate.Linux.csproj", "{0F36DD4E-D5EE-4ACD-AD24-7D86752E6521}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Elizabeth", "Elizabeth\Elizabeth.shproj", "{2BE4AC35-7B61-428A-A9E2-A30C45055332}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86

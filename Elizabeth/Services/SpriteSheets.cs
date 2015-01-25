@@ -10,88 +10,68 @@ using CocosSharp;
 
 namespace Elizabeth
 {
-	public class Sprite2D
-	{
-		public Texture2D Texture { get; private set; }
-		public Rectangle Rect { get; private set; }
-		public int Frames { get; private set; }
-		public string Name { get; private set; }
-
-		private readonly int m_frameWidth;
-		private readonly int m_frameHeight;
-
-		public Sprite2D(string n, Texture2D t, Rectangle r, int f, int fw, int fh)
-		{
-			Texture = t;
-			Rect = r;
-			Frames = f;
-			Name = n;
-			m_frameWidth = fw;
-			m_frameHeight = fh;
-		}
-
-		public Sprite2D(string n, Texture2D t, Rectangle r, int fw, int fh) : this(n, t, r, r.Width / fw, fw, fh) {}
-
-		public Rectangle GetFrameRect(int frameId)
-		{
-			frameId = Math.Min (Frames - 1, frameId);
-			return new Rectangle (Rect.X + frameId * m_frameWidth, Rect.Y, m_frameWidth, m_frameHeight);
-		}
-	};
-
 	public interface ISpriteSheets
 	{
+		void AddSpriteSheet (string plistName, string texture, int frameWidth, int frameHeight);
+		void AddSpriteFont (string fontName, string texture);
+
 		Sprite2D GetSprite (string name);
 		SpriteFont GetFont (string name);
 	};
 
 	public class SpriteSheets : DrawableGameComponent, ISpriteSheets
 	{
+		struct SheetData {
+			public string PList;
+			public string Texture;
+			public int FrameWidth;
+			public int FrameHeight;
+		};
+		struct FontData {
+			public string Name;
+			public string Texture;
+		};
+
 		Dictionary<string, Sprite2D> m_sprites = new Dictionary<string, Sprite2D>();
 		Dictionary<string, SpriteFont> m_fonts = new Dictionary<string, SpriteFont> ();
 
-		private readonly int m_frameWidth;
-		private readonly int m_frameHeight;
+		private List<SheetData> m_addedSheets = new List<SheetData>();
+		private List<FontData> m_addedFonts = new List<FontData> ();
 
-		public SpriteSheets (Game game, int frameWidth, int frameHeight) : base(game)
+		public SpriteSheets(Game game) : base(game)
 		{
-			m_frameWidth = frameWidth;
-			m_frameHeight = frameHeight;
+		}
+
+		public void AddSpriteSheet (string plistName, string texture, int frameWidth, int frameHeight)
+		{
+			var sd = new SheetData {
+				PList = plistName,
+				Texture = texture,
+				FrameWidth = frameWidth,
+				FrameHeight = frameHeight
+			};
+			m_addedSheets.Add (sd);
+		}
+
+		public void AddSpriteFont (string fontName, string texture)
+		{
+			var fd = new FontData {
+				Name = fontName,
+				Texture = texture
+			};
+			m_addedFonts.Add (fd);
 		}
 
 		protected override void LoadContent ()
 		{
-			Texture2D texture = Game.Content.Load<Texture2D> ("Sprites/sprites");
-			var stream = TitleContainer.OpenStream(@"Content/Sprites/sprites.plist");
-
-			#if __IOS__
-			PlistDocument pinfo = new PlistDocument(stream);
-			PlistDictionary frames = pinfo.Root.AsDictionary["frames"].AsDictionary;
-
-			foreach (var frame in frames) {
-				string spriteName = frame.Key.Split('.')[0];
-				string texRect = frame.Value.AsDictionary["frame"].AsString;
-				var sp = new Sprite2D (spriteName, texture, Utils.RectangleFromString (texRect));
-				m_sprites.Add (spriteName, sp);
+			foreach (var sd in m_addedSheets) {
+				LoadSheetData (sd);
 			}
-			#else
-			PList pinfo = new PList (stream);
-			PList frames = pinfo ["frames"] as PList;
-
-			foreach (var frmName in frames.Keys) {
-				PList frame = frames [frmName] as PList;
-				string texRect = frame ["frame"] as string;
-				string spriteName = frmName.Split('.')[0];
-				var sp = new Sprite2D (spriteName, texture, RectangleFromString (texRect), m_frameWidth, m_frameHeight);
-				m_sprites.Add (spriteName, sp);
+			foreach (var fd in m_addedFonts) {
+				LoadFontData (fd);
 			}
-			#endif
-
-			#if __IOS__
-			m_fonts ["SpriteFont1"] = Game.Content.Load<SpriteFont> ("Fonts/arial-22");
-			#else
-			m_fonts ["SpriteFont1"] = Game.Content.Load<SpriteFont> ("Fonts/SpriteFont1");
-			#endif
+			m_addedFonts.Clear ();
+			m_addedSheets.Clear ();
 		}
 
 		public Sprite2D GetSprite(string name)
@@ -102,6 +82,40 @@ namespace Elizabeth
 		public SpriteFont GetFont(string name)
 		{
 			return m_fonts [name];
+		}
+
+		private void LoadSheetData(SheetData sheetData)
+		{
+			var texture = Game.Content.Load<Texture2D> (sheetData.Texture);
+			var stream = TitleContainer.OpenStream(sheetData.PList);
+
+			#if __IOS__
+			PlistDocument pinfo = new PlistDocument(stream);
+			PlistDictionary frames = pinfo.Root.AsDictionary["frames"].AsDictionary;
+
+			foreach (var frame in frames) {
+				string spriteName = frame.Key.Split('.')[0];
+				string texRect = frame.Value.AsDictionary["frame"].AsString;
+				var sp = new Sprite2D (spriteName, texture, Utils.RectangleFromString (texRect), sheetData.FrameWidth, sheetData.FrameHeight);
+				m_sprites.Add (spriteName, sp);
+			}
+			#else
+			PList pinfo = new PList (stream);
+			PList frames = pinfo ["frames"] as PList;
+
+			foreach (var frmName in frames.Keys) {
+				PList frame = frames [frmName] as PList;
+				string texRect = frame ["frame"] as string;
+				string spriteName = frmName.Split('.')[0];
+				var sp = new Sprite2D (spriteName, texture, RectangleFromString (texRect), sheetData.FrameWidth, sheetData.FrameHeight);
+				m_sprites.Add (spriteName, sp);
+			}
+			#endif
+		}
+
+		private void LoadFontData(FontData fontData)
+		{
+			m_fonts [fontData.Name] = Game.Content.Load<SpriteFont> (fontData.Texture);
 		}
 
 		private Rectangle RectangleFromString(string rect)

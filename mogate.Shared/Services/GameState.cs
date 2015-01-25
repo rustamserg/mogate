@@ -49,14 +49,17 @@ namespace mogate
 		bool CountPlaytime { get; set; }
 
 		List<HallOfFameEntry> HallOfFame { get; }
+		 
+		bool IsLoaded { get; }
+		void NewGame ();
+		void ContinueGame ();
 
-		void NewGame();
-		void NextLevel();
+		void NextLevel ();
 		void ApplyArchetype (Dictionary<string, float> archetype);
 	}
 
 	[Serializable]
-	public class MogateSaveData : SaveData
+	public class MogateSaveData
 	{
 		public int Level;
 		public long PlaytimeTicks;
@@ -83,6 +86,7 @@ namespace mogate
 
 	public class GameState : GameComponent, IGameState
 	{
+		public bool IsLoaded { get; private set; }
 		public int Level { get; private set; }
 		public TimeSpan Playtime { get; private set; }
 
@@ -117,10 +121,13 @@ namespace mogate
 			CountPlaytime = false;
 			HallOfFame = new List<HallOfFameEntry> ();
 			InitGame ();
+			IsLoaded = false;
 		}
 
 		public override void Update (GameTime gameTime)
 		{
+			LoadGame ();
+
 			if (CountPlaytime) {
 				Playtime += gameTime.ElapsedGameTime;
 			}
@@ -129,8 +136,17 @@ namespace mogate
 
 		public void NewGame()
 		{
+			var world = (IWorld)Game.Services.GetService(typeof(IWorld));
+			world.GenerateLevels (Globals.MAX_LEVELS);
+
 			InitGame ();
 			SaveGame ();
+		}
+
+		public void ContinueGame()
+		{
+			var world = (IWorld)Game.Services.GetService(typeof(IWorld));
+			world.GenerateLevels (Globals.MAX_LEVELS);
 		}
 
 		public void NextLevel()
@@ -182,9 +198,6 @@ namespace mogate
 
 		void InitGame()
 		{
-			var world = (IWorld)Game.Services.GetService(typeof(IWorld));
-			world.GenerateLevels (Globals.MAX_LEVELS);
-
 			Level = 0;
 			GameProgress = GameProgressState.InGame;
 			Playtime = TimeSpan.Zero;
@@ -195,14 +208,32 @@ namespace mogate
 
 		void LoadGame()
 		{
-			InitGame ();
+			var gameCheckpoint = (ICheckpoint<MogateSaveData>)Game.Services.GetService (typeof(ICheckpoint<MogateSaveData>));
 
-			if (!Guide.IsVisible) {
-				m_storageDevice = null;
-				DataState = SaveDataState.Loading;
-				StorageDevice.BeginShowSelector (PlayerIndex.One, LoadFromDevice, null);
-			} else {
-				DataState = SaveDataState.Ready;
+			if (gameCheckpoint.State == CheckpointState.Ready) {
+				var save = gameCheckpoint.LastCheckpoint;
+				if (save != null) {
+					Level = save.Level;
+					PlayerName = save.PlayerName;
+					Playtime = TimeSpan.FromTicks (save.PlaytimeTicks);
+					PlayerHealth = save.PlayerHealth;
+					PlayerHealthMax = save.PlayerHealthMax;
+					PlayerAntitodPotions = save.PlayerAntitodPotions;
+					PlayerAntitodPotionsMax = save.PlayerAntitodPotionsMax;
+					PlayerMoney = save.PlayerMoney;
+					PlayerViewDistanceType = save.PlayerViewDistanceType;
+					PlayerAttackDistanceMultiplier = save.PlayerAttackDistanceMultiplier;
+					PlayerMoneyMultiplier = save.PlayerMoneyMultiplier;
+					PlayerAttackMultiplier = save.PlayerAttackMultiplier;
+					PlayerPoisonChanceMultiplier = save.PlayerPoisonChanceMultiplier;
+					PlayerAttackSpeed = save.PlayerAttackSpeed;
+					PlayerMoveSpeed = save.PlayerMoveSpeed;
+					PlayerSpriteID = save.PlayerSpriteID;
+					PlayerArmorID = save.PlayerArmorID;
+					PlayerWeaponID = save.PlayerWeaponID;
+					HallOfFame = save.HallOfFame;
+				}
+				IsLoaded = true;
 			}
 		}
 
@@ -230,54 +261,8 @@ namespace mogate
 				HallOfFame = this.HallOfFame
 			};
 
-			var gameCheckpoint = (IGameCheckpoint)Game.Services.GetType (typeof(IGameCheckpoint));
+			var gameCheckpoint = (ICheckpoint<MogateSaveData>)Game.Services.GetService (typeof(ICheckpoint<MogateSaveData>));
 			gameCheckpoint.SaveCheckpoint (save);
-		}
-
-
-		void LoadFromDevice(IAsyncResult result)
-		{
-			m_storageDevice = StorageDevice.EndShowSelector (result);
-			var res = m_storageDevice.BeginOpenContainer ("mogate", null, null);
-			result.AsyncWaitHandle.WaitOne ();
-			var container = m_storageDevice.EndOpenContainer (res);
-			result.AsyncWaitHandle.Close ();
-
-			if (container.FileExists ("mogate.sav")) {
-				SaveData save = null;
-				var stream = container.OpenFile("mogate.sav", FileMode.Open);
-
-				try {
-					var serializer = new XmlSerializer(typeof(SaveData));
-					save = (SaveData)serializer.Deserialize(stream);
-				} catch (SystemException) {}
-
-				stream.Close ();
-				container.Dispose ();
-
-				if (save != null) {
-					Level = save.Level;
-					PlayerName = save.PlayerName;
-					Playtime = TimeSpan.FromTicks(save.PlaytimeTicks);
-					PlayerHealth = save.PlayerHealth;
-					PlayerHealthMax = save.PlayerHealthMax;
-					PlayerAntitodPotions = save.PlayerAntitodPotions;
-					PlayerAntitodPotionsMax = save.PlayerAntitodPotionsMax;
-					PlayerMoney = save.PlayerMoney;
-					PlayerViewDistanceType = save.PlayerViewDistanceType;
-					PlayerAttackDistanceMultiplier = save.PlayerAttackDistanceMultiplier;
-					PlayerMoneyMultiplier = save.PlayerMoneyMultiplier;
-					PlayerAttackMultiplier = save.PlayerAttackMultiplier;
-					PlayerPoisonChanceMultiplier = save.PlayerPoisonChanceMultiplier;
-					PlayerAttackSpeed = save.PlayerAttackSpeed;
-					PlayerMoveSpeed = save.PlayerMoveSpeed;
-					PlayerSpriteID = save.PlayerSpriteID;
-					PlayerArmorID = save.PlayerArmorID;
-					PlayerWeaponID = save.PlayerWeaponID;
-					HallOfFame = save.HallOfFame;
-				}
-			}
-			DataState = SaveDataState.Ready;
 		}
 	}
 }

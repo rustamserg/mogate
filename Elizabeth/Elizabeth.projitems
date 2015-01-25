@@ -35,6 +35,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\SpriteSheets.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Statistics.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Consumable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Sprite2D.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\Checkpoint.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Actions\" />
