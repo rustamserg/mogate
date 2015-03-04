@@ -126,7 +126,9 @@ namespace mogate
 
 		public override void Update (GameTime gameTime)
 		{
-			LoadGame ();
+			if (!IsLoaded) {
+				LoadGame ();
+			}
 
 			if (CountPlaytime) {
 				Playtime += gameTime.ElapsedGameTime;
