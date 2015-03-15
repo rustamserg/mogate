@@ -12,19 +12,14 @@ namespace Elizabeth
 	public enum SceneState
 	{
 		Deactivated,
-		Activating,
 		Activated
 	};
 
 	public class Scene : DrawableGameComponent
 	{
 		private SpriteBatch m_spriteBatch;
-		private Effect m_effect;
-		private float m_fade;
 		private Dictionary<string, Layer> m_layersByName = new Dictionary<string, Layer>();
 		private List<Layer> m_orderedLayers = new List<Layer> ();
-		private int m_spent;
-		private float m_duration;
 		private Matrix m_worldToScreenMtx;
 
 		private RenderTarget2D m_mainTarget;
@@ -42,13 +37,14 @@ namespace Elizabeth
 			ViewportHeight = viewportHeight;
 		}
 
+		protected void SetFadeEffect(string effectName)
+		{
+			
+		}
+
 		protected override void LoadContent ()
 		{
 			m_spriteBatch = new SpriteBatch (Game.GraphicsDevice);
-
-			using (var reader = new BinaryReader(File.Open("Content/Shaders/fade.xnb", FileMode.Open, FileAccess.Read))) {
-				m_effect = new Effect(Game.GraphicsDevice, reader.ReadBytes((int)reader.BaseStream.Length));
-			}
 
 			int backBufWidth = Game.GraphicsDevice.PresentationParameters.BackBufferWidth;
 			int backBufHeight = Game.GraphicsDevice.PresentationParameters.BackBufferHeight;
@@ -66,21 +62,12 @@ namespace Elizabeth
 		public override void Update (GameTime gameTime)
 		{
 			if (State != SceneState.Deactivated) {
-				if (State == SceneState.Activating) {
-					m_spent += gameTime.ElapsedGameTime.Milliseconds;
-					if (m_spent < m_duration) {
-						m_fade = m_spent / m_duration;
-					} else {
-						State = SceneState.Activated;
-					}
-				} else {
-					var mouse = Mouse.GetState ();
-					var touch = TouchPanel.GetState ();
+				var mouse = Mouse.GetState ();
+				var touch = TouchPanel.GetState ();
 
-					foreach (var la in m_orderedLayers) {
-						if (State == SceneState.Activated)
-							la.Update (gameTime, mouse, touch);
-					}
+				foreach (var la in m_orderedLayers) {
+					if (State == SceneState.Activated)
+						la.Update (gameTime, mouse, touch);
 				}
 			}
 			base.Update (gameTime);
@@ -92,10 +79,7 @@ namespace Elizabeth
 				Game.GraphicsDevice.SetRenderTarget (m_mainTarget);
 				Game.GraphicsDevice.Clear (Color.Black);
 				m_spriteBatch.Begin (SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, m_worldToScreenMtx); 
-				if (State == SceneState.Activating) {
-					m_effect.Parameters ["ColorAmount"].SetValue (m_fade);
-					m_effect.CurrentTechnique.Passes [0].Apply ();
-				}
+
 				foreach (var la in m_orderedLayers) {
 					la.Draw (m_spriteBatch, gameTime);
 				}
@@ -133,11 +117,9 @@ namespace Elizabeth
 			m_orderedLayers.RemoveAll (la => la.Name == name);
 		}
 
-		public void ActivateScene(float duration)
+		public void ActivateScene()
 		{
-			State = SceneState.Activating;
-			m_spent = 0;
-			m_duration = duration;
+			State = SceneState.Activated;
 
 			m_layersByName.Clear ();
 			m_orderedLayers.Clear ();

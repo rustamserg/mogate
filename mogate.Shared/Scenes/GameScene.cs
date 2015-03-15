@@ -1,7 +1,6 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using Elizabeth;
@@ -40,10 +39,7 @@ namespace mogate
 			m_lightSpriteDirectDown = sprites.GetSprite ("lightmask_down");
 			m_lightSpriteDirectLeft = sprites.GetSprite ("lightmask_left");
 			m_lightSpriteDirectRight = sprites.GetSprite ("lightmask_right");
-
-			using (var reader = new BinaryReader(File.Open("Content/Shaders/lighting.xnb", FileMode.Open, FileAccess.Read))) {
-				m_lightEffect = new Effect(Game.GraphicsDevice, reader.ReadBytes((int)reader.BaseStream.Length));
-			}
+			m_lightEffect = sprites.GetEffect ("light");
 		}
 
 		protected override void OnPostDraw(SpriteBatch spriteBatch, RenderTarget2D mainTarget, Matrix worldToScreen, GameTime gameTime)

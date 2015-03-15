@@ -3,6 +3,9 @@ using System.Xml;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.IO;
+
+
 #if __IOS__
 using CocosSharp;
 #endif
@@ -14,9 +17,11 @@ namespace Elizabeth
 	{
 		void AddSpriteSheet (string plistName, string texture, int frameWidth, int frameHeight);
 		void AddSpriteFont (string fontName, string texture);
+		void AddEffect (string effectName, string effectFile);
 
 		Sprite2D GetSprite (string name);
 		SpriteFont GetFont (string name);
+		Effect GetEffect (string name);
 	};
 
 	public class SpriteSheets : DrawableGameComponent, ISpriteSheets
@@ -31,12 +36,19 @@ namespace Elizabeth
 			public string Name;
 			public string Texture;
 		};
+		struct EffectData {
+			public string Name;
+			public string Filename;
+		}
 
 		Dictionary<string, Sprite2D> m_sprites = new Dictionary<string, Sprite2D>();
 		Dictionary<string, SpriteFont> m_fonts = new Dictionary<string, SpriteFont> ();
+		Dictionary<string, Effect> m_effects = new Dictionary<string, Effect> ();
 
 		private List<SheetData> m_addedSheets = new List<SheetData>();
 		private List<FontData> m_addedFonts = new List<FontData> ();
+		private List<EffectData> m_addedEffects = new List<EffectData> ();
+
 
 		public SpriteSheets(Game game) : base(game)
 		{
@@ -62,6 +74,15 @@ namespace Elizabeth
 			m_addedFonts.Add (fd);
 		}
 
+		public void AddEffect (string effectName, string effectFile)
+		{
+			var fd = new EffectData {
+				Name = effectName,
+				Filename = effectFile
+			};
+			m_addedEffects.Add (fd);
+		}
+
 		protected override void LoadContent ()
 		{
 			foreach (var sd in m_addedSheets) {
@@ -70,8 +91,12 @@ namespace Elizabeth
 			foreach (var fd in m_addedFonts) {
 				LoadFontData (fd);
 			}
+			foreach (var fd in m_addedEffects) {
+				LoadEffectData (fd);
+			}
 			m_addedFonts.Clear ();
 			m_addedSheets.Clear ();
+			m_addedEffects.Clear ();
 		}
 
 		public Sprite2D GetSprite(string name)
@@ -82,6 +107,11 @@ namespace Elizabeth
 		public SpriteFont GetFont(string name)
 		{
 			return m_fonts [name];
+		}
+
+		public Effect GetEffect(string name)
+		{
+			return m_effects [name];
 		}
 
 		private void LoadSheetData(SheetData sheetData)
@@ -115,7 +145,14 @@ namespace Elizabeth
 
 		private void LoadFontData(FontData fontData)
 		{
-			m_fonts [fontData.Name] = Game.Content.Load<SpriteFont> (fontData.Texture);
+			m_fonts.Add (fontData.Name, Game.Content.Load<SpriteFont> (fontData.Texture));
+		}
+
+		private void LoadEffectData(EffectData effectData)
+		{
+			using (var reader = new BinaryReader(File.Open(effectData.Filename, FileMode.Open, FileAccess.Read))) {
+				m_effects.Add (effectData.Name, new Effect(Game.GraphicsDevice, reader.ReadBytes((int)reader.BaseStream.Length)));
+			}
 		}
 
 		private Rectangle RectangleFromString(string rect)

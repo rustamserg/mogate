@@ -8,7 +8,6 @@ namespace Elizabeth
 	public interface IDirector
 	{
 		void RegisterScene (Scene scene);
-		void ActivateScene (string name, TimeSpan duration);
 		void ActivateScene (string name);
 		Scene GetScene(string name);
 	}
@@ -30,11 +29,6 @@ namespace Elizabeth
 
 		public void ActivateScene (string name)
 		{
-			ActivateScene (name, TimeSpan.Zero);
-		}
-
-		public void ActivateScene (string name, TimeSpan duration)
-		{
 			if (!string.IsNullOrEmpty (m_activeScene)) {
 				m_scenes [m_activeScene].DeactivateScene ();
 			}
@@ -42,7 +36,7 @@ namespace Elizabeth
 			var sc = m_scenes [name];
 			m_activeScene = name;
 
-			sc.ActivateScene ((float)duration.TotalMilliseconds);
+			sc.ActivateScene ();
 		}
 
 		public Scene GetScene(string name)

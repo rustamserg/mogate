@@ -56,6 +56,7 @@ namespace mogate
 			#else
 			sprites.AddSpriteFont ("SpriteFont1", "Fonts/SpriteFont1");
 			#endif
+			sprites.AddEffect ("light", "Content/Shaders/lighting.xnb");
 
 			base.Initialize ();
 		}
