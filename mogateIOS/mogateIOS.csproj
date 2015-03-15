@@ -117,6 +117,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="..\mogate.Shared\mogate.Shared.projitems" Label="Shared" Condition="Exists('..\mogate.Shared\mogate.Shared.projitems')" />
+  <Import Project="..\Elizabeth\Elizabeth.projitems" Label="Shared" Condition="Exists('..\Elizabeth\Elizabeth.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>
     <BundleResource Include="Resources\Content\Sprites\sprites.plist" />

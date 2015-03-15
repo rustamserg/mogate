@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mogateIOS", "mogateIOS\moga
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "mogate.Shared", "mogate.Shared\mogate.Shared.shproj", "{019F46A5-D879-4218-8275-5080E6F90E7D}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Elizabeth", "Elizabeth\Elizabeth.shproj", "{2BE4AC35-7B61-428A-A9E2-A30C45055332}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|iPhoneSimulator = Debug|iPhoneSimulator
@@ -27,8 +29,5 @@ Global
 		{5C3CEF67-9A27-4A99-91B2-156FC8EC563A}.Release|iPhone.Build.0 = Release|iPhone
 		{5C3CEF67-9A27-4A99-91B2-156FC8EC563A}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
 		{5C3CEF67-9A27-4A99-91B2-156FC8EC563A}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
-	EndGlobalSection
-	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = mogateIOS\mogateIOS.csproj
 	EndGlobalSection
 EndGlobal

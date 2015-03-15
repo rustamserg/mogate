@@ -96,7 +96,7 @@ namespace Elizabeth
 			foreach (var frame in frames) {
 				string spriteName = frame.Key.Split('.')[0];
 				string texRect = frame.Value.AsDictionary["frame"].AsString;
-				var sp = new Sprite2D (spriteName, texture, Utils.RectangleFromString (texRect), sheetData.FrameWidth, sheetData.FrameHeight);
+				var sp = new Sprite2D (spriteName, texture, RectangleFromString (texRect), sheetData.FrameWidth, sheetData.FrameHeight);
 				m_sprites.Add (spriteName, sp);
 			}
 			#else
