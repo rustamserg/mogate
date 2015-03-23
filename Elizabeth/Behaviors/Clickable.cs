@@ -6,7 +6,6 @@ using System.Linq;
 
 namespace Elizabeth
 {
-	//TODO: remove pressed/released and make only click and tap events
 	public class Clickable : IBehavior
 	{
 		public Type Behavior { get { return typeof(Clickable); } }
