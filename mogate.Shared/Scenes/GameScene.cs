@@ -19,6 +19,7 @@ namespace mogate
 
 		private RenderTarget2D m_lightTarget;
 		private Effect m_lightEffect;
+		private Color m_lightColor;
 
 		public GameScene (Game game, string name) : base(game, name, Globals.VIEWPORT_WIDTH, Globals.VIEWPORT_HEIGHT)
 		{
@@ -64,7 +65,7 @@ namespace mogate
 			var toLightDirectRight = toLightDirect.Where (e => e.Get<LookDirection> ().Direction == Utils.Direction.Right);
 
 			Game.GraphicsDevice.SetRenderTarget (m_lightTarget);
-			Game.GraphicsDevice.Clear (Color.Black);
+			Game.GraphicsDevice.Clear (m_lightColor);
 			spriteBatch.Begin (SpriteSortMode.Immediate, BlendState.Additive, null, null, null, null, worldToScreen);
 
 			DrawPointLightMasks (toLightPointSmall, m_lightSpritePointSmall, spriteBatch);
@@ -127,6 +128,8 @@ namespace mogate
 		{
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 			gameState.CountPlaytime = true;
+
+			m_lightColor = (gameState.Level == Globals.MAX_LEVELS - 1) ? Color.Blue : Color.Black;
 		}
 
 		protected override void OnDeactivated()
