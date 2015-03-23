@@ -13,15 +13,15 @@ namespace Elizabeth
 
 		public Rectangle ClickArea;
 
-		public Action<Point, Entity> OnLeftButtonPressed;
-		public Action<Point, Entity> OnRightButtonPressed;
-
 		public Action<Point, Entity> OnTouched;
 		public Action<Point, Entity> OnMoved;
 
 		private int m_lastTouchID;
 		private Vector2 m_lastTouchPos;
 		private bool m_isTouchMoved;
+
+		private Point m_lastPressedPos;
+		private bool m_isMousePressed;
 		private Entity m_entity;
 
 		public Clickable (Rectangle clickArea, Entity entity = null)
@@ -33,19 +33,31 @@ namespace Elizabeth
 		public void HandleMouseInput(MouseState state, Vector2 screenToWorldScale)
 		{
 			var worldPos = Vector2.Multiply (new Vector2 (state.Position.X, state.Position.Y), screenToWorldScale);
-
-			if (!ClickArea.Contains (worldPos))
-				return;
-
 			var clickPos = new Point ((int)worldPos.X, (int)worldPos.Y);
 
-			if (state.LeftButton == ButtonState.Pressed) {
-				if (OnLeftButtonPressed != null)
-					OnLeftButtonPressed (clickPos, m_entity);
-			}
-			if (state.RightButton == ButtonState.Pressed) {
-				if (OnRightButtonPressed != null)
-					OnRightButtonPressed (clickPos, m_entity);
+			switch (state.LeftButton) {
+			case ButtonState.Pressed:
+				if (m_lastPressedPos != state.Position) {
+					m_lastPressedPos = state.Position;
+					if (ClickArea.Contains (worldPos) && m_isMousePressed) {
+						if (OnMoved != null) {
+							OnMoved (clickPos, m_entity);
+						}
+					}
+					m_isMousePressed = true;
+				}
+				break;
+			case ButtonState.Released:
+				if (m_isMousePressed) {
+					if (ClickArea.Contains (worldPos)) {
+						if (OnTouched != null) {
+							OnTouched (clickPos, m_entity);
+						}
+					}
+					m_lastPressedPos = Point.Zero;
+					m_isMousePressed = false;
+				}
+				break;
 			}
 		}
 

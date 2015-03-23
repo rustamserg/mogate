@@ -33,7 +33,6 @@ namespace mogate
 				ent.Register (new Sprite (sprites.GetSprite (string.Format ("player_{0:D2}", (int)arch ["sprite_index"]))));
 				ent.Register (new Drawable (new Vector2 (400 + 50 * idx, 250)));
 				ent.Register (new Clickable (new Rectangle (400 + 50 * idx, 250, 40, 40), ent));
-				ent.Get<Clickable> ().OnLeftButtonPressed += OnPlayerSelect;
 				ent.Get<Clickable> ().OnTouched += OnPlayerSelect;
 			}
 
@@ -57,7 +56,6 @@ namespace mogate
 			ent.Register (new Text (m_font, "Go to dangeon"));
 			ent.Register (new Drawable (new Vector2 (410, 500)));
 			ent.Register (new Clickable (new Rectangle (410, 500, 400, 40)));
-			ent.Get<Clickable> ().OnLeftButtonPressed += OnAction;
 			ent.Get<Clickable> ().OnTouched += OnAction;
 
 			UpdateStats ();

@@ -24,14 +24,12 @@ namespace mogate
 				ent.Register (new Text (font, "Next level"));
 				ent.Register (new Drawable (new Vector2 (450, 200)));
 				ent.Register (new Clickable (new Rectangle (450, 200, 400, 40)));
-				ent.Get<Clickable> ().OnLeftButtonPressed += OnAction;
 				ent.Get<Clickable> ().OnTouched += OnAction;
 			} else {
 				var ent = CreateEntity ();
 				ent.Register (new Text (font, "Back to menu"));
 				ent.Register (new Drawable (new Vector2 (440, 550)));
 				ent.Register (new Clickable (new Rectangle (440, 550, 400, 40)));
-				ent.Get<Clickable> ().OnLeftButtonPressed += OnAction;
 				ent.Get<Clickable> ().OnTouched += OnAction;
 
 				int idx = 0;

@@ -63,9 +63,7 @@ namespace mogate
 			player.Get<Consumable<ConsumableTypes>> ().Refill (ConsumableTypes.Money, gameState.PlayerMoney);
 			player.Get<Consumable<ConsumableTypes>> ().Refill (ConsumableTypes.Antitod, gameState.PlayerAntitodPotions);
 
-			player.Get<Clickable> ().OnLeftButtonPressed += OnMoveToPosition;
 			player.Get<Clickable> ().OnMoved += OnMoveToPosition;
-			player.Get<Clickable> ().OnRightButtonPressed += OnAction;
 			player.Get<Clickable> ().OnTouched += OnAction;
 
 			var seq = new Sequence ();

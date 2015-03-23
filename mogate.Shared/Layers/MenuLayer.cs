@@ -34,7 +34,6 @@ namespace mogate
 					newGameBtn.Register (new Text (sprites.GetFont ("SpriteFont1"), "New game"));
 					newGameBtn.Register (new Drawable (new Vector2 (440, 270)));
 					newGameBtn.Register (new Clickable (new Rectangle (440, 270, 400, 40)));
-					newGameBtn.Get<Clickable> ().OnLeftButtonPressed += StartNewGame;
 					newGameBtn.Get<Clickable> ().OnTouched += StartNewGame;
 
 					if (gameState.Level > 0) {
@@ -42,7 +41,6 @@ namespace mogate
 						cntGameBtn.Register (new Text (sprites.GetFont ("SpriteFont1"), "Continue"));
 						cntGameBtn.Register (new Drawable (new Vector2 (450, 320)));
 						cntGameBtn.Register (new Clickable (new Rectangle (450, 320, 400, 40)));
-						cntGameBtn.Get<Clickable> ().OnLeftButtonPressed += ContinueGame;
 						cntGameBtn.Get<Clickable> ().OnTouched += ContinueGame;
 					}
 				}
