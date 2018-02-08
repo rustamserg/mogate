@@ -1,10 +1,9 @@
-using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 namespace Elizabeth
 {
-	public class Sequence : IAction
+    public class Sequence : IAction
 	{
 		private Queue<IAction> m_queue = new Queue<IAction>();
 

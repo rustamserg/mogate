@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace mogate
 {
-	public static class Archetypes
+    public static class Archetypes
 	{
 		public static readonly Dictionary<string, int>[] Monsters = {
 			new Dictionary<string, int> {

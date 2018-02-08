@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Elizabeth
 {
-	public class Entity
+    public class Entity
 	{
 		private readonly IStatistics m_gameStats;
 		private Dictionary<Type, IBehavior> m_behaviors = new Dictionary<Type, IBehavior>();

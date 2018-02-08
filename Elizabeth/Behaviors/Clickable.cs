@@ -1,12 +1,11 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
-using System.Linq;
+using System;
 
 namespace Elizabeth
 {
-	public class Clickable : IBehavior
+    public class Clickable : IBehavior
 	{
 		public Type Behavior { get { return typeof(Clickable); } }
 

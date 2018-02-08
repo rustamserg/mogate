@@ -1,9 +1,8 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 
 namespace mogate
 {
-	public static class NameGenerator
+    public static class NameGenerator
 	{
 		private readonly static char[] m_opened = {'e', 'y', 'u', 'i', 'o', 'a', 'a', 'a', 'e', 'e', 'y', 'u', 'i', 'i'};
 		private readonly static char[] m_closed = {'q', 'w', 'r', 't', 'p', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'z', 'x', 'c', 'v', 'b', 'n', 'm'};

@@ -1,18 +1,13 @@
-using System;
+using Elizabeth;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Storage;
-using Microsoft.Xna.Framework.GamerServices;
-using System.Xml.Serialization;
-using System.IO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Elizabeth;
 
 
 namespace mogate
 {
-	public class HallOfFameEntry
+    public class HallOfFameEntry
 	{
 		public string PlayerName;
 		public int PlayerSpriteID;

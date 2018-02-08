@@ -1,12 +1,10 @@
-using System;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Elizabeth;
+using Microsoft.Xna.Framework;
 
 
 namespace mogate
 {
-	public class MapGridLayer: Layer
+    public class MapGridLayer: Layer
 	{
 		public MapGridLayer (Game game, string name, Scene scene, int z) : base(game, name, scene, z)
 		{

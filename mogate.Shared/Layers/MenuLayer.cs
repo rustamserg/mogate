@@ -1,13 +1,10 @@
-using System;
-using System.Linq;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using Elizabeth;
+using Microsoft.Xna.Framework;
+using System.Linq;
 
 namespace mogate
 {
-	public class MenuLayer : Layer
+    public class MenuLayer : Layer
 	{
 		public MenuLayer (Game game, string name, Scene scene, int z) : base(game, name, scene, z)
 		{

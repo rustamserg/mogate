@@ -1,15 +1,12 @@
-using System;
-using System.Collections.Generic;
-
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System.Linq;
 using Elizabeth;
+using Microsoft.Xna.Framework;
+using System.Collections.Generic;
+using System.Linq;
 
 
 namespace mogate
 {
-	public enum ConsumableTypes { Money, Antitod };
+    public enum ConsumableTypes { Money, Antitod };
 	public enum LootTypes { Money, Health, Antitod, Armor, Weapon };
 	public enum TreasureTypes { Chest, Trash };
 

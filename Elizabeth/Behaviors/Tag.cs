@@ -2,7 +2,7 @@
 
 namespace Elizabeth
 {
-	public class Tag : IBehavior
+    public class Tag : IBehavior
 	{
 		public Type Behavior { get { return typeof(Tag); } }
 

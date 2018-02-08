@@ -1,13 +1,11 @@
 #region Using Statements
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 #endregion
 
 namespace mogate
 {
-	static class Program
+    static class Program
 	{
 		private static GameMogate game;
 

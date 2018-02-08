@@ -1,9 +1,8 @@
-﻿using System;
-using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework.Input;
 
 namespace Elizabeth
 {
-	public static class KeyboardUtils
+    public static class KeyboardUtils
 	{
 		private static bool m_isDown = false;
 		private static Keys m_isDownKey;

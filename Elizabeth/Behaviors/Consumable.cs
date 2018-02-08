@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Elizabeth
 {
-	public enum ConsumeOp { Add, Remove };
+    public enum ConsumeOp { Add, Remove };
 
 	public class Consumable<T> : IBehavior
 	{

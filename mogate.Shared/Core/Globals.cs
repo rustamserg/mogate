@@ -1,8 +1,6 @@
-using System;
-
 namespace mogate
 {
-	public static class Globals
+    public static class Globals
 	{
 		public static readonly int VIEWPORT_WIDTH = 1024;
 		public static readonly int VIEWPORT_HEIGHT = 768;

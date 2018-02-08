@@ -1,12 +1,11 @@
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-
-using Microsoft.Xna.Framework;
 
 
 namespace Elizabeth
 {
-	public interface IAction
+    public interface IAction
 	{
 		bool Execute(GameTime gameTime);
 	};

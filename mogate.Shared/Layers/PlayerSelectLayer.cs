@@ -1,14 +1,11 @@
-﻿using System;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Elizabeth;
 using Microsoft.Xna.Framework;
-using System.Linq;
-using System.Collections.Generic;
+using Microsoft.Xna.Framework.Graphics;
 using System.Text;
-using Elizabeth;
 
 namespace mogate
 {
-	public class PlayerSelectLayer : Layer
+    public class PlayerSelectLayer : Layer
 	{
 		private SpriteFont m_font;
 

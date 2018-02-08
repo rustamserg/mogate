@@ -1,15 +1,13 @@
-using System;
-using System.Linq;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.IO;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Elizabeth
 {
-	public enum SceneState
+    public enum SceneState
 	{
 		Deactivated,
 		Activated

@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Elizabeth;
 using Microsoft.Xna.Framework;
-using Elizabeth;
+using System;
 
 namespace mogate
 {
-	public class DirectLight : IBehavior
+    public class DirectLight : IBehavior
 	{
 		public Type Behavior { get { return typeof(DirectLight); } }
 

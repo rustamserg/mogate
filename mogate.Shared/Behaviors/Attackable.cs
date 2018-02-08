@@ -1,9 +1,9 @@
-using System;
 using Elizabeth;
+using System;
 
 namespace mogate
 {
-	public class Attackable : IBehavior
+    public class Attackable : IBehavior
 	{
 		public Type Behavior { get { return typeof(Attackable); } }
 

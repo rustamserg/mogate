@@ -9,3 +9,5 @@ REM Building shaders for Mac and Windows (pure MonoGame)
 copy /Y Shaders\*.xnb ..\mogate.Mac\Resources\Content\Shaders
 move /Y Shaders\*.xnb Content\Shaders
 
+REM Building images
+..\Tools\3.0\mgcb /outputDir:Content /importer:TextureImporter /processor:TextureProcessor /build:Sprites\sprites.png

@@ -1,9 +1,8 @@
-using System;
 using Microsoft.Xna.Framework;
 
 namespace Elizabeth
 {
-	public class MoveSpriteTo : IAction
+    public class MoveSpriteTo : IAction
 	{
 		Entity m_moved;
 		Vector2 m_to;

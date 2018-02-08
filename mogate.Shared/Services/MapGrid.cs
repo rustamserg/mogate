@@ -1,13 +1,11 @@
-using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using System.Xml.Serialization;
+using System.Collections.Generic;
 
 namespace mogate
 {
-	namespace MapGridTypes
-	{	
-		public enum ID
+    namespace MapGridTypes
+    {
+        public enum ID
 		{
 			Blocked,
 			Empty,

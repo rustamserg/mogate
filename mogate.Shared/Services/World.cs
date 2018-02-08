@@ -1,11 +1,6 @@
-using System;
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
-
-
 namespace mogate
 {
-	public interface IWorld
+    public interface IWorld
 	{
 		void GenerateLevels(int max_levels);
 		IMapGrid GetLevel (int level);

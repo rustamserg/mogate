@@ -1,11 +1,11 @@
-using System;
-using Microsoft.Xna.Framework;
 using Elizabeth;
+using Microsoft.Xna.Framework;
+using System;
 
 
 namespace mogate
 {
-	public class Position : IBehavior
+    public class Position : IBehavior
 	{
 		public Type Behavior { get { return typeof(Position); } }
 

@@ -1,6 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2027
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mogate", "mogate\mogate.csproj", "{0F36DD4E-D5EE-4ACD-AD24-7D86752E6521}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mogate.Content", "mogate.Content\mogate.Content.csproj", "{885B53C3-88D2-4252-8F87-362A7280721E}"
@@ -10,6 +12,12 @@ EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Elizabeth", "Elizabeth\Elizabeth.shproj", "{2BE4AC35-7B61-428A-A9E2-A30C45055332}"
 EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		mogate.Shared\mogate.Shared.projitems*{019f46a5-d879-4218-8275-5080e6f90e7d}*SharedItemsImports = 13
+		Elizabeth\Elizabeth.projitems*{0f36dd4e-d5ee-4acd-ad24-7d86752e6521}*SharedItemsImports = 4
+		mogate.Shared\mogate.Shared.projitems*{0f36dd4e-d5ee-4acd-ad24-7d86752e6521}*SharedItemsImports = 4
+		Elizabeth\Elizabeth.projitems*{2be4ac35-7b61-428a-a9e2-a30c45055332}*SharedItemsImports = 13
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
 		Release|x86 = Release|x86
@@ -24,12 +32,18 @@ Global
 		{885B53C3-88D2-4252-8F87-362A7280721E}.Release|x86.ActiveCfg = Release|Any CPU
 		{885B53C3-88D2-4252-8F87-362A7280721E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9D6DC694-E36D-4B16-8C1F-10B20721A9AC}
+	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		Policies = $0
 		$0.DotNetNamingPolicy = $1
 		$1.DirectoryNamespaceAssociation = None
 		$1.ResourceNamePolicy = FileFormatDefault
-		$0.TextStylePolicy = $2
+		$0.TextStylePolicy = $4
 		$2.inheritsSet = null
 		$2.scope = text/x-csharp
 		$0.CSharpFormattingPolicy = $3
@@ -37,7 +51,6 @@ Global
 		$3.inheritsSet = Mono
 		$3.inheritsScope = text/x-csharp
 		$3.scope = text/x-csharp
-		$0.TextStylePolicy = $4
 		$4.FileWidth = 120
 		$4.TabsToSpaces = False
 		$4.inheritsSet = VisualStudio

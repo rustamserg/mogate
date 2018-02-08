@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Elizabeth;
 using Microsoft.Xna.Framework;
-using Elizabeth;
+using System;
 
 namespace mogate
 {
-	public class DoPoisonEntity : IAction
+    public class DoPoisonEntity : IAction
 	{
 		private Entity m_poisoned;
 		private int m_damage;

@@ -1,10 +1,9 @@
-﻿using System;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace Elizabeth
 {
-	public class Text : IBehavior
+    public class Text : IBehavior
 	{
 		public Type Behavior { get { return typeof(Text); } }
 

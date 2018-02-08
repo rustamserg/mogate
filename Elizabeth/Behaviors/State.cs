@@ -2,7 +2,7 @@ using System;
 
 namespace Elizabeth
 {
-	public class State<T> : IBehavior
+    public class State<T> : IBehavior
 	{
 		public Type Behavior { get { return typeof(State<T>); } }
 

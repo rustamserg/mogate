@@ -1,9 +1,9 @@
-﻿using System;
-using Elizabeth;
+﻿using Elizabeth;
+using System;
 
 namespace mogate
 {
-	public class Perception : IBehavior
+    public class Perception : IBehavior
 	{
 		public Type Behavior { get { return typeof(Perception); } }
 		public int AlertDistance { get; private set; }

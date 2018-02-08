@@ -1,10 +1,10 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace Elizabeth
 {
-	public class Sprite2D
+    public class Sprite2D
 	{
 		public Texture2D Texture { get; private set; }
 		public Rectangle Rect { get; private set; }

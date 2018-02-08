@@ -1,11 +1,9 @@
-using System;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Elizabeth;
+using Microsoft.Xna.Framework;
 
 namespace mogate
 {
-	public class EffectsLayer : Layer
+    public class EffectsLayer : Layer
 	{
 		public EffectsLayer(Game game, string name, Scene scene, int z) : base(game, name, scene, z)
 		{

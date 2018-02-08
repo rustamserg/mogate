@@ -1,13 +1,12 @@
-using System;
+using Elizabeth;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Linq;
 using System.Collections.Generic;
-using Elizabeth;
+using System.Linq;
 
 namespace mogate
 {
-	public class GameScene : Scene
+    public class GameScene : Scene
 	{
 		private Sprite2D m_lightSpritePointSmall;
 		private Sprite2D m_lightSpritePointNormal;

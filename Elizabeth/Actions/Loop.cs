@@ -1,9 +1,8 @@
-using System;
 using Microsoft.Xna.Framework;
 
 namespace Elizabeth
 {
-	public class Loop : IAction
+    public class Loop : IAction
 	{
 		IAction m_looped;
 		int m_delay;

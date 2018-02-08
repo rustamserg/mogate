@@ -1,10 +1,9 @@
-﻿using System;
+﻿using Elizabeth;
 using Microsoft.Xna.Framework;
-using Elizabeth;
 
 namespace mogate
 {
-	public class TriggerEntity : IAction
+    public class TriggerEntity : IAction
 	{
 		Entity m_from;
 		Entity m_to;

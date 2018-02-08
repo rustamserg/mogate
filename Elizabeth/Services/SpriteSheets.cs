@@ -38,7 +38,7 @@ namespace Elizabeth
 		};
 		struct EffectData {
 			public string Name;
-			public string Filename;
+			public string Effect;
 		}
 
 		Dictionary<string, Sprite2D> m_sprites = new Dictionary<string, Sprite2D>();
@@ -74,11 +74,11 @@ namespace Elizabeth
 			m_addedFonts.Add (fd);
 		}
 
-		public void AddEffect (string effectName, string effectFile)
+		public void AddEffect (string effectName, string effect)
 		{
 			var fd = new EffectData {
 				Name = effectName,
-				Filename = effectFile
+				Effect = effect
 			};
 			m_addedEffects.Add (fd);
 		}
@@ -150,9 +150,7 @@ namespace Elizabeth
 
 		private void LoadEffectData(EffectData effectData)
 		{
-			using (var reader = new BinaryReader(File.Open(effectData.Filename, FileMode.Open, FileAccess.Read))) {
-				m_effects.Add (effectData.Name, new Effect(Game.GraphicsDevice, reader.ReadBytes((int)reader.BaseStream.Length)));
-			}
+            m_effects.Add(effectData.Name, Game.Content.Load<Effect>(effectData.Effect));
 		}
 
 		private Rectangle RectangleFromString(string rect)

@@ -1,14 +1,13 @@
-using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Elizabeth
 {
-	public class Layer
+    public class Layer
 	{
 		private Dictionary<string, Entity> m_entitiesByTag = new Dictionary<string, Entity>();
 		private List<Entity> m_orderedEntity = new List<Entity> ();

@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Elizabeth;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Elizabeth;
+using System;
 
 namespace mogate
 {
-	public class HUDLayer : Layer
+    public class HUDLayer : Layer
 	{
 		Sprite2D m_life;
 		Sprite2D m_antitod;

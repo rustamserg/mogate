@@ -1,9 +1,9 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
+using System;
 
 namespace Elizabeth
 {
-	public class Sprite : IBehavior
+    public class Sprite : IBehavior
 	{
 		public Type Behavior { get { return typeof(Sprite); } }
 

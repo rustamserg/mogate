@@ -2,7 +2,7 @@ using System;
 
 namespace Elizabeth
 {
-	public interface IBehavior
+    public interface IBehavior
 	{
 		Type Behavior { get; }
 	}

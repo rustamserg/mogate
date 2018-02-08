@@ -1,9 +1,9 @@
-using System;
 using Microsoft.Xna.Framework;
+using System;
 
 namespace Elizabeth
 {
-	public class ActionEntity : IAction
+    public class ActionEntity : IAction
 	{
 		Action<Entity> m_action;
 		Entity m_entity;

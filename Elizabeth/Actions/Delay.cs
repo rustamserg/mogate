@@ -1,9 +1,8 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 
 namespace Elizabeth
 {
-	public class Delay : IAction
+    public class Delay : IAction
 	{
 		float m_duration;
 		int m_spent;

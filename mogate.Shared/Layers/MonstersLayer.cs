@@ -1,14 +1,13 @@
-using System;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System.Linq;
-using System.Collections.Generic;
 using Elizabeth;
+using Microsoft.Xna.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 
 namespace mogate
 {
-	public class MonstersLayer : Layer
+    public class MonstersLayer : Layer
 	{
 		enum MonsterType { Monster, Boss };
 

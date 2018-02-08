@@ -1,9 +1,9 @@
-﻿using System;
-using Elizabeth;
+﻿using Elizabeth;
+using System;
 
 namespace mogate
 {
-	public class MoneyMultiplier : IBehavior
+    public class MoneyMultiplier : IBehavior
 	{
 		public Type Behavior { get { return typeof(MoneyMultiplier); } }
 

@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Elizabeth;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Elizabeth;
 
 namespace mogate
 {
-	public class IFFSystem : IBehavior
+    public class IFFSystem : IBehavior
 	{
 		public Type Behavior { get { return typeof(IFFSystem); } }
 

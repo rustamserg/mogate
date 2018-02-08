@@ -1,9 +1,8 @@
-using System;
 using Microsoft.Xna.Framework;
 
 namespace Elizabeth
 {
-	public class FollowSprite : IAction
+    public class FollowSprite : IAction
 	{
 		Entity m_entity;
 		Entity m_follow;

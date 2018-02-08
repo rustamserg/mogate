@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
-using System.Xml;
 using System.IO;
+using System.Xml;
 
 // Copied from great arcticle
 // http://www.codeproject.com/Tips/406235/A-Simple-PList-Parser-in-Csharp
 
 namespace Elizabeth
 {
-	public class PList : Dictionary<string, dynamic>
+    public class PList : Dictionary<string, dynamic>
 	{
 		public PList ()
 		{

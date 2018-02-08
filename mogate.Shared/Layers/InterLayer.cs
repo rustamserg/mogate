@@ -1,12 +1,10 @@
-﻿using System;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Elizabeth;
 using Microsoft.Xna.Framework;
-using Elizabeth;
+using System;
 
 namespace mogate
 {
-	public class InterLayer : Layer
+    public class InterLayer : Layer
 	{
 		public InterLayer (Game game, string name, Scene scene, int z) : base(game, name, scene, z)
 		{

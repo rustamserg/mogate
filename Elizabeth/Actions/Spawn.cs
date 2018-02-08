@@ -1,10 +1,9 @@
-using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 namespace Elizabeth
 {
-	public class Spawn : IAction
+    public class Spawn : IAction
 	{
 		private List<IAction> m_spawn = new List<IAction>();
 

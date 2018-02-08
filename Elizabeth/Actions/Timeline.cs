@@ -1,9 +1,8 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 
 namespace Elizabeth
 {
-	public class Timeline : IAction
+    public class Timeline : IAction
 	{
 		IAction m_timeline;
 		float m_duration;

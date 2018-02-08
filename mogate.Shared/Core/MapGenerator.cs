@@ -1,13 +1,13 @@
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Xna.Framework;
 
 
 namespace mogate
 {
 
-	public static class MapGenerator
+    public static class MapGenerator
 	{
 		public struct Params
 		{

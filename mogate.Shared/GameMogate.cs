@@ -1,17 +1,14 @@
 #region Using Statements
-using System;
 
+using Elizabeth;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Storage;
-using Microsoft.Xna.Framework.Input;
-using Elizabeth;
 
 #endregion
 
 namespace mogate
 {
-	public class GameMogate : Game
+    public class GameMogate : Game
 	{
 		GraphicsDeviceManager m_graphics;
 
@@ -22,8 +19,9 @@ namespace mogate
 			m_graphics.PreferredBackBufferHeight = Globals.VIEWPORT_HEIGHT;
 			m_graphics.PreferredBackBufferWidth = Globals.VIEWPORT_WIDTH;
 			m_graphics.IsFullScreen = false;
+            m_graphics.GraphicsProfile = GraphicsProfile.HiDef;
 
-			IsMouseVisible = true;
+            IsMouseVisible = true;
 		}
 
 		protected override void Initialize ()
@@ -56,7 +54,7 @@ namespace mogate
 			#else
 			sprites.AddSpriteFont ("SpriteFont1", "Fonts/SpriteFont1");
 			#endif
-			sprites.AddEffect ("light", "Content/Shaders/lighting.xnb");
+			sprites.AddEffect ("light", "Shaders/lighting");
 
 			base.Initialize ();
 		}

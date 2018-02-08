@@ -1,11 +1,10 @@
-using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 
 namespace Elizabeth
 {
-	public interface IDirector
+    public interface IDirector
 	{
 		void RegisterScene (Scene scene);
 		void ActivateScene (string name);

@@ -1,9 +1,8 @@
-using System;
 using Microsoft.Xna.Framework;
 
 namespace Elizabeth
 {
-	public class AnimSprite : IAction
+    public class AnimSprite : IAction
 	{
 		Entity m_entity;
 		float m_duration;

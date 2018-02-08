@@ -1,10 +1,9 @@
-﻿using System;
+﻿using Elizabeth;
 using Microsoft.Xna.Framework;
-using Elizabeth;
 
 namespace mogate
 {
-	public class MenuBackgroundLayer : Layer
+    public class MenuBackgroundLayer : Layer
 	{
 		private int m_tileSize;
 		private int m_tilesHeight;

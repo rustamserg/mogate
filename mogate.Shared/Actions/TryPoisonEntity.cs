@@ -1,10 +1,9 @@
-﻿using System;
+﻿using Elizabeth;
 using Microsoft.Xna.Framework;
-using Elizabeth;
 
 namespace mogate
 {
-	public class TryPoisonEntity : IAction
+    public class TryPoisonEntity : IAction
 	{
 		Entity m_attacker;
 		Entity m_defender;

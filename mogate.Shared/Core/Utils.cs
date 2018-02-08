@@ -1,11 +1,11 @@
-using System;
-using System.Linq;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace mogate
 {
-	public static class Utils
+    public static class Utils
 	{
 		public static Random Rand = new Random(DateTime.UtcNow.Millisecond);
 		public enum Direction { Up, Down, Left, Right };

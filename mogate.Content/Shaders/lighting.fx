@@ -13,6 +13,6 @@ technique Technique0
 {
     pass Pass0
     {
-        PixelShader = compile ps_2_0 main();
+        PixelShader = compile ps_4_0 main();
     }
 }
