@@ -55,8 +55,9 @@ namespace mogate
 			sprites.AddSpriteFont ("SpriteFont1", "Fonts/SpriteFont1");
 			#endif
 			sprites.AddEffect ("light", "Shaders/lighting");
+            sprites.AddEffect("fade", "Shaders/fade");
 
-			base.Initialize ();
+            base.Initialize ();
 		}
 
 		protected override void LoadContent ()

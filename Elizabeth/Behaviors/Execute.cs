@@ -5,12 +5,7 @@ using System.Collections.Generic;
 
 namespace Elizabeth
 {
-    public interface IAction
-	{
-		bool Execute(GameTime gameTime);
-	};
-
-	public class Execute : IBehavior
+    public class Execute : IBehavior
 	{
 		public Type Behavior { get { return typeof(Execute); } }
 

@@ -3,10 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-
 namespace mogate
 {
-
     public static class MapGenerator
 	{
 		public struct Params

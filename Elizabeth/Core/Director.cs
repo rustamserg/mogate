@@ -1,7 +1,6 @@
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 
-
 namespace Elizabeth
 {
     public interface IDirector
