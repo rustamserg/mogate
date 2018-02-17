@@ -128,7 +128,7 @@ namespace mogate
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 			gameState.CountPlaytime = true;
 
-			m_lightColor = (gameState.Level == Globals.MAX_LEVELS - 1) ? Color.Blue : Color.Black;
+			m_lightColor = (gameState.Level == Globals.MAX_LEVELS - 1) ? Color.Blue : Color.Green;
 		}
 
 		protected override void OnDeactivated()

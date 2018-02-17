@@ -66,7 +66,7 @@ namespace Elizabeth
 			m_orderedEntity.RemoveAll (ent => ent.Tag == tag);
 		}
 
-		public void Update(GameTime gameTime, MouseState mouse, TouchCollection touches)
+		public void Update(GameTime gameTime, MouseState mouse, TouchCollection touches, KeyboardState keyboard)
 		{
 			var iter = new List<Entity> (m_entitiesByTag.Values);
 
@@ -80,6 +80,7 @@ namespace Elizabeth
 				if (ent.Has<Clickable> ()) {
 					ent.Get<Clickable> ().HandleMouseInput (mouse, m_screenToWorld);
 					ent.Get<Clickable> ().HandleTouchInput (touches);
+                    ent.Get<Clickable>().HandleKeyboardInput(keyboard);
 				}
 			}
 		}

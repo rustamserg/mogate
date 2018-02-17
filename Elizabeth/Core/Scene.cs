@@ -62,10 +62,11 @@ namespace Elizabeth
 			if (State != SceneState.Deactivated) {
 				var mouse = Mouse.GetState ();
 				var touch = TouchPanel.GetState ();
+                var keyboard = Keyboard.GetState();
 
 				foreach (var la in m_orderedLayers) {
 					if (State == SceneState.Activated)
-						la.Update (gameTime, mouse, touch);
+						la.Update (gameTime, mouse, touch, keyboard);
 				}
 			}
 			base.Update (gameTime);

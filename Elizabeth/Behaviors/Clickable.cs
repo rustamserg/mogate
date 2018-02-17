@@ -13,6 +13,7 @@ namespace Elizabeth
 
 		public Action<Point, Entity> OnTouched;
 		public Action<Point, Entity> OnMoved;
+        public Action<Keys, Entity> OnKeyPressed;
 
 		private int m_lastTouchID;
 		private Vector2 m_lastTouchPos;
@@ -22,10 +23,13 @@ namespace Elizabeth
 		private bool m_isMousePressed;
 		private Entity m_entity;
 
-		public Clickable (Rectangle clickArea, Entity entity = null)
+        private KeyboardState m_prevKeyboard;
+
+        public Clickable (Rectangle clickArea, Entity entity = null)
 		{
 			ClickArea = clickArea;
 			m_entity = entity;
+            m_prevKeyboard = Keyboard.GetState();
 		}
 
 		public void HandleMouseInput(MouseState state, Vector2 screenToWorldScale)
@@ -59,43 +63,67 @@ namespace Elizabeth
 			}
 		}
 
-		public void HandleTouchInput(TouchCollection touches)
-		{
-			foreach (var touch in touches) {
-				var touchPos = new Point ((int)touch.Position.X, (int)touch.Position.Y);
+        public void HandleTouchInput(TouchCollection touches)
+        {
+            foreach (var touch in touches)
+            {
+                var touchPos = new Point((int)touch.Position.X, (int)touch.Position.Y);
 
-				switch (touch.State) {
-				case TouchLocationState.Pressed:
-					m_lastTouchID = touch.Id;
-					m_lastTouchPos = touch.Position;
-					m_isTouchMoved = false;
-					break;
-				case TouchLocationState.Released:
-					if (touch.Id == m_lastTouchID) {
-						if (!m_isTouchMoved && ClickArea.Contains (touchPos)) {
-							if (OnTouched != null) {
-								OnTouched (touchPos, m_entity);
-							}
-						}
-						m_isTouchMoved = false;
-						m_lastTouchID = 0;
-						m_lastTouchPos = Vector2.Zero;
-					}
-					break;
-				case TouchLocationState.Moved:
-					if (touch.Id == m_lastTouchID && touch.Position != m_lastTouchPos) {
-						m_lastTouchPos = touch.Position;
-						m_isTouchMoved = true;
-						if (ClickArea.Contains (touchPos)) {
-							if (OnMoved != null) {
-								OnMoved (touchPos, m_entity);
-							}
-						}
-					}
-					break;
-				}
-			}
-		}
+                switch (touch.State)
+                {
+                    case TouchLocationState.Pressed:
+                        m_lastTouchID = touch.Id;
+                        m_lastTouchPos = touch.Position;
+                        m_isTouchMoved = false;
+                        break;
+                    case TouchLocationState.Released:
+                        if (touch.Id == m_lastTouchID)
+                        {
+                            if (!m_isTouchMoved && ClickArea.Contains(touchPos))
+                            {
+                                if (OnTouched != null)
+                                {
+                                    OnTouched(touchPos, m_entity);
+                                }
+                            }
+                            m_isTouchMoved = false;
+                            m_lastTouchID = 0;
+                            m_lastTouchPos = Vector2.Zero;
+                        }
+                        break;
+                    case TouchLocationState.Moved:
+                        if (touch.Id == m_lastTouchID && touch.Position != m_lastTouchPos)
+                        {
+                            m_lastTouchPos = touch.Position;
+                            m_isTouchMoved = true;
+                            if (ClickArea.Contains(touchPos))
+                            {
+                                if (OnMoved != null)
+                                {
+                                    OnMoved(touchPos, m_entity);
+                                }
+                            }
+                        }
+                        break;
+                }
+            }
+        }
+
+        public void HandleKeyboardInput(KeyboardState keyboard)
+        {
+            var keys = keyboard.GetPressedKeys();
+            foreach (var key in keys)
+            {
+                if (!m_prevKeyboard.IsKeyDown(key))
+                {
+                    if (OnKeyPressed != null)
+                    {
+                        OnKeyPressed(key, m_entity);
+                    }
+                }
+            }
+            m_prevKeyboard = keyboard;
+        }
 	}
 }
 

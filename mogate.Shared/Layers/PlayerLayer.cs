@@ -46,7 +46,7 @@ namespace mogate
 			player.Register (new Poisonable (OnPoisoned));
 			player.Register (new Sprite (sprites.GetSprite (string.Format("player_{0:D2}", gameState.PlayerSpriteID))));
 			player.Register (new Drawable (new Vector2(mapGrid.StairDown.X * Globals.CELL_WIDTH, mapGrid.StairDown.Y * Globals.CELL_HEIGHT)));
-			player.Register (new Clickable (new Rectangle (0, 0, Globals.CELL_WIDTH * Globals.WORLD_WIDTH, Globals.CELL_HEIGHT * Globals.WORLD_HEIGHT)));
+			player.Register (new Clickable (new Rectangle (0, 0, Globals.CELL_WIDTH * Globals.WORLD_WIDTH, Globals.CELL_HEIGHT * Globals.WORLD_HEIGHT), player));
 			player.Register (new Consumable<ConsumableTypes> ());
 			player.Register (new CriticalHit ());
 			player.Register (new MoneyMultiplier (gameState.PlayerMoneyMultiplier));
@@ -61,8 +61,8 @@ namespace mogate
 			player.Get<Consumable<ConsumableTypes>> ().Refill (ConsumableTypes.Money, gameState.PlayerMoney);
 			player.Get<Consumable<ConsumableTypes>> ().Refill (ConsumableTypes.Antitod, gameState.PlayerAntitodPotions);
 
-			player.Get<Clickable> ().OnMoved += OnMoveToPosition;
 			player.Get<Clickable> ().OnTouched += OnAction;
+            player.Get<Clickable>().OnKeyPressed += OnKeyPressed;
 
 			var seq = new Sequence ();
 			seq.Add (new ActionEntity (player, OnEnterToLevel));
@@ -145,19 +145,29 @@ namespace mogate
 			}
 		}
 
-		private void OnMoveToPosition(Point clickPos, Entity _)
-		{
-			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
-			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
+        private void OnKeyPressed(Keys key, Entity player)
+        {
+            var world = (IWorld)Game.Services.GetService(typeof(IWorld));
+            var gameState = (IGameState)Game.Services.GetService(typeof(IGameState));
 
-			var mapGrid = world.GetLevel(gameState.Level);
-			var actionPos = mapGrid.ScreenToWorld (clickPos.X, clickPos.Y);
+            var mapGrid = world.GetLevel(gameState.Level);
+            var mapPos = player.Get<Position>().MapPos;
 
-			if (mapGrid.GetID (actionPos.X, actionPos.Y) != MapGridTypes.ID.Blocked
-				&& m_toMove != actionPos) {
-				m_toMove = actionPos;
-			}
-		}
+            if (key == Keys.Left)
+                --mapPos.X;
+            else if (key == Keys.Right)
+                ++mapPos.X;
+            else if (key == Keys.Up)
+                --mapPos.Y;
+            else if (key == Keys.Down)
+                ++mapPos.Y;
+
+             if (mapGrid.GetID(mapPos.X, mapPos.Y) != MapGridTypes.ID.Blocked
+                && m_toMove != mapPos)
+            {
+                m_toMove = mapPos;
+            }
+        }
 
 		private void OnAction(Point clickPos, Entity _)
 		{
