@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Xml;
+using System.Text;
+using Windows.Data.Xml.Dom;
 
 // Copied from great arcticle
 // http://www.codeproject.com/Tips/406235/A-Simple-PList-Parser-in-Csharp
@@ -23,30 +24,41 @@ namespace Elizabeth
 		{
 			Clear();
 
-			XmlDocument doc = new XmlDocument ();
-			doc.Load(data);
+            byte[] bytes = new byte[data.Length];
+            data.Position = 0;
+            data.Read(bytes, 0, (int)data.Length);
+            string buf = Encoding.ASCII.GetString(bytes);
 
-			XmlNode plist = doc.SelectSingleNode("plist");
-			XmlNode dict = plist.SelectSingleNode("dict");
+            XmlDocument doc = new XmlDocument ();
+			doc.LoadXml(buf);
 
-			var dictElements = dict.ChildNodes;
+			IXmlNode plist = doc.SelectSingleNode("plist");
+			IXmlNode dict = plist.SelectSingleNode("dict");
+
+            var dictElements = dict.ChildNodes;
 			Parse(this, dictElements);
 		}
 
 		private void Parse(PList dict, XmlNodeList elements)
 		{
-			for (int i = 0; i < elements.Count; i += 2)
-			{
-				XmlNode key = elements.Item (i);
-				XmlNode val = elements.Item (i + 1);
+            uint i = 0;
+            while (i < elements.Count)
+            {
+                if (elements.Item(i) is XmlElement)
+                {
+                    IXmlNode key = elements.Item(i);
+                    IXmlNode val = elements.Item(i + 2);
 
-				dict[key.InnerText] = ParseValue(val);
-			}
+                    dict[key.InnerText] = ParseValue(val);
+                    i += 2;
+                }
+                ++i;
+            }
 		}
 		
-		private dynamic ParseValue(XmlNode val)
+		private dynamic ParseValue(IXmlNode val)
 		{
-			switch (val.Name.ToString ()) {
+			switch (val.NodeName.ToString ()) {
 			case "string":
 				return val.InnerText;
 			case "integer":

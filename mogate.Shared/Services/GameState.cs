@@ -53,7 +53,7 @@ namespace mogate
 		void ApplyArchetype (Dictionary<string, float> archetype);
 	}
 
-	[Serializable]
+	//[Serializable]
 	public class MogateSaveData
 	{
 		public int Level;
