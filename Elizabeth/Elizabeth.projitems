@@ -29,7 +29,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\Behavior.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Director.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Entity.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Core\KeyboardUtils.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Layer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\PList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Scene.cs" />

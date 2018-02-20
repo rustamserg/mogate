@@ -62,6 +62,7 @@ namespace mogate
 			player.Get<Consumable<ConsumableTypes>> ().Refill (ConsumableTypes.Antitod, gameState.PlayerAntitodPotions);
 
 			player.Get<Clickable> ().OnTouched += OnAction;
+            player.Get<Clickable>().OnKeyHold += OnKeyHold;
             player.Get<Clickable>().OnKeyPressed += OnKeyPressed;
 
 			var seq = new Sequence ();
@@ -101,15 +102,6 @@ namespace mogate
 			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 
-			if (KeyboardUtils.IsKeyPressed (Keys.Q))
-				m_isLevelCompleted = true;
-			else if (KeyboardUtils.IsKeyPressed (Keys.M)) {
-				player.Get<Consumable<ConsumableTypes>> ().Refill (ConsumableTypes.Money, 100);
-			} else if (KeyboardUtils.IsKeyPressed (Keys.S)) {
-				var stats = (IStatistics)Game.Services.GetService (typeof(IStatistics));
-				stats.Dump ();
-			}
-
 			var director = (IDirector)Game.Services.GetService (typeof(IDirector));
 			if (m_isLevelCompleted) {
 				gameState.NextLevel ();
@@ -146,6 +138,21 @@ namespace mogate
 		}
 
         private void OnKeyPressed(Keys key, Entity player)
+        {
+            if (key == Keys.Q)
+                m_isLevelCompleted = true;
+            else if (key == Keys.M)
+            {
+                player.Get<Consumable<ConsumableTypes>>().Refill(ConsumableTypes.Money, 100);
+            }
+            else if (key == Keys.S)
+            {
+                var stats = (IStatistics)Game.Services.GetService(typeof(IStatistics));
+                stats.Dump();
+            }
+        }
+
+        private void OnKeyHold(Keys key, Entity player)
         {
             var world = (IWorld)Game.Services.GetService(typeof(IWorld));
             var gameState = (IGameState)Game.Services.GetService(typeof(IGameState));
