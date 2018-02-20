@@ -55,7 +55,11 @@ namespace mogate
 			ent.Register (new Clickable (new Rectangle (410, 500, 400, 40)));
 			ent.Get<Clickable> ().OnTouched += OnAction;
 
-			UpdateStats ();
+            ent = CreateEntity();
+            ent.Register(new Text(m_font, "Arrow keys to move. LMB to attack"));
+            ent.Register(new Drawable(new Vector2(310, 600)));
+
+            UpdateStats ();
 		}
 
 		private void OnPlayerSelect(Point _, Entity player)
