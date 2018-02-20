@@ -16,10 +16,10 @@ namespace mogate
 
 		public override void OnActivated()
 		{
-			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
+			var res = (IGameResources)Game.Services.GetService (typeof(IGameResources));
 
-			m_life = sprites.GetSprite ("health_01");
-			m_antitod = sprites.GetSprite ("antitod_potion_01");
+			m_life = res.GetSprite ("health_01");
+			m_antitod = res.GetSprite ("antitod_potion_01");
 
 			var infoEnt = CreateEntity ();
 			infoEnt.Register (new Execute ());
@@ -30,43 +30,43 @@ namespace mogate
 
 			var feedbackEnt = CreateEntity ("hud_feedback");
 			feedbackEnt.Register (new Execute ());
-			feedbackEnt.Register (new Text (sprites.GetFont ("SpriteFont1")));
+			feedbackEnt.Register (new Text (res.GetFont ("SpriteFont1")));
 			feedbackEnt.Register (new Drawable (new Vector2 (570, Globals.CELL_HEIGHT * Globals.WORLD_HEIGHT), Color.Yellow));
 
 			var hudIcon = CreateEntity ();
-			hudIcon.Register (new Sprite (sprites.GetSprite("health_01")));
+			hudIcon.Register (new Sprite (res.GetSprite("health_01")));
 			hudIcon.Register (new Drawable (new Vector2 (0, Globals.CELL_HEIGHT * Globals.WORLD_HEIGHT)));
 
 			hudIcon = CreateEntity ();
-			hudIcon.Register (new Sprite (sprites.GetSprite("money_01")));
+			hudIcon.Register (new Sprite (res.GetSprite("money_01")));
 			hudIcon.Register (new Drawable (new Vector2 (100, Globals.CELL_HEIGHT * Globals.WORLD_HEIGHT)));
 
 			hudIcon = CreateEntity ();
-			hudIcon.Register (new Sprite (sprites.GetSprite("weapon_01")));
+			hudIcon.Register (new Sprite (res.GetSprite("weapon_01")));
 			hudIcon.Register (new Drawable (new Vector2 (200, Globals.CELL_HEIGHT * Globals.WORLD_HEIGHT)));
 
 			hudIcon = CreateEntity ();
-			hudIcon.Register (new Sprite (sprites.GetSprite("armor_01")));
+			hudIcon.Register (new Sprite (res.GetSprite("armor_01")));
 			hudIcon.Register (new Drawable (new Vector2 (300, Globals.CELL_HEIGHT * Globals.WORLD_HEIGHT)));
 
 			var textMsg = CreateEntity ("hud_health");
-			textMsg.Register (new Text(sprites.GetFont ("SpriteFont1")));
+			textMsg.Register (new Text(res.GetFont ("SpriteFont1")));
 			textMsg.Register (new Drawable (new Vector2 (40, Globals.CELL_HEIGHT * Globals.WORLD_HEIGHT), Color.Green));
 
 			textMsg = CreateEntity ("hud_weapon");
-			textMsg.Register (new Text(sprites.GetFont ("SpriteFont1")));
+			textMsg.Register (new Text(res.GetFont ("SpriteFont1")));
 			textMsg.Register (new Drawable (new Vector2 (240, Globals.CELL_HEIGHT * Globals.WORLD_HEIGHT), Color.Green));
 
 			textMsg = CreateEntity ("hud_money");
-			textMsg.Register (new Text(sprites.GetFont ("SpriteFont1")));
+			textMsg.Register (new Text(res.GetFont ("SpriteFont1")));
 			textMsg.Register (new Drawable (new Vector2 (140, Globals.CELL_HEIGHT * Globals.WORLD_HEIGHT), Color.Green));
 
 			textMsg = CreateEntity ("hud_armor");
-			textMsg.Register (new Text(sprites.GetFont ("SpriteFont1")));
+			textMsg.Register (new Text(res.GetFont ("SpriteFont1")));
 			textMsg.Register (new Drawable (new Vector2 (340, Globals.CELL_HEIGHT * Globals.WORLD_HEIGHT), Color.Green));
 
 			textMsg = CreateEntity ("hud_time");
-			textMsg.Register (new Text(sprites.GetFont ("SpriteFont1")));
+			textMsg.Register (new Text(res.GetFont ("SpriteFont1")));
 			textMsg.Register (new Drawable (new Vector2 (440, Globals.CELL_HEIGHT * Globals.WORLD_HEIGHT), Color.Green));
 		}
 
@@ -113,7 +113,7 @@ namespace mogate
 
 		protected override void OnPostDraw (SpriteBatch spriteBatch, GameTime gameTime)
 		{
-			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
+			var res = (IGameResources)Game.Services.GetService (typeof(IGameResources));
 			var player = Scene.GetLayer("player").GetEntityByTag("player");
 
 			for (int i = 0; i < Math.Ceiling((float)player.Get<Health> ().HP/Globals.HEALTH_PACK); i++) {
@@ -129,14 +129,14 @@ namespace mogate
 				var armorDrawPos = new Vector2 (Globals.WORLD_WIDTH * Globals.CELL_WIDTH, 20 * Globals.CELL_HEIGHT);
 				int armorId = player.Get<Armor> ().ArchetypeID;
 				var armorSpriteName = string.Format ("armor_{0:D2}", Archetypes.Armors [armorId] ["sprite_index"]);
-				var armorSprite = sprites.GetSprite (armorSpriteName);
+				var armorSprite = res.GetSprite (armorSpriteName);
 				spriteBatch.Draw (armorSprite.Texture, armorDrawPos, armorSprite.GetFrameRect (0), Color.White);
 			}
 
 			var weaponDrawPos = new Vector2 (Globals.WORLD_WIDTH * Globals.CELL_WIDTH, 21 * Globals.CELL_HEIGHT);
 			int weaponId = player.Get<Attack> ().ArchetypeID;
 			string weaponSpriteName = string.Format ("weapon_{0:D2}", Archetypes.Weapons [weaponId] ["sprite_index"]);
-			var weaponSprite = sprites.GetSprite (weaponSpriteName);
+			var weaponSprite = res.GetSprite (weaponSpriteName);
 			spriteBatch.Draw(weaponSprite.Texture, weaponDrawPos, weaponSprite.GetFrameRect (0), Color.White);
 		}
 	}

@@ -185,7 +185,7 @@ namespace mogate
 		{
 			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
-			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
+			var res = (IGameResources)Game.Services.GetService (typeof(IGameResources));
 
 			var map = world.GetLevel(gameState.Level);
 
@@ -216,7 +216,7 @@ namespace mogate
 						me.Register (new LookDirection (Utils.Direction.Down));
 						me.Register (new Perception (arch["perception"]));
 						me.Register (new AllowedMapArea(MapGridTypes.ID.Tunnel));
-						me.Register (new Sprite (sprites.GetSprite (spriteName)));
+						me.Register (new Sprite (res.GetSprite (spriteName)));
 						me.Register (new Drawable (new Vector2 (pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
 
 						if (arch ["poison_chance"] > 0)
@@ -241,7 +241,7 @@ namespace mogate
 		public void SpawnBoss(MapGridTypes.Room room)
 		{
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
-			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
+			var res = (IGameResources)Game.Services.GetService (typeof(IGameResources));
 
 			int maxWeight = Globals.BOSSES_SPAWN_WEIGHT [gameState.Level];
 			var bosses = GetAllEntities ().Where (e => e.Has<State<MonsterType>> () && e.Get<State<MonsterType>> ().EState == MonsterType.Boss);
@@ -272,7 +272,7 @@ namespace mogate
 							boss.Register (new LookDirection (Utils.Direction.Down));
 							boss.Register (new Perception (arch ["perception"]));
 							boss.Register (new AllowedMapArea (MapGridTypes.ID.Room));
-							boss.Register (new Sprite (sprites.GetSprite (spriteName)));
+							boss.Register (new Sprite (res.GetSprite (spriteName)));
 							boss.Register (new Drawable (new Vector2 (pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
 							boss.Register (new Tag (room.RoomID));
 

@@ -37,7 +37,7 @@ namespace mogate
 
 		public void DropLoot(Point pos, Dictionary<string, int>[] loots, int maxWeight)
 		{
-			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
+			var res = (IGameResources)Game.Services.GetService (typeof(IGameResources));
 
 			loots.Shuffle ();
 
@@ -72,27 +72,27 @@ namespace mogate
 					ent.Get<Execute> ().Add (seq, "lifetime");
 
 					if (lootType == LootTypes.Money) {
-						ent.Register (new Sprite (sprites.GetSprite ("money_01")));
+						ent.Register (new Sprite (res.GetSprite ("money_01")));
 						ent.Register (new Triggerable ((from) => OnMoneyTriggered (ent, from)));
 						ent.Register (new Loot (arch["money"]));
 					} else if (lootType == LootTypes.Health) {
-						ent.Register (new Sprite (sprites.GetSprite ("health_potion_01")));
+						ent.Register (new Sprite (res.GetSprite ("health_potion_01")));
 						ent.Register (new Triggerable ((from) => OnHealthTriggered (ent, from)));
 						ent.Register (new Loot (arch ["health"]));
 					} else if (lootType == LootTypes.Armor) {
 						var armorSprite = string.Format ("armor_{0:D2}", Archetypes.Armors [arch ["armor_index"]] ["sprite_index"]);
-						ent.Register (new Sprite (sprites.GetSprite (armorSprite)));
+						ent.Register (new Sprite (res.GetSprite (armorSprite)));
 						ent.Register (new Triggerable ((from) => OnArmorTriggered (ent, from)));
 						ent.Register (new Loot (arch ["armor_index"]));
 						ent.Register (new Price (arch ["price"]));
 					} else if (lootType == LootTypes.Weapon) {
 						var weaponSprite = string.Format ("weapon_{0:D2}", Archetypes.Weapons [arch ["weapon_index"]] ["sprite_index"]);
-						ent.Register (new Sprite (sprites.GetSprite (weaponSprite)));
+						ent.Register (new Sprite (res.GetSprite (weaponSprite)));
 						ent.Register (new Triggerable ((from) => OnWeaponTriggered (ent, from)));
 						ent.Register (new Loot (arch ["weapon_index"]));
 						ent.Register (new Price (arch ["price"]));
 					} else {
-						ent.Register (new Sprite (sprites.GetSprite ("antitod_potion_01")));
+						ent.Register (new Sprite (res.GetSprite ("antitod_potion_01")));
 						ent.Register (new Triggerable ((from) => OnAntitodTriggered (ent, from)));
 					}
 					break;
@@ -186,7 +186,7 @@ namespace mogate
 			if (chest.Get<Health> ().HP > 0)
 				return;
 
-			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
+			var res = (IGameResources)Game.Services.GetService (typeof(IGameResources));
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
 
 			RemoveEntityByTag (chest.Tag);
@@ -198,7 +198,7 @@ namespace mogate
 				ent.Register (new Drawable (new Vector2 (mp.X * Globals.CELL_WIDTH, mp.Y * Globals.CELL_HEIGHT)));
 				ent.Register (new Position (mp.X, mp.Y));
 				ent.Register (new PointLight (PointLight.DistanceType.Normal, Color.Green));
-				ent.Register (new Sprite (sprites.GetSprite ("artefact_01")));
+				ent.Register (new Sprite (res.GetSprite ("artefact_01")));
 				ent.Register (new Triggerable ((from) => OnArtefactTriggered(ent, from)));
 			} else {
 				DropLoot (mp, Archetypes.ChestLoot, Globals.CHEST_DROP_LOOT_WEIGHT[gameState.Level]);
@@ -264,7 +264,7 @@ namespace mogate
 		{
 			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
-			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
+			var res = (IGameResources)Game.Services.GetService (typeof(IGameResources));
 
 			var map = world.GetLevel(gameState.Level);
 			int trash = GetAllEntities ().Where (e => e.Has<State<TreasureTypes>> () && e.Get<State<TreasureTypes>> ().EState == TreasureTypes.Trash).Count();
@@ -274,7 +274,7 @@ namespace mogate
 				var pos = tunnels [Utils.ThrowDice (tunnels.Count)];
 
 				var ent = CreateEntity ();
-				ent.Register (new Sprite (sprites.GetSprite ("skeleton_01")));
+				ent.Register (new Sprite (res.GetSprite ("skeleton_01")));
 				ent.Register (new Drawable (new Vector2(pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
 				ent.Register (new Position (pos.X, pos.Y));
 				ent.Register (new Health (Globals.TRASH_HEALTH[gameState.Level], () => OnTrashDestroyed(ent)));
@@ -289,7 +289,7 @@ namespace mogate
 		{
 			var world = (IWorld)Game.Services.GetService (typeof(IWorld));
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
-			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
+			var res = (IGameResources)Game.Services.GetService (typeof(IGameResources));
 			var monsters = (MonstersLayer)Scene.GetLayer ("monsters");
 
 			var map = world.GetLevel(gameState.Level);
@@ -302,7 +302,7 @@ namespace mogate
 				var pos = new Point (room.Pos.X + Utils.Rand.Next (room.Width), room.Pos.Y + Utils.Rand.Next (room.Height));
 
 				var ent = CreateEntity ();
-				ent.Register (new Sprite (sprites.GetSprite ("grave_01")));
+				ent.Register (new Sprite (res.GetSprite ("grave_01")));
 				ent.Register (new Drawable (new Vector2(pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
 				ent.Register (new Position (pos.X, pos.Y));
 				ent.Register (new Health (Globals.CHEST_HEALTH[gameState.Level], () => OnChestDestroyed(ent)));

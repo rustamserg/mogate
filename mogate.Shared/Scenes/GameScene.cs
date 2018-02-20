@@ -26,20 +26,20 @@ namespace mogate
 
 		protected override void OnInitialized()
 		{
-			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
+			var res = (IGameResources)Game.Services.GetService (typeof(IGameResources));
 
 			int backBufWidth = Game.GraphicsDevice.PresentationParameters.BackBufferWidth;
 			int backBufHeight = Game.GraphicsDevice.PresentationParameters.BackBufferHeight;
 
 			m_lightTarget = new RenderTarget2D (Game.GraphicsDevice, backBufWidth, backBufHeight);
-			m_lightSpritePointSmall = sprites.GetSprite("lightmask_small");
-			m_lightSpritePointNormal = sprites.GetSprite ("lightmask_normal");
-			m_lightSpritePointBig = sprites.GetSprite ("lightmask_big");
-			m_lightSpriteDirectUp = sprites.GetSprite ("lightmask_up");
-			m_lightSpriteDirectDown = sprites.GetSprite ("lightmask_down");
-			m_lightSpriteDirectLeft = sprites.GetSprite ("lightmask_left");
-			m_lightSpriteDirectRight = sprites.GetSprite ("lightmask_right");
-			m_lightEffect = sprites.GetEffect ("light");
+			m_lightSpritePointSmall = res.GetSprite("lightmask_small");
+			m_lightSpritePointNormal = res.GetSprite ("lightmask_normal");
+			m_lightSpritePointBig = res.GetSprite ("lightmask_big");
+			m_lightSpriteDirectUp = res.GetSprite ("lightmask_up");
+			m_lightSpriteDirectDown = res.GetSprite ("lightmask_down");
+			m_lightSpriteDirectLeft = res.GetSprite ("lightmask_left");
+			m_lightSpriteDirectRight = res.GetSprite ("lightmask_right");
+			m_lightEffect = res.GetEffect ("light");
 		}
 
 		protected override void OnPostDraw(SpriteBatch spriteBatch, RenderTarget2D mainTarget, Matrix worldToScreen, GameTime gameTime)

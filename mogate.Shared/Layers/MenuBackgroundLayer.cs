@@ -15,15 +15,15 @@ namespace mogate
 
 		public override void OnActivated()
 		{
-			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
-			m_tileSize = sprites.GetSprite ("back_01").Rect.Width;
+			var res = (IGameResources)Game.Services.GetService (typeof(IGameResources));
+			m_tileSize = res.GetSprite ("back_01").Rect.Width;
 			m_tilesWidth = Globals.VIEWPORT_WIDTH / m_tileSize + 1;
 			m_tilesHeight = Globals.VIEWPORT_HEIGHT / m_tileSize + 1;
 
 			for (int x = 0; x < m_tilesWidth; x++) {
 				for (int y = 0; y < m_tilesHeight; y++) {
 					var tileEnt = CreateEntity (string.Format("{0}_{1}", x, y));
-					tileEnt.Register (new Sprite (sprites.GetSprite ("back_01"), false));
+					tileEnt.Register (new Sprite (res.GetSprite ("back_01"), false));
 					tileEnt.Register (new Drawable (new Vector2 (x * m_tileSize, y * m_tileSize)));
 				}
 			}

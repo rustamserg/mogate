@@ -29,15 +29,15 @@ namespace mogate
 		{
 			var director = new Director (this);
 			var gameState = new GameState (this);
-			var sprites = new SpriteSheets (this);
+			var gameRes = new GameResources (this);
 
 			Services.AddService (typeof(IWorld), new World());
 			Services.AddService (typeof(IGameState), gameState);
-			Services.AddService (typeof(ISpriteSheets), sprites);
+			Services.AddService (typeof(IGameResources), gameRes);
 			Services.AddService (typeof(IStatistics), new Statistics ());
 			Services.AddService (typeof(IDirector), director);
 
-			Components.Add (sprites);
+			Components.Add (gameRes);
 			Components.Add (gameState);
 			Components.Add (director);
 
@@ -46,14 +46,14 @@ namespace mogate
 			director.RegisterScene (new InterScene (this, "inter"));
 			director.RegisterScene (new PlayerSelectScene (this, "player_select"));
 
-			sprites.AddSpriteSheet ("Content/Sprites/sprites.plist", "Sprites/sprites", Globals.CELL_WIDTH, Globals.CELL_HEIGHT);
-			#if __IOS__
-			sprites.AddSpriteFont ("SpriteFont1", "Fonts/arial-22");
-			#else
-			sprites.AddSpriteFont ("SpriteFont1", "Fonts/SpriteFont1");
-			#endif
-			sprites.AddEffect ("light", "Shaders/lighting");
-            sprites.AddEffect("fade", "Shaders/fade");
+            gameRes.AddSpriteSheet ("Content/Sprites/sprites.plist", "Sprites/sprites", Globals.CELL_WIDTH, Globals.CELL_HEIGHT);
+#if __IOS__
+			gameRes.AddSpriteFont ("SpriteFont1", "Fonts/arial-22");
+#else
+            gameRes.AddSpriteFont ("SpriteFont1", "Fonts/SpriteFont1");
+#endif
+            gameRes.AddEffect ("light", "Shaders/lighting");
+            gameRes.AddEffect("fade", "Shaders/fade");
 
             base.Initialize ();
 		}

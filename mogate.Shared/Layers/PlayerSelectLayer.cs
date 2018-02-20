@@ -15,8 +15,8 @@ namespace mogate
 
 		public override void OnActivated()
 		{
-			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
-			m_font = sprites.GetFont ("SpriteFont1");
+			var res = (IGameResources)Game.Services.GetService (typeof(IGameResources));
+			m_font = res.GetFont ("SpriteFont1");
 
 			var ent = CreateEntity ();
 			ent.Register (new Text (m_font, "Choose a hero"));
@@ -27,7 +27,7 @@ namespace mogate
 
 				ent = CreateEntity ();
 				ent.Register (new Tag (idx));
-				ent.Register (new Sprite (sprites.GetSprite (string.Format ("player_{0:D2}", (int)arch ["sprite_index"]))));
+				ent.Register (new Sprite (res.GetSprite (string.Format ("player_{0:D2}", (int)arch ["sprite_index"]))));
 				ent.Register (new Drawable (new Vector2 (400 + 50 * idx, 250)));
 				ent.Register (new Clickable (new Rectangle (400 + 50 * idx, 250, 40, 40), ent));
 				ent.Get<Clickable> ().OnTouched += OnPlayerSelect;

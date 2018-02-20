@@ -13,9 +13,9 @@ namespace mogate
 		public override void OnActivated()
 		{
 			var gameState = (IGameState)Game.Services.GetService (typeof(IGameState));
-			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
+			var res = (IGameResources)Game.Services.GetService (typeof(IGameResources));
 
-			var font = sprites.GetFont ("SpriteFont1");
+			var font = res.GetFont ("SpriteFont1");
 
 			if (gameState.GameProgress == GameProgressState.InGame) {
 				var ent = CreateEntity ();
@@ -34,7 +34,7 @@ namespace mogate
 
 				foreach (var hof in gameState.HallOfFame) {
 					var hofsprite = CreateEntity ();
-					hofsprite.Register (new Sprite (sprites.GetSprite (string.Format("player_{0:D2}", hof.PlayerSpriteID))));
+					hofsprite.Register (new Sprite (res.GetSprite (string.Format("player_{0:D2}", hof.PlayerSpriteID))));
 					hofsprite.Register (new Drawable (new Vector2 (380, 320 + idx * 36)));
 
 					var hofname = CreateEntity();

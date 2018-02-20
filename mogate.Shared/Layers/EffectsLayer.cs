@@ -11,11 +11,11 @@ namespace mogate
 
 		public void SpawnEffect(Point pos, string name, float duration)
 		{
-			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
+			var res = (IGameResources)Game.Services.GetService (typeof(IGameResources));
 
 			var ent = CreateEntity ();
 			ent.Register (new Execute ());
-			ent.Register (new Sprite (sprites.GetSprite (name)));
+			ent.Register (new Sprite (res.GetSprite (name)));
 			ent.Register (new Drawable (new Vector2(pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
 
 			var seq = new Sequence ();
@@ -29,12 +29,12 @@ namespace mogate
 
 		public void AttachEffect(Entity entity, string name, float duration)
 		{
-			var sprites = (ISpriteSheets)Game.Services.GetService (typeof(ISpriteSheets));
+			var res = (IGameResources)Game.Services.GetService (typeof(IGameResources));
 			var pos = entity.Get<Position> ().MapPos;
 
 			var ent = CreateEntity ();
 			ent.Register (new Execute ());
-			ent.Register (new Sprite (sprites.GetSprite (name)));
+			ent.Register (new Sprite (res.GetSprite (name)));
 			ent.Register (new Drawable (new Vector2(pos.X * Globals.CELL_WIDTH, pos.Y * Globals.CELL_HEIGHT)));
 
 			var seq = new Sequence ();

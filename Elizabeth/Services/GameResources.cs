@@ -1,9 +1,6 @@
-using System;
-using System.Xml;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.IO;
+using System.Collections.Generic;
 
 
 #if __IOS__
@@ -13,7 +10,7 @@ using CocosSharp;
 
 namespace Elizabeth
 {
-	public interface ISpriteSheets
+    public interface IGameResources
 	{
 		void AddSpriteSheet (string plistName, string texture, int frameWidth, int frameHeight);
 		void AddSpriteFont (string fontName, string texture);
@@ -24,8 +21,8 @@ namespace Elizabeth
 		Effect GetEffect (string name);
 	};
 
-	public class SpriteSheets : DrawableGameComponent, ISpriteSheets
-	{
+	public class GameResources : DrawableGameComponent, IGameResources
+    {
 		struct SheetData {
 			public string PList;
 			public string Texture;
@@ -50,7 +47,7 @@ namespace Elizabeth
 		private List<EffectData> m_addedEffects = new List<EffectData> ();
 
 
-		public SpriteSheets(Game game) : base(game)
+		public GameResources(Game game) : base(game)
 		{
 		}
 

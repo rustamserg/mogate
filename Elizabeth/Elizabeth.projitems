@@ -32,7 +32,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\Layer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\PList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Scene.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\SpriteSheets.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\GameResources.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Statistics.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Consumable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Sprite2D.cs" />
