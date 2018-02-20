@@ -129,14 +129,16 @@ namespace mogate
 
 		public List<HallOfFameEntry> HallOfFame { get; private set; }
 
+        private ICheckpoint<MogateSaveData> Checkpoint { get; }
 
-		public GameState (Game game) : base(game)
-		{
-			CountPlaytime = false;
-			HallOfFame = new List<HallOfFameEntry> ();
-			InitGame ();
-			IsLoaded = false;
-		}
+        public GameState(Game game) : base(game)
+        {
+            CountPlaytime = false;
+            HallOfFame = new List<HallOfFameEntry>();
+            InitGame();
+            IsLoaded = false;
+            Checkpoint = new Checkpoint<MogateSaveData>();
+        }
 
 		public override void Update (GameTime gameTime)
 		{
@@ -222,36 +224,33 @@ namespace mogate
 			ApplyArchetype (arch);
 		}
 
-		void LoadGame()
-		{
-			var gameCheckpoint = (ICheckpoint<MogateSaveData>)Game.Services.GetService (typeof(ICheckpoint<MogateSaveData>));
-
-			if (gameCheckpoint.State == CheckpointState.Ready) {
-				var save = gameCheckpoint.LastCheckpoint;
-				if (save != null) {
-					Level = save.Level;
-					PlayerName = save.PlayerName;
-					Playtime = TimeSpan.FromTicks (save.PlaytimeTicks);
-					PlayerHealth = save.PlayerHealth;
-					PlayerHealthMax = save.PlayerHealthMax;
-					PlayerAntitodPotions = save.PlayerAntitodPotions;
-					PlayerAntitodPotionsMax = save.PlayerAntitodPotionsMax;
-					PlayerMoney = save.PlayerMoney;
-					PlayerViewDistanceType = save.PlayerViewDistanceType;
-					PlayerAttackDistanceMultiplier = save.PlayerAttackDistanceMultiplier;
-					PlayerMoneyMultiplier = save.PlayerMoneyMultiplier;
-					PlayerAttackMultiplier = save.PlayerAttackMultiplier;
-					PlayerPoisonChanceMultiplier = save.PlayerPoisonChanceMultiplier;
-					PlayerAttackSpeed = save.PlayerAttackSpeed;
-					PlayerMoveSpeed = save.PlayerMoveSpeed;
-					PlayerSpriteID = save.PlayerSpriteID;
-					PlayerArmorID = save.PlayerArmorID;
-					PlayerWeaponID = save.PlayerWeaponID;
-					HallOfFame = save.HallOfFame;
-				}
-				IsLoaded = true;
-			}
-		}
+        void LoadGame()
+        {
+            var save = Checkpoint.Load("mogate.sav");
+            if (save != null)
+            {
+                Level = save.Level;
+                PlayerName = save.PlayerName;
+                Playtime = TimeSpan.FromTicks(save.PlaytimeTicks);
+                PlayerHealth = save.PlayerHealth;
+                PlayerHealthMax = save.PlayerHealthMax;
+                PlayerAntitodPotions = save.PlayerAntitodPotions;
+                PlayerAntitodPotionsMax = save.PlayerAntitodPotionsMax;
+                PlayerMoney = save.PlayerMoney;
+                PlayerViewDistanceType = save.PlayerViewDistanceType;
+                PlayerAttackDistanceMultiplier = save.PlayerAttackDistanceMultiplier;
+                PlayerMoneyMultiplier = save.PlayerMoneyMultiplier;
+                PlayerAttackMultiplier = save.PlayerAttackMultiplier;
+                PlayerPoisonChanceMultiplier = save.PlayerPoisonChanceMultiplier;
+                PlayerAttackSpeed = save.PlayerAttackSpeed;
+                PlayerMoveSpeed = save.PlayerMoveSpeed;
+                PlayerSpriteID = save.PlayerSpriteID;
+                PlayerArmorID = save.PlayerArmorID;
+                PlayerWeaponID = save.PlayerWeaponID;
+                HallOfFame = save.HallOfFame;
+            }
+            IsLoaded = true;
+        }
 
 		void SaveGame()
 		{
@@ -276,9 +275,7 @@ namespace mogate
 				PlayerWeaponID = this.PlayerWeaponID,
 				HallOfFame = this.HallOfFame
 			};
-
-			var gameCheckpoint = (ICheckpoint<MogateSaveData>)Game.Services.GetService (typeof(ICheckpoint<MogateSaveData>));
-			gameCheckpoint.SaveCheckpoint (save);
+			Checkpoint.Save(save, "mogate.sav");
 		}
 	}
 }

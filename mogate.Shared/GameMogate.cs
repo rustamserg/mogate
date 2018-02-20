@@ -30,19 +30,16 @@ namespace mogate
 			var director = new Director (this);
 			var gameState = new GameState (this);
 			var sprites = new SpriteSheets (this);
-			var checkpoint = new Checkpoint<MogateSaveData> (this);
 
 			Services.AddService (typeof(IWorld), new World());
 			Services.AddService (typeof(IGameState), gameState);
 			Services.AddService (typeof(ISpriteSheets), sprites);
 			Services.AddService (typeof(IStatistics), new Statistics ());
 			Services.AddService (typeof(IDirector), director);
-			Services.AddService (typeof(ICheckpoint<MogateSaveData>), checkpoint);
 
 			Components.Add (sprites);
 			Components.Add (gameState);
 			Components.Add (director);
-			Components.Add (checkpoint);
 
 			director.RegisterScene (new GameScene (this, "game"));
 			director.RegisterScene (new MainScene (this, "main"));

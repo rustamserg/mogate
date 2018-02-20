@@ -6,65 +6,44 @@ using System.Xml;
 
 namespace Elizabeth
 {
-    public enum CheckpointState { Unsync, Loading, Saving, Ready };
-
 	public interface ICheckpoint<T>
 	{
-		CheckpointState State { get; }
-		T LastCheckpoint { get; }
-		void SaveCheckpoint(T checkpoint);
+        T Load(string filename);
+		void Save(T checkpoint, string filename);
 	}
 
-	public class Checkpoint<T> : GameComponent, ICheckpoint<T>
+	public class Checkpoint<T> : ICheckpoint<T>
 	{
-		public CheckpointState State { get; private set; }
-		public T LastCheckpoint { get; private set; }
-
-		public Checkpoint (Game game) : base(game)
-		{
-			State = CheckpointState.Unsync;
-			LastCheckpoint = default(T);
-		}
-
-		public override void Update (GameTime gameTime)
-		{
-			if (State == CheckpointState.Unsync) {
-				LoadCheckpoint ();
-			}
-			base.Update(gameTime);
-		}
-
-		public void SaveCheckpoint(T data)
+		public void Save(T data, string filename)
 		{
             var isoStore = IsolatedStorageFile.GetUserStoreForApplication();
-            if (isoStore.FileExists("mogate.sav"))
+            if (isoStore.FileExists(filename))
             {
-                isoStore.DeleteFile("mogate.sav");
+                isoStore.DeleteFile(filename);
             }
 
-            using (var isoStream = new IsolatedStorageFileStream("mogate.sav", FileMode.CreateNew, isoStore))
+            using (var isoStream = new IsolatedStorageFileStream(filename, FileMode.CreateNew, isoStore))
             {
                 var ser = new DataContractSerializer(typeof(T));
                 ser.WriteObject(isoStream, data);
             }
-            State = CheckpointState.Ready;
 		}
 
-        void LoadCheckpoint()
+        public T Load(string filename)
         {
             var isoStore = IsolatedStorageFile.GetUserStoreForApplication();
-            if (isoStore.FileExists("mogate.sav"))
+            if (isoStore.FileExists(filename))
             {
-                using (var isoStream = new IsolatedStorageFileStream("mogate.sav", FileMode.Open, isoStore))
+                using (var isoStream = new IsolatedStorageFileStream(filename, FileMode.Open, isoStore))
                 {
                     using (var reader = XmlDictionaryReader.CreateTextReader(isoStream, new XmlDictionaryReaderQuotas()))
                     {
                         var ser = new DataContractSerializer(typeof(T));
-                        LastCheckpoint = (T)ser.ReadObject(reader, true);
+                        return (T)ser.ReadObject(reader, true);
                     }
                 }
             }
-            State = CheckpointState.Ready;
+            return default(T);
         }
 	}
 }
