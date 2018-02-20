@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Runtime.Serialization;
 
 namespace mogate
 {
@@ -53,30 +53,49 @@ namespace mogate
 		void ApplyArchetype (Dictionary<string, float> archetype);
 	}
 
-	//[Serializable]
+	[DataContract]
 	public class MogateSaveData
-	{
+    {
+        [DataMember]
 		public int Level;
-		public long PlaytimeTicks;
-		public int PlayerHealth;
-		public int PlayerHealthMax;
-		public int PlayerAntitodPotions;
-		public int PlayerAntitodPotionsMax;
-		public int PlayerMoney;
-		public int PlayerViewDistanceType;
-		public int PlayerAttackSpeed;
-		public int PlayerMoveSpeed;
-		public int PlayerSpriteID;
-		public int PlayerWeaponID;
-		public int PlayerArmorID;
+        [DataMember]
+        public long PlaytimeTicks;
+        [DataMember]
+        public int PlayerHealth;
+        [DataMember]
+        public int PlayerHealthMax;
+        [DataMember]
+        public int PlayerAntitodPotions;
+        [DataMember]
+        public int PlayerAntitodPotionsMax;
+        [DataMember]
+        public int PlayerMoney;
+        [DataMember]
+        public int PlayerViewDistanceType;
+        [DataMember]
+        public int PlayerAttackSpeed;
+        [DataMember]
+        public int PlayerMoveSpeed;
+        [DataMember]
+        public int PlayerSpriteID;
+        [DataMember]
+        public int PlayerWeaponID;
+        [DataMember]
+        public int PlayerArmorID;
 
-		public float PlayerAttackMultiplier;
-		public float PlayerMoneyMultiplier;
-		public float PlayerPoisonChanceMultiplier;
-		public float PlayerAttackDistanceMultiplier;
+        [DataMember]
+        public float PlayerAttackMultiplier;
+        [DataMember]
+        public float PlayerMoneyMultiplier;
+        [DataMember]
+        public float PlayerPoisonChanceMultiplier;
+        [DataMember]
+        public float PlayerAttackDistanceMultiplier;
 
-		public string PlayerName;
-		public List<HallOfFameEntry> HallOfFame;
+        [DataMember]
+        public string PlayerName;
+        [DataMember]
+        public List<HallOfFameEntry> HallOfFame;
 	}
 
 	public class GameState : GameComponent, IGameState
