@@ -19,7 +19,6 @@ namespace mogate
 			m_graphics.PreferredBackBufferHeight = Globals.VIEWPORT_HEIGHT;
 			m_graphics.PreferredBackBufferWidth = Globals.VIEWPORT_WIDTH;
 			m_graphics.IsFullScreen = false;
-            m_graphics.GraphicsProfile = GraphicsProfile.HiDef;
             m_graphics.ApplyChanges();
 
             IsMouseVisible = true;

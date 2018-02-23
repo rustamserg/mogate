@@ -1,12 +1,11 @@
-﻿using Microsoft.Xna.Framework;
-using System.IO;
+﻿using System.IO;
 using System.IO.IsolatedStorage;
 using System.Runtime.Serialization;
 using System.Xml;
 
 namespace Elizabeth
 {
-	public interface ICheckpoint<T>
+    public interface ICheckpoint<T>
 	{
         T Load(string filename);
 		void Save(T checkpoint, string filename);
